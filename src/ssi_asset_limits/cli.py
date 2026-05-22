@@ -4,7 +4,11 @@ from __future__ import annotations
 
 import argparse
 
-from .constants import ANALYSIS_YEAR
+from .constants import (
+    ANALYSIS_YEAR,
+    DEFAULT_COUPLE_LIMIT,
+    DEFAULT_INDIVIDUAL_LIMIT,
+)
 from .pipeline import generate_all_data
 
 
@@ -29,6 +33,18 @@ def build_parser() -> argparse.ArgumentParser:
         help="Policy year to analyze.",
     )
     parser.add_argument(
+        "--individual-limit",
+        type=float,
+        default=DEFAULT_INDIVIDUAL_LIMIT,
+        help="Reformed SSI resource limit for unmarried individuals.",
+    )
+    parser.add_argument(
+        "--couple-limit",
+        type=float,
+        default=DEFAULT_COUPLE_LIMIT,
+        help="Reformed SSI resource limit for married couples.",
+    )
+    parser.add_argument(
         "--skip-poverty",
         action="store_true",
         help="Generate only SSI fiscal and participation metrics.",
@@ -43,6 +59,8 @@ def main(argv: list[str] | None = None) -> None:
         dataset=args.dataset,
         year=args.year,
         include_poverty=not args.skip_poverty,
+        individual_limit=args.individual_limit,
+        couple_limit=args.couple_limit,
     )
 
 

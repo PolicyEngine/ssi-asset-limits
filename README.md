@@ -43,6 +43,17 @@ uv run ssi-asset-limits-data \
   --skip-poverty
 ```
 
+Model the $10,000 individual / $20,000 couple limit proposal:
+
+```bash
+uv run ssi-asset-limits-data \
+  --dataset /path/to/enhanced_cps_2024.h5 \
+  --output-dir public/data \
+  --individual-limit 10000 \
+  --couple-limit 20000 \
+  --skip-poverty
+```
+
 ## Verify
 
 ```bash
