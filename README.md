@@ -55,9 +55,10 @@ uv run ssi-asset-limits-data \
   --external-benchmark-comparison
 ```
 
-The external benchmark comparison first scales PolicyEngine's new-recipient
-count to CBPP's 224,000 new-beneficiary estimate, then reports the additional
-benefit-amount scale needed to match OACT's $1.0 billion 2026 cost estimate.
+The external benchmark comparison starts from PolicyEngine's post-take-up
+estimate, scales the new-recipient count to CBPP's 224,000 new-beneficiary
+estimate, then reports the additional benefit-amount scale needed to match
+OACT's $1.0 billion 2026 cost estimate.
 
 ## Verify
 

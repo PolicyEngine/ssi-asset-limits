@@ -5,7 +5,7 @@ from ssi_asset_limits.benchmarks import (
 )
 
 
-def test_external_benchmark_comparison_matches_participation_then_cost():
+def test_external_benchmark_comparison_matches_new_beneficiaries_then_cost():
     summary = pd.DataFrame(
         [
             {"metric": "annual_ssi_cost", "value": 10_000},
@@ -21,25 +21,32 @@ def test_external_benchmark_comparison_matches_participation_then_cost():
 
     assert comparison.loc["policyengine_raw", "annual_ssi_cost"] == 10_000
     assert (
-        comparison.loc["cbpp_participation_matched", "annual_ssi_cost"]
+        comparison.loc["cbpp_new_beneficiary_matched", "annual_ssi_cost"]
         == 2_000
     )
     assert (
         comparison.loc[
-            "cbpp_participation_and_oact_cost_matched", "annual_ssi_cost"
+            "cbpp_new_beneficiary_and_oact_cost_matched", "annual_ssi_cost"
         ]
         == 500
     )
     assert (
         comparison.loc[
-            "cbpp_participation_and_oact_cost_matched",
+            "cbpp_new_beneficiary_and_oact_cost_matched",
             "average_cost_per_new_recipient",
         ]
         == 2.5
     )
     assert (
         comparison.loc[
-            "cbpp_participation_and_oact_cost_matched",
+            "cbpp_new_beneficiary_and_oact_cost_matched",
+            "new_beneficiary_scale",
+        ]
+        == 0.2
+    )
+    assert (
+        comparison.loc[
+            "cbpp_new_beneficiary_and_oact_cost_matched",
             "benefit_amount_scale",
         ]
         == 0.25

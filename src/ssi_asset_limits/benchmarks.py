@@ -20,21 +20,23 @@ def calculate_external_benchmark_comparison(
     cbpp_new_beneficiaries: float = CBPP_TEN_TWENTY_NEW_BENEFICIARIES,
     oact_annual_cost: float = OACT_TEN_TWENTY_2026_FEDERAL_SSI_COST,
 ) -> pd.DataFrame:
-    """Compare PolicyEngine output with CBPP participation and OACT cost.
+    """Compare PolicyEngine output with CBPP recipients and OACT cost.
 
     This is intended for the $10,000 individual / $20,000 couple resource-limit
-    scenario. CBPP reports new beneficiaries; OACT reports federal SSI payment
-    cost. The combined row asks what benefit-amount scale is needed after first
-    matching PolicyEngine's new-recipient count to CBPP.
+    scenario. PolicyEngine output already includes its seeded SSI take-up
+    assignment and calibration to SSI amount and recipient targets. CBPP
+    reports new beneficiaries; OACT reports federal SSI payment cost. The
+    combined row asks what benefit-amount scale is needed after matching
+    PolicyEngine's post-take-up new-recipient count to CBPP.
     """
 
     pe_cost = _metric_value(summary, "annual_ssi_cost")
     pe_new_recipients = _metric_value(summary, "new_recipients")
     pe_average_cost = pe_cost / pe_new_recipients
 
-    participation_scale = cbpp_new_beneficiaries / pe_new_recipients
-    participation_matched_cost = pe_cost * participation_scale
-    benefit_amount_scale = oact_annual_cost / participation_matched_cost
+    new_beneficiary_scale = cbpp_new_beneficiaries / pe_new_recipients
+    cbpp_matched_cost = pe_cost * new_beneficiary_scale
+    benefit_amount_scale = oact_annual_cost / cbpp_matched_cost
 
     rows = [
         {
@@ -42,25 +44,25 @@ def calculate_external_benchmark_comparison(
             "new_recipients": pe_new_recipients,
             "annual_ssi_cost": pe_cost,
             "average_cost_per_new_recipient": pe_average_cost,
-            "participation_scale": 1.0,
+            "new_beneficiary_scale": 1.0,
             "benefit_amount_scale": 1.0,
         },
         {
-            "scenario": "cbpp_participation_matched",
+            "scenario": "cbpp_new_beneficiary_matched",
             "new_recipients": cbpp_new_beneficiaries,
-            "annual_ssi_cost": participation_matched_cost,
+            "annual_ssi_cost": cbpp_matched_cost,
             "average_cost_per_new_recipient": pe_average_cost,
-            "participation_scale": participation_scale,
+            "new_beneficiary_scale": new_beneficiary_scale,
             "benefit_amount_scale": 1.0,
         },
         {
-            "scenario": "cbpp_participation_and_oact_cost_matched",
+            "scenario": "cbpp_new_beneficiary_and_oact_cost_matched",
             "new_recipients": cbpp_new_beneficiaries,
             "annual_ssi_cost": oact_annual_cost,
             "average_cost_per_new_recipient": (
                 oact_annual_cost / cbpp_new_beneficiaries
             ),
-            "participation_scale": participation_scale,
+            "new_beneficiary_scale": new_beneficiary_scale,
             "benefit_amount_scale": benefit_amount_scale,
         },
     ]
