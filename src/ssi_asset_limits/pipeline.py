@@ -4,11 +4,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from .benchmarks import calculate_external_benchmark_comparison
 from .calculators import calculate_national_summary, calculate_resource_bins
 from .constants import (
     ANALYSIS_YEAR,
     DEFAULT_COUPLE_LIMIT,
     DEFAULT_INDIVIDUAL_LIMIT,
+    EXTERNAL_BENCHMARK_COMPARISON_FILE,
     NATIONAL_SUMMARY_FILE,
     RESOURCE_BINS_FILE,
 )
@@ -42,6 +44,7 @@ def generate_all_data(
     include_poverty: bool = True,
     individual_limit: float = DEFAULT_INDIVIDUAL_LIMIT,
     couple_limit: float = DEFAULT_COUPLE_LIMIT,
+    include_external_benchmark_comparison: bool = False,
 ) -> None:
     """Generate dashboard CSVs."""
 
@@ -60,6 +63,13 @@ def generate_all_data(
         baseline, reformed, year, include_poverty=include_poverty
     )
     national.to_csv(output / NATIONAL_SUMMARY_FILE, index=False)
+
+    if include_external_benchmark_comparison:
+        print("Calculating external benchmark comparison...")
+        comparison = calculate_external_benchmark_comparison(national)
+        comparison.to_csv(
+            output / EXTERNAL_BENCHMARK_COMPARISON_FILE, index=False
+        )
 
     print("Calculating resource-bin impacts...")
     resource_bins = calculate_resource_bins(baseline, reformed, year)

@@ -49,6 +49,13 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Generate only SSI fiscal and participation metrics.",
     )
+    parser.add_argument(
+        "--external-benchmark-comparison",
+        action="store_true",
+        help=(
+            "Write CBPP/OACT comparison scalars for the $10k/$20k proposal."
+        ),
+    )
     return parser
 
 
@@ -61,6 +68,9 @@ def main(argv: list[str] | None = None) -> None:
         include_poverty=not args.skip_poverty,
         individual_limit=args.individual_limit,
         couple_limit=args.couple_limit,
+        include_external_benchmark_comparison=(
+            args.external_benchmark_comparison
+        ),
     )
 
 
