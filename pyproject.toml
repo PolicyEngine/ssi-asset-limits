@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ssi-asset-limits"
+version = "0.1.0"
+description = "PolicyEngine analysis of removing SSI asset limits"
+readme = "README.md"
+requires-python = ">=3.13"
+license = {text = "MIT"}
+dependencies = [
+    "microdf-python>=1.2.1",
+    "pandas>=2.3.0",
+    "policyengine-core>=3.26.1,<3.27",
+    "policyengine-us>=1.702.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.9.0",
+]
+
+[project.scripts]
+ssi-asset-limits-data = "ssi_asset_limits.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["ssi_asset_limits*"]
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

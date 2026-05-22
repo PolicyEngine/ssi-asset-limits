@@ -1,0 +1,12 @@
+.DS_Store
+.venv/
+.ruff_cache/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+node_modules/
+.next/
+out/
+dist/
+*.egg-info/
+.local-results/
