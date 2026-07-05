@@ -89,7 +89,7 @@ export default function DashboardClient() {
               </h1>
               <p className="max-w-3xl text-base leading-7 text-muted-foreground">
                 Estimated impact of removing the SSI resource test using
-                PolicyEngine US and the Enhanced CPS.
+                PolicyEngine.py and the certified populace US dataset.
               </p>
             </div>
             <Card className="self-start">
@@ -164,8 +164,9 @@ export default function DashboardClient() {
                 reads CSV outputs from <code>public/data</code>.
               </p>
               <p>
-                Provenance: PolicyEngine US microsimulation, Enhanced CPS, and
-                package versions from the generation environment.
+                Provenance: PolicyEngine.py managed US microsimulation,
+                certified populace data, and package versions from the
+                generation environment.
               </p>
             </CardContent>
           </Card>

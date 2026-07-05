@@ -24,7 +24,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--dataset",
         default=None,
-        help="Optional dataset path or Hugging Face URL for PolicyEngine US.",
+        help=(
+            "Optional local path or dataset URI. Omit to use the certified "
+            "PolicyEngine.py US populace default."
+        ),
     )
     parser.add_argument(
         "--year",
@@ -45,6 +48,15 @@ def build_parser() -> argparse.ArgumentParser:
         help="Reformed SSI resource limit for married couples.",
     )
     parser.add_argument(
+        "--reform-start-year",
+        type=int,
+        default=None,
+        help=(
+            "First calendar year when the reform is active. Defaults to the "
+            "analysis year."
+        ),
+    )
+    parser.add_argument(
         "--skip-poverty",
         action="store_true",
         help="Generate only SSI fiscal and participation metrics.",
@@ -54,6 +66,23 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Write CBPP/OACT comparison scalars for the $10k/$20k proposal."
+        ),
+    )
+    parser.add_argument(
+        "--cbpp-replication",
+        action="store_true",
+        help=(
+            "Write CBPP public target, method-coefficient, and age-bridge "
+            "replication tables."
+        ),
+    )
+    parser.add_argument(
+        "--cbpp-excludes-retirement-accounts",
+        action="store_true",
+        help=(
+            "Select CBPP's retirement-account-exclusion target for the "
+            "requested resource-limit scenario. This changes benchmark "
+            "selection only; the PolicyEngine reform must model the policy."
         ),
     )
     return parser
@@ -71,6 +100,11 @@ def main(argv: list[str] | None = None) -> None:
         include_external_benchmark_comparison=(
             args.external_benchmark_comparison
         ),
+        include_cbpp_replication=args.cbpp_replication,
+        cbpp_excludes_retirement_accounts=(
+            args.cbpp_excludes_retirement_accounts
+        ),
+        reform_start_year=args.reform_start_year,
     )
 
 

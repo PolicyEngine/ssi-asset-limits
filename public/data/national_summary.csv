@@ -1,6 +1,9 @@
 metric,label,value,unit
-annual_ssi_cost,Annual SSI cost,15751175847.204847,currency
-baseline_recipients,Baseline SSI recipients,6838671.134098053,people
-reform_recipients,Recipients after reform,8607063.585777283,people
-new_recipients,New SSI recipients,1768392.4516792297,people
-average_gain,Average gain among winners,8907.058968866242,currency
+annual_ssi_cost,Annual SSI cost,0.0,currency
+baseline_recipients,Baseline SSI recipients,6678931.868375167,people
+reform_recipients,Recipients after reform,6678931.868375167,people
+new_recipients,New SSI recipients,0.0,people
+average_gain,Average gain among winners,0.0,currency
+poverty_rate_reduction,SPM poverty rate reduction,0.0,rate
+people_lifted_from_poverty,People lifted from poverty,0.0,people
+deep_poverty_rate_reduction,Deep poverty rate reduction,6.17834398927708e-06,rate
