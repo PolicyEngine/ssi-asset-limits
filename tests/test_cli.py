@@ -14,8 +14,12 @@ def test_cli_parses_dataset_and_output_dir():
             "10000",
             "--couple-limit",
             "20000",
+            "--reform-start-year",
+            "2025",
             "--skip-poverty",
             "--external-benchmark-comparison",
+            "--cbpp-replication",
+            "--cbpp-excludes-retirement-accounts",
         ]
     )
 
@@ -24,5 +28,8 @@ def test_cli_parses_dataset_and_output_dir():
     assert args.year == 2026
     assert args.individual_limit == 10_000
     assert args.couple_limit == 20_000
+    assert args.reform_start_year == 2025
     assert args.skip_poverty is True
     assert args.external_benchmark_comparison is True
+    assert args.cbpp_replication is True
+    assert args.cbpp_excludes_retirement_accounts is True
