@@ -20,6 +20,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "hypothesis>=6.100",
     "pytest>=8.0",
     "ruff>=0.9.0",
 ]
@@ -29,6 +30,7 @@ ssi-asset-limits-data = "ssi_asset_limits.cli:main"
 ssi-asset-limits-fit-cbpp = "ssi_asset_limits.cbpp_fit_cli:main"
 ssi-asset-limits-holdout = "ssi_asset_limits.holdout_cli:main"
 ssi-asset-limits-decomposition = "ssi_asset_limits.decomposition_cli:main"
+ssi-asset-limits-publish = "ssi_asset_limits.publish:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
