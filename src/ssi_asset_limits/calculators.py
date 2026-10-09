@@ -28,6 +28,12 @@ RESOURCE_BINS = [
     ResourceBin("$25,000 or more", 25_000, None),
 ]
 
+CBPP_AGE_GROUPS = [
+    ("children_under_18", "Children, under 18", None, 18),
+    ("adults_18_64", "Adults, aged 18-64", 18, 65),
+    ("elderly_65_plus", "Elderly, aged 65 and over", 65, None),
+]
+
 
 def _calc(simulation, variable: str, year: int, map_to: str | None = None):
     kwargs = {"period": year}
@@ -181,4 +187,40 @@ def calculate_resource_bins(baseline, reformed, year: int) -> pd.DataFrame:
                 ),
             }
         )
+    return pd.DataFrame(rows)
+
+
+def calculate_cbpp_age_group_impacts(
+    baseline, reformed, year: int
+) -> pd.DataFrame:
+    """Calculate PE new-recipient impacts using CBPP's age groups."""
+
+    age = _calc(baseline, "age", year)
+    baseline_ssi = _calc(baseline, "ssi", year)
+    reformed_ssi = _calc(reformed, "ssi", year)
+    ssi_change = reformed_ssi - baseline_ssi
+    new_recipients = (baseline_ssi <= 0) & (reformed_ssi > 0)
+
+    rows = []
+    for age_group, label, lower, upper in CBPP_AGE_GROUPS:
+        mask = new_recipients
+        if lower is not None:
+            mask = mask & (age >= lower)
+        if upper is not None:
+            mask = mask & (age < upper)
+
+        people = _scalar(mask.sum())
+        cost = _scalar(ssi_change[mask].sum())
+        rows.append(
+            {
+                "age_group": age_group,
+                "label": label,
+                "policyengine_new_recipients": people,
+                "policyengine_annual_ssi_cost": cost,
+                "policyengine_average_cost_per_new_recipient": (
+                    0 if people == 0 else cost / people
+                ),
+            }
+        )
+
     return pd.DataFrame(rows)
