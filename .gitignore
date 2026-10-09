@@ -10,3 +10,4 @@ out/
 dist/
 *.egg-info/
 .local-results/
+tsconfig.tsbuildinfo
