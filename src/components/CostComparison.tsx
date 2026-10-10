@@ -62,9 +62,9 @@ export default function CostComparison({
           {total
             ? ` (sampling range ${formatBillionsRange(total.annual_ssi_cost_low, total.annual_ssi_cost_high)})`
             : ""}
-          . {oactSentence(results)} Both letters assume the limits apply from
-          January 1 of their first year. The table shows OACT&apos;s letters
-          year by year.
+          . {oactSentence(results)}{" "}
+          Both letters assume the limits apply from January 1 of their first
+          year. The table shows OACT&apos;s letters year by year.
         </p>
         <div className="overflow-x-auto">
           <DataTable

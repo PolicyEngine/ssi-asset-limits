@@ -1,4 +1,12 @@
 {
   "persons.csv.gz": "0335610b27b9e845cb2ab2058fc74d85d0ebc4d481f5c32ed4acd762061faef5",
-  "persons_diagnostics.csv.gz": "eb8d81c280283e544a9c6d4062d1b08bf5b1d66e317b2044ce49d79d46a11bbd"
+  "persons_diagnostics.csv.gz": "eb8d81c280283e544a9c6d4062d1b08bf5b1d66e317b2044ce49d79d46a11bbd",
+  "chunk:chunk_0000.h5": "3680b27d1f173f53021a98bbaecddeca93431a63b28492fea32409c95fbadc93",
+  "chunk:chunk_0001.h5": "e14f88f1f18c08849f6fbaf49b64854d1169b35d9586cd56cb969539d5c358a5",
+  "chunk:chunk_0002.h5": "df0035522367e60dbf317615a84da1cdcf50262b931ccacb4125557cb7ccade6",
+  "chunk:chunk_0003.h5": "7d3f8e36e5be01372ff3d39bff0f3330d4b4e481f1fe9dc701adb31f00862dab",
+  "chunk:chunk_0004.h5": "32d5741574fdbf7fdda7bee46b1c7bcdd03716f59d4411ecbc421e14b8f5089b",
+  "chunk:chunk_0005.h5": "bae9e975509d0015ae0191c43d09d2a7bf75c9cda9a7a5a86d1f1eca1652d898",
+  "chunk:chunk_0006.h5": "75fb0d8dfb105a7a72399349911f1948c3e522f70ca472213f0e263ed812e77d",
+  "chunk:chunk_0007.h5": "6c42f832a83e07516cf131c1009548d3b3cf9456f4e4a71fd9d128ea25f04a49"
 }

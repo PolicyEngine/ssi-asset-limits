@@ -9,8 +9,12 @@
     "dataset_build_id": "populace-us-2024-spm-20260915",
     "dataset_sha256": "6496cc4393d4d3c6574f76eca231de5898c803b9067645591fd5c4d3e65aee84",
     "generated_at": "2026-10-10T00:23:08.942203+00:00",
-    "code_commit": "5cf8d3e47494ebd105204fa95501b07532ccc282",
-    "method_note": "The population was run in household batches, which is exact because every marital, tax, SPM and family unit nests within one household."
+    "code_commit": "5cf8d3e47494ebd105204fa95501b07532ccc282"
+  },
+  "population": {
+    "households": 57240,
+    "persons": 166321,
+    "households_with_99pct_of_weight": 12329
   },
   "precision_note": "Ranges are the 5th to 95th percentiles of a household bootstrap with 2,000 replicates. They show only how much the estimate could move if the population sample were redrawn; uncertainty in the imputed savings, the claiming flags, the weights and the rules is not included.",
   "baseline": {
@@ -593,13 +597,172 @@
         "policyengine_share_pct": 16.32788136801266,
         "ssa_share_pct": 2.439675554051695
       }
+    ],
+    "new_recipients_by_reporting": [
+      {
+        "scenario": "current_law",
+        "age_band": "Under 18",
+        "recipients": 179909.58058321697,
+        "reporting_ssi_in_cps": 93452.9146,
+        "share_pct": 51.94437911369232
+      },
+      {
+        "scenario": "current_law",
+        "age_band": "18-64",
+        "recipients": 3797039.098028782,
+        "reporting_ssi_in_cps": 2298118.1778603876,
+        "share_pct": 60.523953494538596
+      },
+      {
+        "scenario": "current_law",
+        "age_band": "65 or older",
+        "recipients": 2311353.4101357507,
+        "reporting_ssi_in_cps": 172395.54878703377,
+        "share_pct": 7.458640813258784
+      },
+      {
+        "scenario": "ten_twenty",
+        "age_band": "Under 18",
+        "recipients": 0.0,
+        "reporting_ssi_in_cps": 0.0,
+        "share_pct": 0.0
+      },
+      {
+        "scenario": "ten_twenty",
+        "age_band": "18-64",
+        "recipients": 153211.12201356312,
+        "reporting_ssi_in_cps": 23344.8893747644,
+        "share_pct": 15.237072262089288
+      },
+      {
+        "scenario": "ten_twenty",
+        "age_band": "65 or older",
+        "recipients": 362628.22904256266,
+        "reporting_ssi_in_cps": 0.0,
+        "share_pct": 0.0
+      },
+      {
+        "scenario": "no_limit",
+        "age_band": "Under 18",
+        "recipients": 0.0,
+        "reporting_ssi_in_cps": 0.0,
+        "share_pct": 0.0
+      },
+      {
+        "scenario": "no_limit",
+        "age_band": "18-64",
+        "recipients": 253026.4403168509,
+        "reporting_ssi_in_cps": 38916.8518959096,
+        "share_pct": 15.380547521901743
+      },
+      {
+        "scenario": "no_limit",
+        "age_band": "65 or older",
+        "recipients": 693844.9353300455,
+        "reporting_ssi_in_cps": 38122.959874012,
+        "share_pct": 5.494449542371858
+      }
+    ],
+    "new_recipients_by_marital_status": [
+      {
+        "scenario": "ten_twenty",
+        "age_band": "Under 18",
+        "new_recipients": 0.0,
+        "with_spouse": 0.0,
+        "share_pct": 0.0
+      },
+      {
+        "scenario": "ten_twenty",
+        "age_band": "18-64",
+        "new_recipients": 153211.12201356312,
+        "with_spouse": 86302.4856264213,
+        "share_pct": 56.32912577898968
+      },
+      {
+        "scenario": "ten_twenty",
+        "age_band": "65 or older",
+        "new_recipients": 362628.22904256266,
+        "with_spouse": 263453.29234970466,
+        "share_pct": 72.6510710556906
+      },
+      {
+        "scenario": "ten_twenty",
+        "age_band": "All ages",
+        "new_recipients": 515839.35105612583,
+        "with_spouse": 349755.77797612594,
+        "share_pct": 67.80323704658018
+      },
+      {
+        "scenario": "no_limit",
+        "age_band": "Under 18",
+        "new_recipients": 0.0,
+        "with_spouse": 0.0,
+        "share_pct": 0.0
+      },
+      {
+        "scenario": "no_limit",
+        "age_band": "18-64",
+        "new_recipients": 253026.4403168509,
+        "with_spouse": 99751.06933596048,
+        "share_pct": 39.42318012736052
+      },
+      {
+        "scenario": "no_limit",
+        "age_band": "65 or older",
+        "new_recipients": 693844.9353300455,
+        "with_spouse": 478998.11815337406,
+        "share_pct": 69.03532673702173
+      },
+      {
+        "scenario": "no_limit",
+        "age_band": "All ages",
+        "new_recipients": 946871.3756468964,
+        "with_spouse": 578749.1874893346,
+        "share_pct": 61.12226035916831
+      }
+    ],
+    "children": [
+      {
+        "measure": "Under 15 and meeting SSI's disability standard",
+        "records": 1,
+        "weighted": 0.0027729087
+      },
+      {
+        "measure": "Under 18 and aged, blind or disabled",
+        "records": 98,
+        "weighted": 307318.99738132197
+      },
+      {
+        "measure": "of which with any countable savings",
+        "records": 1,
+        "weighted": 1563.8573
+      },
+      {
+        "measure": "of which with countable savings over $2,000",
+        "records": 0,
+        "weighted": 0.0
+      },
+      {
+        "measure": "Under 18 and receiving SSI under current law",
+        "records": 23,
+        "weighted": 179909.58058321697
+      }
     ]
   },
   "sensitivities": [
     {
       "key": "restore_cps_social_security",
       "label": "Social Security that the population file erased, restored",
-      "description": "Reruns the 3,566 households in which the population file set a person's CPS-reported Social Security to zero (PolicyEngine/microcosm#1178), with the benefit restored. Weights are not recalibrated, so the current-law caseload no longer matches SSA's.",
+      "description": "Reruns only the 3,566 households in which the population file set a person's CPS-reported Social Security to zero (PolicyEngine/microcosm#1178), with the benefit restored, and splices them into the published run. Claiming flags are not redrawn, so the current-law caseload falls below SSA's count; compare new recipients with each run's own current-law recipients.",
+      "provenance": {
+        "code_commit": "139ef7565e0bc67780da82b1e25aca4808dc57fc",
+        "generated_at": "2026-10-10T07:07:50.573505+00:00",
+        "dataset_build_id": "populace-us-2024-spm-20260915",
+        "dataset_sha256": "6496cc4393d4d3c6574f76eca231de5898c803b9067645591fd5c4d3e65aee84",
+        "model_version": "2.2.1",
+        "variant": "restore_cps_social_security",
+        "variant_source_sha256": null
+      },
       "baseline_by_age": [
         {
           "age_group": "children_under_18",
@@ -684,7 +847,16 @@
     {
       "key": "resource_deeming",
       "label": "A spouse's and a parent's savings counted, as SSA does",
-      "description": "Adds federal resource deeming (20 CFR 416.1202) to the certified engine as a reform, ahead of the policyengine-us change that adds it (PolicyEngine/policyengine-us#10040). The certified engine has no links from a child to their parents, so the reform treats people marked as parents in the child's tax unit and household, and their spouses, as the parents. Counting more resources removes some people from SSI today, and a higher limit lets them back in, so the estimate rises.",
+      "description": "Adds federal resource deeming (20 CFR 416.1202) to the certified engine as a reform, ahead of the policyengine-us change that adds it (PolicyEngine/policyengine-us#10040). The certified engine has no links from a child to their parents, so the reform treats people marked as parents in the child's tax unit and household, and their spouses, as the parents. Counting more resources removes some people from SSI today, and a higher limit lets them back in.",
+      "provenance": {
+        "code_commit": "6792d233bc09c617ab7d8b0a9819e10bbd02b770",
+        "generated_at": "2026-10-10T06:58:23.869942+00:00",
+        "dataset_build_id": "populace-us-2024-spm-20260915",
+        "dataset_sha256": "6496cc4393d4d3c6574f76eca231de5898c803b9067645591fd5c4d3e65aee84",
+        "model_version": "2.2.1",
+        "variant": "resource_deeming",
+        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b"
+      },
       "baseline_by_age": [
         {
           "age_group": "children_under_18",
