@@ -6,8 +6,8 @@ booleans are stored as the fraction of those months that are true (and
 ``*_january`` flags retain January's state for marital-unit checks). Resources
 and age are January snapshots when their variables are monthly. Each engine
 scenario runs in a fresh process admitted by ``heavy`` (see
-``WORKER_MEM_GIB``); an interrupted run resumes from the workers that finished. No engine
-calculation runs in the coordinator or unit tests.
+``WORKER_MEM_GIB``); an interrupted run resumes from the workers that
+finished. No engine calculation runs in the coordinator or unit tests.
 
 Output weights use the model's 2026 weights, including its population
 uprating; the separate input partition proof compares the unchanged 2024
@@ -513,8 +513,9 @@ def run(out_dir: Path, chunk_size: int, cached_dataset: Path | None) -> None:
             receipts.append(receipt)
             if receipt["peak_rss_gib"] > WORKER_MEM_GIB:
                 raise RuntimeError(
-                    f"Worker peak exceeds {WORKER_MEM_GIB} GiB; rerun in a "
-                    f"new directory with --chunk-size {max(1, chunk_size // 2)}"
+                    f"Worker peak exceeds {WORKER_MEM_GIB} GiB; rerun in "
+                    "a new directory with --chunk-size "
+                    f"{max(1, chunk_size // 2)}"
                 )
     assemble_run(out_dir / "workers", manifest["chunk_count"], out_dir)
     output_weight_totals = {
