@@ -488,6 +488,16 @@
       }
     ]
   },
+  "published_with": {
+    "publisher": {
+      "code_commit": "59df7857fe95806ab34d47ef714d2a67a241da1f",
+      "code_dirty": false
+    },
+    "admin_checks": {
+      "code_commit": "59df7857fe95806ab34d47ef714d2a67a241da1f",
+      "code_dirty": false
+    }
+  },
   "held_out_checks": {
     "recipients_by_fine_age": [
       {

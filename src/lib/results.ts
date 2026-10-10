@@ -195,7 +195,7 @@ export interface ErasedSocialSecurityCheck {
 export interface Results {
   provenance: Provenance;
   published_with?: { publisher: CodeState; admin_checks?: CodeState };
-  population: Population;
+  population?: Population;
   precision_note: string;
   held_out_checks?: HeldOutChecks;
   sensitivities?: Sensitivity[];

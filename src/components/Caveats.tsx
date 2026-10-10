@@ -26,7 +26,7 @@ import { Results } from "@/src/lib/results";
 type Item = { key: string; title: string; body: string };
 
 function precisionItem(results: Results): Item {
-  const { households, households_with_99pct_of_weight: dense } = results.population;
+  const population = results.population;
   const ten = results.scenarios.find((item) => item.key === "ten_twenty");
   const records = ten?.by_age.find((row) => row.age_group === "total_all_ages")
     ?.new_recipient_records;
@@ -37,7 +37,7 @@ function precisionItem(results: Results): Item {
   return {
     key: "precision",
     title: "The estimates rest on few sample records",
-    body: `The population file has ${households.toLocaleString("en-US")} households, but ${dense.toLocaleString("en-US")} of them carry 99 percent of the weight, and a reform that reaches a narrow group rests on few records${example}. The sampling ranges on this page show how far the estimates could move if the sample were redrawn. They do not include any of the problems listed below, so the real uncertainty is wider.`,
+    body: `${population ? `The population file has ${population.households.toLocaleString("en-US")} households, but ${population.households_with_99pct_of_weight.toLocaleString("en-US")} of them carry 99 percent of the weight, and a` : "A"} reform that reaches a narrow group rests on few records${example}. The sampling ranges on this page show how far the estimates could move if the sample were redrawn. They do not include any of the problems listed below, so the real uncertainty is wider.`,
   };
 }
 
