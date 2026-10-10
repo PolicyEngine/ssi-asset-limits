@@ -31,6 +31,7 @@ ssi-asset-limits-holdout = "ssi_asset_limits.holdout_cli:main"
 ssi-asset-limits-decomposition = "ssi_asset_limits.decomposition_cli:main"
 ssi-asset-limits-publish = "ssi_asset_limits.publish:main"
 ssi-asset-limits-run = "ssi_asset_limits.microcosm_run:main"
+ssi-asset-limits-admin-checks = "ssi_asset_limits.admin_checks:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
