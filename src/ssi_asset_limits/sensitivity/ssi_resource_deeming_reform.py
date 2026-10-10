@@ -2,16 +2,20 @@
 
 The certified bundle pins policyengine-us 2.2.1, whose SSI resource test
 counts only the person's own resources (or a couple's when both spouses are
-eligible). PolicyEngine/policyengine-us pull request "Deem SSI resources from
-ineligible spouses and parents" adds the federal deeming rules. Until a
+eligible). The PolicyEngine/policyengine-us branch ``ssi-resource-deeming``
+("Deem SSI resources from ineligible spouses and parents", fixing
+PolicyEngine/policyengine-us#3557) adds the federal deeming rules. Until a
 certified bundle carries that change, this module installs the same variable
 classes on 2.2.1 so the effect on the certified population can be measured.
 It is a sensitivity variant, never the published estimate.
 
-The classes below are copied from that branch (commit 482467511a). Their
-source is compared with the branch class by class in the branch's own
-differential check, and the same regulation-sourced cases are run against
-this reform in ``tests/engine/test_resource_deeming_reform.py``.
+This is the branch's own 2.2.1 companion (``backport/`` at commit
+51d64d4904). 2.2.1 has no parent links, so parents are found by the branch's
+no-link proxy (tax unit and household, over ``is_parent``); every other
+policy class and helper is the branch source, which the branch's checker
+compares class by class. The branch's regulation-sourced cases that 2.2.1 can
+express run against this reform in
+``tests/engine/test_resource_deeming_reform.py``.
 """
 
 from policyengine_us.model_api import *
@@ -32,18 +36,24 @@ class is_ssi_resource_deeming_child(Variable):
     )
 
     def formula(person, period, parameters):
+        # SI 01330.200 B divides only among SSI-eligible children. Match
+        # is_ssi_eligible's immigration gate without reading eligibility or
+        # the resource test, which depend on this allocation.
+        immigration_status = person("immigration_status", period)
+        is_citizen = immigration_status == immigration_status.possible_values.CITIZEN
+        meets_immigration_status = is_citizen | person(
+            "is_ssi_qualified_noncitizen", period
+        )
         # 416.1856: 'You are not married' and 'not the head of a household'.
         # A two-person marital unit represents married, cohabiting spouses.
         # age is annual in the model: supply the relevant attained age.
         return (
             person("is_ssi_aged_blind_disabled", period)
+            & meets_immigration_status
             & (person("age", period.this_year) < 18)
             & (person.marital_unit.nb_persons() == 1)
             & ~person("is_household_head", period)
-            & ~(
-                person("ssi_lives_in_medical_treatment_facility", period)
-                & ~person("ssi_resource_deeming_temporary_absence", period)
-            )
+            & ~person("ssi_lives_in_medical_treatment_facility", period)
             & ~person("ssi_resource_deeming_waiver", period)
             & ~person("ssi_resource_deeming_child_is_ineligible", period)
         )
@@ -62,6 +72,9 @@ class is_ssi_spousal_resource_deeming_applies(Variable):
     )
 
     def formula(person, period, parameters):
+        # Use the same tax-head/spouse convention as SSI income deeming and
+        # ssi_claim_is_joint. A marital unit alone cannot establish marriage:
+        # situations omitting marital units put everyone in one default unit.
         ineligible = person("is_ssi_ineligible_spouse", period)
         # Marital units represent spouses living together. Subtract self:
         # an unmarried ineligible adult is not their own ineligible spouse.
@@ -69,16 +82,14 @@ class is_ssi_spousal_resource_deeming_applies(Variable):
         households = person.household.reference_entity.members_entity_id
         first_home = person.marital_unit.value_nth_person(0, households, default=-1)
         second_home = person.marital_unit.value_nth_person(1, households, default=-2)
+        # 416.1167 retains the absent person's household membership. Enter a
+        # temporarily absent spouse in the household they remain a member of.
         return (
             person("is_ssi_aged_blind_disabled", period)
+            & person("is_tax_unit_head_or_spouse", period)
             & ~person("ssi_claim_is_joint", period)
             & has_ineligible_spouse
-            & (
-                (first_home == second_home)
-                | person.marital_unit.any(
-                    person("ssi_resource_deeming_temporary_absence", period)
-                )
-            )
+            & (first_home == second_home)
         )
 
 
@@ -118,26 +129,6 @@ class ssi_resource_deeming_excluded_military_resources(Variable):
     """
 
 
-# Source: policyengine_us/variables/gov/ssa/ssi/eligibility/resources/deemed/ssi_resource_deeming_temporary_absence.py
-class ssi_resource_deeming_temporary_absence(Variable):
-    value_type = bool
-    entity = Person
-    label = "Temporary absence retaining SSI deeming household membership"
-    definition_period = MONTH
-    reference = "https://www.ecfr.gov/current/title-20/section-416.1167"
-    documentation = """
-    Adjudicated SSI household membership during a temporary absence under
-    416.1167. The tax unit and marital unit must still represent that SSI
-    household. Includes absence with intended and actual return in the same
-    or next month; medical-facility absence while 416.212 benefits are payable
-    (including the specified discharge extension); children away at school
-    subject to parental control; and active-duty absence without contrary
-    evidence. For active-duty contrary evidence, deeming ceases the following
-    month under 416.1167(c). Set this monthly determination accordingly; actual
-    return dates, 416.212 awards and contrary evidence are not model inputs.
-    """
-
-
 # Source: policyengine_us/variables/gov/ssa/ssi/eligibility/resources/deemed/ssi_resource_deeming_waiver.py
 class ssi_resource_deeming_waiver(Variable):
     value_type = bool
@@ -158,29 +149,109 @@ class ssi_resource_deeming_waiver(Variable):
 
 
 # Source: policyengine_us/variables/gov/ssa/ssi/eligibility/resources/deemed/ssi_resources_deemed_from_ineligible_parent.py
-def _sum_coresident_tax_unit(person, values, temporary):
-    """Sum over the intersection of a tax unit and an actual household.
+def _ssi_established_spouse_indices(person, period, first, second):
+    """Rows of established co-resident spouses, with the Medicaid bound.
 
-    Keep the same tax-unit family proxy as SSI income deeming. A tax unit
-    must contain only the child's natural/adoptive parents and their spouses
-    as parental participants; is_parent alone cannot identify which child's
-    parent an unrelated adult is. Separate tax units need explicit inputs
-    for their deemed amounts. No optional parent-link APIs are required.
+    As in _medicaid_parents, marriage is shown by the other head/spouse of
+    a joint return, or a two-person marital unit with cohabitating_spouses
+    on either tax unit. A marital unit alone is insufficient: situations
+    omitting marital units put everyone in one. Parent-child links exclude
+    candidates even when tax roles suggest marriage; ambiguous candidates
+    resolve to no spouse. Apply this test to each named parent, without
+    inferring additional relatives beyond their spouses.
     """
+    head_or_spouse = person("is_tax_unit_head_or_spouse", period)
+    tax_unit = person.tax_unit.reference_entity.members_entity_id
+    joint = head_or_spouse & (person.tax_unit("head_spouse_count", period) == 2)
+    married = person.marital_unit.nb_persons() == 2
+    marital_unit = person.marital_unit.reference_entity.members_entity_id
+    cohabiting = person.tax_unit("cohabitating_spouses", period)
+    own_index = np.arange(person.count)
+    spouse = np.full(person.count, -1, dtype=int)
+    candidates = np.zeros(person.count, dtype=int)
+    household = person.household
+    for position in range(
+        int(np.max(household.reference_entity.members_position, initial=-1)) + 1
+    ):
+        member = household.value_nth_person(position, own_index, default=-1)
+        names_applicant = (first[member] == own_index) | (second[member] == own_index)
+        named_by_applicant = (first == member) | (second == member)
+        shown = (
+            (member >= 0)
+            & (member != own_index)
+            & ~names_applicant
+            & ~named_by_applicant
+            & (
+                (joint & head_or_spouse[member] & (tax_unit[member] == tax_unit))
+                | (
+                    married
+                    & (marital_unit[member] == marital_unit)
+                    & (cohabiting | cohabiting[member])
+                )
+            )
+        )
+        spouse = np.where(shown, member, spouse)
+        candidates += shown
+    return np.where(candidates == 1, spouse, -1)
+
+
+def _ssi_unlinked_parental_resource_pool(person, resources, parent, spouse):
+    """Return tax-unit/household proxy resources, count and exact pool keys.
+
+    Only unlinked parents and their established spouses enter this proxy.
+    With no parent ids, is_parent cannot distinguish a grandparent or an
+    unrelated parent from the child's parent: this is a data limitation.
+    The first four key columns hold deemor row indices. A proxy with more
+    than four deemors cannot equal a linked pool (two parents and at most
+    their two spouses), so its fifth column identifies its tax-unit and
+    household intersection. Thus keys are exact, with linear memory.
+    """
+    parent = parent | ((spouse >= 0) & parent[spouse])
     group = person.tax_unit
     indices = np.arange(person.count)
     households = person.household.reference_entity.members_entity_id
     total = np.zeros(person.count)
-    for position in range(int(np.max(group.reference_entity.members_position)) + 1):
+    count = np.zeros(person.count, dtype=int)
+    keys = np.full((person.count, 5), -1, dtype=int)
+    for position in range(
+        int(np.max(group.reference_entity.members_position, initial=-1)) + 1
+    ):
         member = group.value_nth_person(position, indices, default=-1)
-        # 416.1167: an adjudicated temporary absence retains membership in
-        # the SSI household represented by this tax unit, including a medical
-        # facility absence while benefits under 416.212 remain payable.
-        coresident = (member >= 0) & (
-            (households[member] == households) | temporary[member] | temporary
+        selected = (member >= 0) & (households[member] == households) & parent[member]
+        store = selected & (count < 4)
+        keys[indices[store], count[store]] = member[store]
+        total += np.where(selected, resources[member], 0)
+        count += selected
+    keys[:, :4].sort(axis=1)
+    large = count > 4
+    if np.any(large):
+        _, intersections = np.unique(
+            np.column_stack((group.reference_entity.members_entity_id, households)),
+            axis=0,
+            return_inverse=True,
         )
-        total += where(coresident, values[member], 0)
-    return total
+        keys[large, :4] = -1
+        keys[large, 4] = intersections[large]
+    return total, count, keys
+
+
+def _ssi_parental_resource_pool(person, period, resources):
+    """Group the no-link tax-unit/household proxy by its exact deemor sets.
+
+    US 2.2.1 has no parent ids, so is_parent is the available parent proxy.
+    It cannot distinguish a grandparent or unrelated parent from this child's
+    parent, nor identify a co-resident parent in another tax unit. Spouse
+    identification, allowances and eligible-child redistribution match the
+    branch's no-link path. Represent temporary absence through household
+    membership under 20 CFR 416.1167, as on the current branch.
+    """
+    first = second = np.full(person.count, -1, dtype=int)
+    spouse = _ssi_established_spouse_indices(person, period, first, second)
+    total, count, keys = _ssi_unlinked_parental_resource_pool(
+        person, resources, person("is_parent", period), spouse
+    )
+    _, pool = np.unique(keys, axis=0, return_inverse=True)
+    return total, count, pool
 
 
 class ssi_resources_deemed_from_ineligible_parent(Variable):
@@ -202,15 +273,12 @@ class ssi_resources_deemed_from_ineligible_parent(Variable):
 
     def formula(person, period, parameters):
         p = parameters(period).gov.ssa.ssi.eligibility.resources.limit
-        parent = person("is_parent", period)
-        # 416.1202(b)(1): the parent's spouse is a stepparent living with
-        # the child and parent. A marital-unit spouse need not have own children.
-        parent = parent | person.marital_unit.any(parent)
-        temporary = person("ssi_resource_deeming_temporary_absence", period)
-        parental_resources = _sum_coresident_tax_unit(
-            person, parent * person("ssi_resources_for_deeming", period), temporary
+        # Under 416.1167 a temporarily absent person should be entered in
+        # the household they remain a member of; tax-unit membership alone
+        # does not bring permanently nonresident relatives into that home.
+        parental_resources, parent_count, pool = _ssi_parental_resource_pool(
+            person, period, person("ssi_resources_for_deeming", period)
         )
-        parent_count = _sum_coresident_tax_unit(person, parent, temporary)
         # 'only to the extent that those resources exceed the resource limits
         # described in § 416.1205': use the reformable individual/couple limits.
         allowance = where(parent_count > 1, p.couple, p.individual)
@@ -227,13 +295,17 @@ class ssi_resources_deemed_from_ineligible_parent(Variable):
         # child is ineligible 'divide ... among the remaining eligible children'.
         # Retain the last tested share for a failed child, then redistribute.
         # Each round removes at least one child or leaves the result stable;
-        # at most the largest tax-unit size rounds are needed (Goode, .280).
-        rounds = int(np.max(person.tax_unit.nb_persons()))
+        # at most the largest household size rounds are needed (Goode, .280).
+        rounds = int(np.max(person.household.nb_persons(), initial=0))
+        pool_count = int(np.max(pool, initial=-1)) + 1
         for _ in range(rounds):
-            count = _sum_coresident_tax_unit(person, active, temporary)
-            share = excess / max_(1, count)
+            count = np.bincount(pool[active], minlength=pool_count)
+            share = excess / max_(1, count[pool])
             deemed = where(active, share, deemed)
-            active = active & (own_resources + share <= p.individual)
+            remaining = active & (own_resources + share <= p.individual)
+            if np.array_equal(active, remaining):
+                break
+            active = remaining
         return deemed
 
 
@@ -334,7 +406,6 @@ class SSIResourceDeemingReform(Reform):
             is_ssi_spousal_resource_deeming_applies,
             ssi_resource_deeming_child_is_ineligible,
             ssi_resource_deeming_excluded_military_resources,
-            ssi_resource_deeming_temporary_absence,
             ssi_resource_deeming_waiver,
             ssi_resources_deemed_from_ineligible_parent,
             ssi_resources_deemed_from_ineligible_spouse,

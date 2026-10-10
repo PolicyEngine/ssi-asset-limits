@@ -1,22 +1,7 @@
-# Hand-computed cases: 20 CFR 416.1202(b), excess over the same individual
-# or couple resource limit used for SSI resource eligibility, never negative.
-# https://www.ecfr.gov/current/title-20/section-416.1202
-# https://www.ecfr.gov/current/title-20/section-416.1205
-# POMS SI 01330.200.A includes a parent spouse; .200.B equally divides excess
-# and reallocates a child share once that child is ineligible.
-# https://secure.ssa.gov/poms.nsf/lnx/0501330200
-# Official Blake and Goode examples (including cascading ineligibility):
-# https://secure.ssa.gov/poms.nsf/lnx/0501330280
-# Official White and Ryder examples include an ABD parent and use 2024 limits:
-# https://secure.ssa.gov/poms.nsf/lnx/0501330340
-# Blake/Goode use the unchanged 2026 resource limits; stock amounts are those
-# in the 2024 example. Ryder aggregates cash and second-car countable value
-# into the published countable resource input because these assets have no
-# separate SSI stock input. Waiver input certifies all .1202(b)(2) conditions.
-# Cross-tax-unit isolation is a documented model relationship proxy, not an
-# assertion that the regulation disregards every separate tax-unit parent.
-
-# 20 CFR 416.1202(b)(1), 416.1205: one-parent allowance2000; two-parent allowance3000.
+# Copied from PolicyEngine/policyengine-us branch ssi-resource-deeming
+# (commit 51d64d4904), policyengine_us/tests/policy/baseline/gov/ssa/ssi/eligibility/resources/deemed/ssi_resources_deemed_from_ineligible_parent.yaml, without the cases that need parent
+# links, which policyengine-us 2.2.1 lacks. Expected values are the
+# branch's, sourced from 20 CFR 416.1202 and POMS SI 01330.
 - name: One and two ineligible parents below at and above each allowance
   period: 2026-01
   input:
@@ -221,108 +206,256 @@
           '2026': 0
     tax_units:
       n1_total1999:
-        members: [n1_total1999_parent0, n1_total1999_child]
+        members:
+        - n1_total1999_parent0
+        - n1_total1999_child
       n1_total2000:
-        members: [n1_total2000_parent0, n1_total2000_child]
+        members:
+        - n1_total2000_parent0
+        - n1_total2000_child
       n1_total2001:
-        members: [n1_total2001_parent0, n1_total2001_child]
+        members:
+        - n1_total2001_parent0
+        - n1_total2001_child
       n1_total3999:
-        members: [n1_total3999_parent0, n1_total3999_child]
+        members:
+        - n1_total3999_parent0
+        - n1_total3999_child
       n1_total4000:
-        members: [n1_total4000_parent0, n1_total4000_child]
+        members:
+        - n1_total4000_parent0
+        - n1_total4000_child
       n1_total4001:
-        members: [n1_total4001_parent0, n1_total4001_child]
+        members:
+        - n1_total4001_parent0
+        - n1_total4001_child
       n2_total2999:
-        members: [n2_total2999_parent0, n2_total2999_parent1, n2_total2999_child]
+        members:
+        - n2_total2999_parent0
+        - n2_total2999_parent1
+        - n2_total2999_child
       n2_total3000:
-        members: [n2_total3000_parent0, n2_total3000_parent1, n2_total3000_child]
+        members:
+        - n2_total3000_parent0
+        - n2_total3000_parent1
+        - n2_total3000_child
       n2_total3001:
-        members: [n2_total3001_parent0, n2_total3001_parent1, n2_total3001_child]
+        members:
+        - n2_total3001_parent0
+        - n2_total3001_parent1
+        - n2_total3001_child
       n2_total4999:
-        members: [n2_total4999_parent0, n2_total4999_parent1, n2_total4999_child]
+        members:
+        - n2_total4999_parent0
+        - n2_total4999_parent1
+        - n2_total4999_child
       n2_total5000:
-        members: [n2_total5000_parent0, n2_total5000_parent1, n2_total5000_child]
+        members:
+        - n2_total5000_parent0
+        - n2_total5000_parent1
+        - n2_total5000_child
       n2_total5001:
-        members: [n2_total5001_parent0, n2_total5001_parent1, n2_total5001_child]
+        members:
+        - n2_total5001_parent0
+        - n2_total5001_parent1
+        - n2_total5001_child
     marital_units:
       n1_total1999_n1_total1999_parent0:
-        members: [n1_total1999_parent0]
+        members:
+        - n1_total1999_parent0
       n1_total1999_n1_total1999_child:
-        members: [n1_total1999_child]
+        members:
+        - n1_total1999_child
       n1_total2000_n1_total2000_parent0:
-        members: [n1_total2000_parent0]
+        members:
+        - n1_total2000_parent0
       n1_total2000_n1_total2000_child:
-        members: [n1_total2000_child]
+        members:
+        - n1_total2000_child
       n1_total2001_n1_total2001_parent0:
-        members: [n1_total2001_parent0]
+        members:
+        - n1_total2001_parent0
       n1_total2001_n1_total2001_child:
-        members: [n1_total2001_child]
+        members:
+        - n1_total2001_child
       n1_total3999_n1_total3999_parent0:
-        members: [n1_total3999_parent0]
+        members:
+        - n1_total3999_parent0
       n1_total3999_n1_total3999_child:
-        members: [n1_total3999_child]
+        members:
+        - n1_total3999_child
       n1_total4000_n1_total4000_parent0:
-        members: [n1_total4000_parent0]
+        members:
+        - n1_total4000_parent0
       n1_total4000_n1_total4000_child:
-        members: [n1_total4000_child]
+        members:
+        - n1_total4000_child
       n1_total4001_n1_total4001_parent0:
-        members: [n1_total4001_parent0]
+        members:
+        - n1_total4001_parent0
       n1_total4001_n1_total4001_child:
-        members: [n1_total4001_child]
+        members:
+        - n1_total4001_child
       n2_total2999_couple_0:
-        members: [n2_total2999_parent0, n2_total2999_parent1]
+        members:
+        - n2_total2999_parent0
+        - n2_total2999_parent1
       n2_total2999_n2_total2999_child:
-        members: [n2_total2999_child]
+        members:
+        - n2_total2999_child
       n2_total3000_couple_0:
-        members: [n2_total3000_parent0, n2_total3000_parent1]
+        members:
+        - n2_total3000_parent0
+        - n2_total3000_parent1
       n2_total3000_n2_total3000_child:
-        members: [n2_total3000_child]
+        members:
+        - n2_total3000_child
       n2_total3001_couple_0:
-        members: [n2_total3001_parent0, n2_total3001_parent1]
+        members:
+        - n2_total3001_parent0
+        - n2_total3001_parent1
       n2_total3001_n2_total3001_child:
-        members: [n2_total3001_child]
+        members:
+        - n2_total3001_child
       n2_total4999_couple_0:
-        members: [n2_total4999_parent0, n2_total4999_parent1]
+        members:
+        - n2_total4999_parent0
+        - n2_total4999_parent1
       n2_total4999_n2_total4999_child:
-        members: [n2_total4999_child]
+        members:
+        - n2_total4999_child
       n2_total5000_couple_0:
-        members: [n2_total5000_parent0, n2_total5000_parent1]
+        members:
+        - n2_total5000_parent0
+        - n2_total5000_parent1
       n2_total5000_n2_total5000_child:
-        members: [n2_total5000_child]
+        members:
+        - n2_total5000_child
       n2_total5001_couple_0:
-        members: [n2_total5001_parent0, n2_total5001_parent1]
+        members:
+        - n2_total5001_parent0
+        - n2_total5001_parent1
       n2_total5001_n2_total5001_child:
-        members: [n2_total5001_child]
+        members:
+        - n2_total5001_child
     households:
       n1_total1999:
-        members: [n1_total1999_parent0, n1_total1999_child]
+        members:
+        - n1_total1999_parent0
+        - n1_total1999_child
       n1_total2000:
-        members: [n1_total2000_parent0, n1_total2000_child]
+        members:
+        - n1_total2000_parent0
+        - n1_total2000_child
       n1_total2001:
-        members: [n1_total2001_parent0, n1_total2001_child]
+        members:
+        - n1_total2001_parent0
+        - n1_total2001_child
       n1_total3999:
-        members: [n1_total3999_parent0, n1_total3999_child]
+        members:
+        - n1_total3999_parent0
+        - n1_total3999_child
       n1_total4000:
-        members: [n1_total4000_parent0, n1_total4000_child]
+        members:
+        - n1_total4000_parent0
+        - n1_total4000_child
       n1_total4001:
-        members: [n1_total4001_parent0, n1_total4001_child]
+        members:
+        - n1_total4001_parent0
+        - n1_total4001_child
       n2_total2999:
-        members: [n2_total2999_parent0, n2_total2999_parent1, n2_total2999_child]
+        members:
+        - n2_total2999_parent0
+        - n2_total2999_parent1
+        - n2_total2999_child
       n2_total3000:
-        members: [n2_total3000_parent0, n2_total3000_parent1, n2_total3000_child]
+        members:
+        - n2_total3000_parent0
+        - n2_total3000_parent1
+        - n2_total3000_child
       n2_total3001:
-        members: [n2_total3001_parent0, n2_total3001_parent1, n2_total3001_child]
+        members:
+        - n2_total3001_parent0
+        - n2_total3001_parent1
+        - n2_total3001_child
       n2_total4999:
-        members: [n2_total4999_parent0, n2_total4999_parent1, n2_total4999_child]
+        members:
+        - n2_total4999_parent0
+        - n2_total4999_parent1
+        - n2_total4999_child
       n2_total5000:
-        members: [n2_total5000_parent0, n2_total5000_parent1, n2_total5000_child]
+        members:
+        - n2_total5000_parent0
+        - n2_total5000_parent1
+        - n2_total5000_child
       n2_total5001:
-        members: [n2_total5001_parent0, n2_total5001_parent1, n2_total5001_child]
+        members:
+        - n2_total5001_parent0
+        - n2_total5001_parent1
+        - n2_total5001_child
   output:
-    ssi_resources_deemed_from_ineligible_parent: [0, 0, 0, 0, 0, 1, 0, 1999, 0, 2000, 0, 2001, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1999, 0, 0, 2000, 0, 0, 2001]
-    meets_ssi_resource_test: [true, true, true, true, false, true, false, true, false, true, false, false, true, true, true, true, true, true, true, true, true, false, false, true, false, false, true, false, false, false]
-
-# 20 CFR 416.1202(b)(1), 416.1205: add parental excess500 to child1499/1500/1501.
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 1
+    - 0
+    - 1999
+    - 0
+    - 2000
+    - 0
+    - 2001
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 1
+    - 0
+    - 0
+    - 1999
+    - 0
+    - 0
+    - 2000
+    - 0
+    - 0
+    - 2001
+    meets_ssi_resource_test:
+    - true
+    - true
+    - true
+    - true
+    - false
+    - true
+    - false
+    - true
+    - false
+    - true
+    - false
+    - false
+    - true
+    - true
+    - true
+    - true
+    - true
+    - true
+    - true
+    - true
+    - true
+    - false
+    - false
+    - true
+    - false
+    - false
+    - true
+    - false
+    - false
+    - false
 - name: Child own resources plus parental excess include the individual limit boundary
   period: 2026-01
   input:
@@ -368,36 +501,64 @@
           '2026': 1501
     tax_units:
       own1499:
-        members: [own1499_parent, own1499_child]
+        members:
+        - own1499_parent
+        - own1499_child
       own1500:
-        members: [own1500_parent, own1500_child]
+        members:
+        - own1500_parent
+        - own1500_child
       own1501:
-        members: [own1501_parent, own1501_child]
+        members:
+        - own1501_parent
+        - own1501_child
     marital_units:
       own1499_own1499_parent:
-        members: [own1499_parent]
+        members:
+        - own1499_parent
       own1499_own1499_child:
-        members: [own1499_child]
+        members:
+        - own1499_child
       own1500_own1500_parent:
-        members: [own1500_parent]
+        members:
+        - own1500_parent
       own1500_own1500_child:
-        members: [own1500_child]
+        members:
+        - own1500_child
       own1501_own1501_parent:
-        members: [own1501_parent]
+        members:
+        - own1501_parent
       own1501_own1501_child:
-        members: [own1501_child]
+        members:
+        - own1501_child
     households:
       own1499:
-        members: [own1499_parent, own1499_child]
+        members:
+        - own1499_parent
+        - own1499_child
       own1500:
-        members: [own1500_parent, own1500_child]
+        members:
+        - own1500_parent
+        - own1500_child
       own1501:
-        members: [own1501_parent, own1501_child]
+        members:
+        - own1501_parent
+        - own1501_child
   output:
-    ssi_resources_deemed_from_ineligible_parent: [0, 500, 0, 500, 0, 500]
-    meets_ssi_resource_test: [false, true, false, true, false, false]
-
-# POMS SI 01330.340 White example: parent pool1200 <=couple limit3000; child deemed0.
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 500
+    - 0
+    - 500
+    - 0
+    - 500
+    meets_ssi_resource_test:
+    - false
+    - true
+    - false
+    - true
+    - false
+    - false
 - name: POMS White eligible parent leaves no excess resources to deem
   period: 2024-01
   input:
@@ -424,21 +585,37 @@
           '2024': 0
     tax_units:
       family:
-        members: [other_parent, abd_parent, child]
+        members:
+        - other_parent
+        - abd_parent
+        - child
     marital_units:
       family_couple_0:
-        members: [other_parent, abd_parent]
+        members:
+        - other_parent
+        - abd_parent
       family_child:
-        members: [child]
+        members:
+        - child
     households:
       family:
-        members: [other_parent, abd_parent, child]
+        members:
+        - other_parent
+        - abd_parent
+        - child
   output:
-    is_ssi_resource_deeming_child: [false, false, true]
-    ssi_resources_deemed_from_ineligible_parent: [0, 0, 0]
-    meets_ssi_resource_test: [true, true, true]
-
-# POMS SI 01330.340 Ryder example: parent pool3100-3000=100; Mary owns200.
+    is_ssi_resource_deeming_child:
+    - false
+    - false
+    - true
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 0
+    meets_ssi_resource_test:
+    - true
+    - true
+    - true
 - name: POMS Ryder parent failing resources contributes to the parental pool
   period: 2024-01
   input:
@@ -465,21 +642,37 @@
           '2024': 200
     tax_units:
       family:
-        members: [other_parent, abd_parent, child]
+        members:
+        - other_parent
+        - abd_parent
+        - child
     marital_units:
       family_couple_0:
-        members: [other_parent, abd_parent]
+        members:
+        - other_parent
+        - abd_parent
       family_child:
-        members: [child]
+        members:
+        - child
     households:
       family:
-        members: [other_parent, abd_parent, child]
+        members:
+        - other_parent
+        - abd_parent
+        - child
   output:
-    is_ssi_resource_deeming_child: [false, false, true]
-    ssi_resources_deemed_from_ineligible_parent: [0, 0, 100]
-    meets_ssi_resource_test: [true, false, true]
-
-# POMS SI 01330.280 Blake example: parents4000-3000=1000; Thomas owns0.
+    is_ssi_resource_deeming_child:
+    - false
+    - false
+    - true
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 100
+    meets_ssi_resource_test:
+    - true
+    - false
+    - true
 - name: POMS Blake two parents with 4000 resources deem 1000 to Thomas
   period: 2026-01
   input:
@@ -506,20 +699,33 @@
           '2026': 0
     tax_units:
       family:
-        members: [first_parent, second_parent, thomas]
+        members:
+        - first_parent
+        - second_parent
+        - thomas
     marital_units:
       family_couple_0:
-        members: [first_parent, second_parent]
+        members:
+        - first_parent
+        - second_parent
       family_thomas:
-        members: [thomas]
+        members:
+        - thomas
     households:
       family:
-        members: [first_parent, second_parent, thomas]
+        members:
+        - first_parent
+        - second_parent
+        - thomas
   output:
-    ssi_resources_deemed_from_ineligible_parent: [0, 0, 1000]
-    meets_ssi_resource_test: [true, true, true]
-
-# POMS SI 01330.280 Goode example: (parents4800-3000)/2=900 each.
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 1000
+    meets_ssi_resource_test:
+    - true
+    - true
+    - true
 - name: POMS Goode parent and stepparent divide excess equally between two children
   period: 2026-01
   input:
@@ -552,22 +758,40 @@
           '2026': 500
     tax_units:
       family:
-        members: [parker, peter, john, joan]
+        members:
+        - parker
+        - peter
+        - john
+        - joan
     marital_units:
       family_couple_0:
-        members: [parker, peter]
+        members:
+        - parker
+        - peter
       family_john:
-        members: [john]
+        members:
+        - john
       family_joan:
-        members: [joan]
+        members:
+        - joan
     households:
       family:
-        members: [parker, peter, john, joan]
+        members:
+        - parker
+        - peter
+        - john
+        - joan
   output:
-    ssi_resources_deemed_from_ineligible_parent: [0, 0, 900, 900]
-    meets_ssi_resource_test: [false, false, true, true]
-
-# POMS SI 01330.280 Goode cascade: Joan1500+900 fails; John225+1800 then fails.
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 900
+    - 900
+    meets_ssi_resource_test:
+    - false
+    - false
+    - true
+    - true
 - name: POMS Goode resource failure reallocates parental excess to the remaining child
   period: 2026-01
   input:
@@ -600,22 +824,40 @@
           '2026': 1500
     tax_units:
       family:
-        members: [parker, peter, john, joan]
+        members:
+        - parker
+        - peter
+        - john
+        - joan
     marital_units:
       family_couple_0:
-        members: [parker, peter]
+        members:
+        - parker
+        - peter
       family_john:
-        members: [john]
+        members:
+        - john
       family_joan:
-        members: [joan]
+        members:
+        - joan
     households:
       family:
-        members: [parker, peter, john, joan]
+        members:
+        - parker
+        - peter
+        - john
+        - joan
   output:
-    ssi_resources_deemed_from_ineligible_parent: [0, 0, 1800, 900]
-    meets_ssi_resource_test: [false, false, false, false]
-
-# POMS SI 01330.200.B: remove any child found otherwise ineligible before allocation.
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 1800
+    - 900
+    meets_ssi_resource_test:
+    - false
+    - false
+    - false
+    - false
 - name: Otherwise ineligible child does not share the parental resource allocation
   period: 2026-01
   input:
@@ -642,22 +884,35 @@
         ssi_resource_deeming_child_is_ineligible: true
     tax_units:
       family:
-        members: [parent, first_child, ineligible_child]
+        members:
+        - parent
+        - first_child
+        - ineligible_child
     marital_units:
       family_parent:
-        members: [parent]
+        members:
+        - parent
       family_first_child:
-        members: [first_child]
+        members:
+        - first_child
       family_ineligible_child:
-        members: [ineligible_child]
+        members:
+        - ineligible_child
     households:
       family:
-        members: [parent, first_child, ineligible_child]
+        members:
+        - parent
+        - first_child
+        - ineligible_child
   output:
-    ssi_resources_deemed_from_ineligible_parent: [0, 1800, 0]
-    meets_ssi_resource_test: [false, false, true]
-
-# POMS SI 01330.200.B: a child already over their own limit is ineligible before deeming.
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 1800
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - false
+    - true
 - name: Child already over own resource limit receives no parental share
   period: 2026-01
   input:
@@ -677,20 +932,28 @@
           '2026': 2001
     tax_units:
       family:
-        members: [parent, child]
+        members:
+        - parent
+        - child
     marital_units:
       family_parent:
-        members: [parent]
+        members:
+        - parent
       family_child:
-        members: [child]
+        members:
+        - child
     households:
       family:
-        members: [parent, child]
+        members:
+        - parent
+        - child
   output:
-    ssi_resources_deemed_from_ineligible_parent: [0, 0]
-    meets_ssi_resource_test: [false, false]
-
-# 20 CFR 416.1202(b)(1)(ii)-(iii): subtract certified excluded military pay first.
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - false
 - name: Qualified military pay is excluded before the parental allowance
   period: 2026-01
   input:
@@ -711,20 +974,28 @@
           '2026': 0
     tax_units:
       family:
-        members: [parent, child]
+        members:
+        - parent
+        - child
     marital_units:
       family_parent:
-        members: [parent]
+        members:
+        - parent
       family_child:
-        members: [child]
+        members:
+        - child
     households:
       family:
-        members: [parent, child]
+        members:
+        - parent
+        - child
   output:
-    ssi_resources_deemed_from_ineligible_parent: [0, 1000]
-    meets_ssi_resource_test: [false, true]
-
-# 20 CFR 416.1202(b)(1): the child must be under age 18.
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 1000
+    meets_ssi_resource_test:
+    - false
+    - true
 - name: Parental deeming stops when a child attains age eighteen
   period: 2026-01
   input:
@@ -744,20 +1015,28 @@
           '2026': 100
     tax_units:
       family:
-        members: [parent, child]
+        members:
+        - parent
+        - child
     marital_units:
       family_parent:
-        members: [parent]
+        members:
+        - parent
       family_child:
-        members: [child]
+        members:
+        - child
     households:
       family:
-        members: [parent, child]
+        members:
+        - parent
+        - child
   output:
-    ssi_resources_deemed_from_ineligible_parent: [0, 0]
-    meets_ssi_resource_test: [false, true]
-
-# 20 CFR 416.1202(b)(1), 416.1851(c): child must live in the parental household.
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - true
 - name: Medical treatment facility exception prevents parental resource deeming
   period: 2026-01
   input:
@@ -778,20 +1057,28 @@
         ssi_lives_in_medical_treatment_facility: true
     tax_units:
       family:
-        members: [parent, child]
+        members:
+        - parent
+        - child
     marital_units:
       family_parent:
-        members: [parent]
+        members:
+        - parent
       family_child:
-        members: [child]
+        members:
+        - child
     households:
       family:
-        members: [parent, child]
+        members:
+        - parent
+        - child
   output:
-    ssi_resources_deemed_from_ineligible_parent: [0, 0]
-    meets_ssi_resource_test: [false, true]
-
-# 20 CFR 416.1202(b)(2)(i)-(iii): the input certifies all three conditions.
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - true
 - name: Certified Medicaid waiver exception prevents parental resource deeming
   period: 2026-01
   input:
@@ -812,20 +1099,28 @@
         ssi_resource_deeming_waiver: true
     tax_units:
       family:
-        members: [parent, child]
+        members:
+        - parent
+        - child
     marital_units:
       family_parent:
-        members: [parent]
+        members:
+        - parent
       family_child:
-        members: [child]
+        members:
+        - child
     households:
       family:
-        members: [parent, child]
+        members:
+        - parent
+        - child
   output:
-    ssi_resources_deemed_from_ineligible_parent: [0, 0]
-    meets_ssi_resource_test: [false, true]
-
-# 20 CFR 416.1202(c): the eligible individual must be aged, blind, or disabled.
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - true
 - name: A non ABD child receives no deemed resources
   period: 2026-01
   input:
@@ -845,20 +1140,28 @@
           '2026': 100
     tax_units:
       family:
-        members: [parent, child]
+        members:
+        - parent
+        - child
     marital_units:
       family_parent:
-        members: [parent]
+        members:
+        - parent
       family_child:
-        members: [child]
+        members:
+        - child
     households:
       family:
-        members: [parent, child]
+        members:
+        - parent
+        - child
   output:
-    ssi_resources_deemed_from_ineligible_parent: [0, 0]
-    meets_ssi_resource_test: [false, true]
-
-# 20 CFR 416.1856(c): the child must not be the head of a household.
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - true
 - name: A child household head does not meet the SSI child definition
   period: 2026-01
   input:
@@ -879,20 +1182,28 @@
         is_household_head: true
     tax_units:
       family:
-        members: [parent, child]
+        members:
+        - parent
+        - child
     marital_units:
       family_parent:
-        members: [parent]
+        members:
+        - parent
       family_child:
-        members: [child]
+        members:
+        - child
     households:
       family:
-        members: [parent, child]
+        members:
+        - parent
+        - child
   output:
-    ssi_resources_deemed_from_ineligible_parent: [0, 0]
-    meets_ssi_resource_test: [false, true]
-
-# 20 CFR 416.1202(b)(1): the adult must be a natural or adoptive parent, or stepparent.
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - true
 - name: An adult without a parent relationship does not deem to a child
   period: 2026-01
   input:
@@ -913,20 +1224,28 @@
           '2026': 100
     tax_units:
       family:
-        members: [parent, child]
+        members:
+        - parent
+        - child
     marital_units:
       family_parent:
-        members: [parent]
+        members:
+        - parent
       family_child:
-        members: [child]
+        members:
+        - child
     households:
       family:
-        members: [parent, child]
+        members:
+        - parent
+        - child
   output:
-    ssi_resources_deemed_from_ineligible_parent: [0, 0]
-    meets_ssi_resource_test: [false, true]
-
-# 20 CFR 416.1202(b)(1), 416.1856(b): the child must be unmarried.
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - true
 - name: Married child is not subject to parental resource deeming
   period: 2026-01
   input:
@@ -952,19 +1271,29 @@
           '2026': 0
     tax_units:
       family:
-        members: [parent, child, child_spouse]
+        members:
+        - parent
+        - child
+        - child_spouse
     marital_units:
       family_couple_0:
-        members: [child, child_spouse]
+        members:
+        - child
+        - child_spouse
       family_parent:
-        members: [parent]
+        members:
+        - parent
     households:
       family:
-        members: [parent, child, child_spouse]
+        members:
+        - parent
+        - child
+        - child_spouse
   output:
-    ssi_resources_deemed_from_ineligible_parent: [0, 0, 0]
-
-# 20 CFR 416.1202(b)(1): the parent and child must live in the same household.
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 0
 - name: Nonresident parent resources are not deemed within a shared tax unit
   period: 2026-01
   input:
@@ -984,60 +1313,95 @@
           '2026': 0
     tax_units:
       family:
-        members: [parent, child]
+        members:
+        - parent
+        - child
     marital_units:
       family_parent:
-        members: [parent]
+        members:
+        - parent
       family_child:
-        members: [child]
+        members:
+        - child
     households:
       parent_home:
-        members: [parent]
+        members:
+        - parent
       child_home:
-        members: [child]
+        members:
+        - child
   output:
-    ssi_resources_deemed_from_ineligible_parent: [0, 0]
-    meets_ssi_resource_test: [false, true]
-
-# Model relationship limitation: tax units proxy the parent/child grouping.
-- name: Resources remain isolated between tax units in the model household proxy
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - true
+- name: Without parent links the tax unit proxy cannot distinguish a grandparent
   period: 2026-01
   input:
     people:
-      parent:
+      grandparent:
         age: 40
         is_ssi_aged_blind_disabled: false
         is_tax_unit_head: true
-        is_parent: true
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: false
+        is_household_head: false
         ssi_countable_resources:
-          '2026': 6000
-      child:
-        age: 16
-        is_ssi_aged_blind_disabled: true
+          '2026': 5000
+        is_parent: true
+      mother:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
         is_tax_unit_dependent: true
+        is_household_head: false
         ssi_countable_resources:
           '2026': 0
+        is_parent: true
+      child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: true
+        is_household_head: false
+        ssi_countable_resources:
+          '2026': 1
     tax_units:
-      parent_unit:
-        members: [parent]
-      child_unit:
-        members: [child]
-    marital_units:
-      family_parent:
-        members: [parent]
-      family_child:
-        members: [child]
-    households:
       family:
-        members: [parent, child]
+        members:
+        - grandparent
+        - mother
+        - child
+    marital_units:
+      grandparent:
+        members:
+        - grandparent
+      mother:
+        members:
+        - mother
+      child:
+        members:
+        - child
+    households:
+      home:
+        members:
+        - grandparent
+        - mother
+        - child
   output:
-    ssi_resources_deemed_from_ineligible_parent: [0, 0]
-
-# 20 CFR 416.1167(a)(2): medical-facility temporary absence preserves parental
-# deeming through the last month of benefits under 416.212. The monthly input
-# records the adjudicated temporary absence despite separate physical households.
-# https://www.ecfr.gov/current/title-20/section-416.1167
-- name: Temporary medical facility absence preserves parental resource deeming
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 2000
+    meets_ssi_resource_test:
+    - false
+    - true
+    - false
+- name: Immigration ineligible sibling does not dilute citizen child parental excess
   period: 2026-01
   input:
     people:
@@ -1045,30 +1409,139 @@
         age: 40
         is_ssi_aged_blind_disabled: false
         is_tax_unit_head: true
-        is_parent: true
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: false
+        is_household_head: false
         ssi_countable_resources:
-          '2026': 6000
-      child:
+          '2026': 5000
+        is_parent: true
+      citizen_child:
         age: 16
         is_ssi_aged_blind_disabled: true
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
         is_tax_unit_dependent: true
-        ssi_lives_in_medical_treatment_facility: true
-        ssi_resource_deeming_temporary_absence: true
+        is_household_head: false
         ssi_countable_resources:
-          '2026': 100
+          '2026': 0
+        immigration_status: CITIZEN
+      undocumented_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: true
+        is_household_head: false
+        ssi_countable_resources:
+          '2026': 0
+        immigration_status: UNDOCUMENTED
+        is_ssi_qualified_noncitizen: false
     tax_units:
       family:
-        members: [parent, child]
+        members:
+        - parent
+        - citizen_child
+        - undocumented_child
     marital_units:
       parent:
-        members: [parent]
-      child:
-        members: [child]
+        members:
+        - parent
+      citizen_child:
+        members:
+        - citizen_child
+      undocumented_child:
+        members:
+        - undocumented_child
     households:
-      parent_home:
-        members: [parent]
-      medical_facility:
-        members: [child]
+      home:
+        members:
+        - parent
+        - citizen_child
+        - undocumented_child
   output:
-    ssi_resources_deemed_from_ineligible_parent: [0, 4000]
-    meets_ssi_resource_test: [false, false]
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 3000
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - false
+    - true
+    is_ssi_resource_deeming_child:
+    - false
+    - true
+    - false
+    is_ssi_eligible:
+    - false
+    - false
+    - false
+- name: Qualified noncitizen child shares parental resources with a citizen sibling
+  period: 2026-01
+  input:
+    people:
+      parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: false
+        is_household_head: false
+        ssi_countable_resources:
+          '2026': 5000
+        is_parent: true
+      citizen_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: true
+        is_household_head: false
+        ssi_countable_resources:
+          '2026': 0
+        immigration_status: CITIZEN
+      qualified_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: true
+        is_household_head: false
+        ssi_countable_resources:
+          '2026': 0
+        immigration_status: REFUGEE
+        is_ssi_qualified_noncitizen: true
+    tax_units:
+      family:
+        members:
+        - parent
+        - citizen_child
+        - qualified_child
+    marital_units:
+      parent:
+        members:
+        - parent
+      citizen_child:
+        members:
+        - citizen_child
+      qualified_child:
+        members:
+        - qualified_child
+    households:
+      home:
+        members:
+        - parent
+        - citizen_child
+        - qualified_child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 1500
+    - 1500
+    meets_ssi_resource_test:
+    - false
+    - true
+    - true
+    is_ssi_resource_deeming_child:
+    - false
+    - true
+    - true
