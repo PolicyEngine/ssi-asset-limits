@@ -1,0 +1,699 @@
+{
+  "provenance": {
+    "analysis_year": 2026,
+    "policyengine_version": "6.2.5",
+    "bundle_id": "us-6.2.5",
+    "model_package": "policyengine-us",
+    "model_version": "2.2.1",
+    "dataset": "populace_us_2024",
+    "dataset_build_id": "populace-us-2024-spm-20260915",
+    "dataset_sha256": "6496cc4393d4d3c6574f76eca231de5898c803b9067645591fd5c4d3e65aee84",
+    "generated_at": "2026-10-10T01:14:57.558887+00:00",
+    "code_commit": "a11eca134774fc4cbec24250e264e9c84aaa5923",
+    "method_note": "The population was run in household batches, which is exact because every marital, tax, SPM and family unit nests within one household. Sensitivity variant, not the certified engine: SSI resource deeming from ineligible spouses and parents (20 CFR 416.1202) installed on the certified engine as a reform."
+  },
+  "diagnostics": {
+    "chunk_paths": [
+      "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0000.h5",
+      "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0001.h5",
+      "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0002.h5",
+      "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0003.h5",
+      "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0004.h5",
+      "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0005.h5",
+      "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0006.h5",
+      "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0007.h5"
+    ],
+    "household_count": 57240,
+    "person_count": 166321,
+    "chunk_count": 8,
+    "chunk_size": 8000,
+    "nesting": {
+      "all_nested": true,
+      "person_count": 166321,
+      "person_foreign_key_columns": {
+        "household": "person_household_id",
+        "marital_unit": "person_marital_unit_id",
+        "tax_unit": "person_tax_unit_id",
+        "spm_unit": "person_spm_unit_id",
+        "family": "person_family_id"
+      },
+      "entities": {
+        "marital_unit": {
+          "unit_count": 130729,
+          "cross_household_unit_count": 0
+        },
+        "tax_unit": {
+          "unit_count": 79729,
+          "cross_household_unit_count": 0
+        },
+        "spm_unit": {
+          "unit_count": 59900,
+          "cross_household_unit_count": 0
+        },
+        "family": {
+          "unit_count": 65206,
+          "cross_household_unit_count": 0
+        }
+      }
+    },
+    "person_weight_source": "household.household_weight mapped to persons",
+    "full_weight_totals": {
+      "household": 122537091.8856833,
+      "person": 340077322.65364885
+    },
+    "chunk_weight_totals": [
+      {
+        "household": 19449863.395431682,
+        "person": 54864095.130439185
+      },
+      {
+        "household": 17641111.728432506,
+        "person": 47165057.09405108
+      },
+      {
+        "household": 17347141.274989564,
+        "person": 48313525.910818085
+      },
+      {
+        "household": 17241886.33489637,
+        "person": 48631696.54465583
+      },
+      {
+        "household": 14753670.444294728,
+        "person": 40910206.153310545
+      },
+      {
+        "household": 17048111.04880338,
+        "person": 47355191.186657414
+      },
+      {
+        "household": 15703383.826415336,
+        "person": 42910794.476900056
+      },
+      {
+        "household": 3351923.8324197233,
+        "person": 9926756.156816635
+      }
+    ],
+    "summed_chunk_weight_totals": {
+      "household": 122537091.8856833,
+      "person": 340077322.65364885
+    },
+    "chunks": [
+      {
+        "path": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0000.h5",
+        "household_count": 8000,
+        "person_count": 23630,
+        "weight_totals": {
+          "household": 19449863.395431682,
+          "person": 54864095.130439185
+        }
+      },
+      {
+        "path": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0001.h5",
+        "household_count": 8000,
+        "person_count": 23540,
+        "weight_totals": {
+          "household": 17641111.728432506,
+          "person": 47165057.09405108
+        }
+      },
+      {
+        "path": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0002.h5",
+        "household_count": 8000,
+        "person_count": 23850,
+        "weight_totals": {
+          "household": 17347141.274989564,
+          "person": 48313525.910818085
+        }
+      },
+      {
+        "path": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0003.h5",
+        "household_count": 8000,
+        "person_count": 22685,
+        "weight_totals": {
+          "household": 17241886.33489637,
+          "person": 48631696.54465583
+        }
+      },
+      {
+        "path": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0004.h5",
+        "household_count": 8000,
+        "person_count": 22700,
+        "weight_totals": {
+          "household": 14753670.444294728,
+          "person": 40910206.153310545
+        }
+      },
+      {
+        "path": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0005.h5",
+        "household_count": 8000,
+        "person_count": 22994,
+        "weight_totals": {
+          "household": 17048111.04880338,
+          "person": 47355191.186657414
+        }
+      },
+      {
+        "path": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0006.h5",
+        "household_count": 8000,
+        "person_count": 23195,
+        "weight_totals": {
+          "household": 15703383.826415336,
+          "person": 42910794.476900056
+        }
+      },
+      {
+        "path": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0007.h5",
+        "household_count": 1240,
+        "person_count": 3727,
+        "weight_totals": {
+          "household": 3351923.8324197233,
+          "person": 9926756.156816635
+        }
+      }
+    ],
+    "source_uri": "hf://policyengine/populace-us/populace_us_2024.h5@populace-us-2024-spm-20260915",
+    "source_sha256": "6496cc4393d4d3c6574f76eca231de5898c803b9067645591fd5c4d3e65aee84",
+    "preparation_peak_rss_gib": 1.93878173828125,
+    "preparation_wall_seconds": 16.080364415975055,
+    "variant": "resource_deeming",
+    "output_weight_totals": {
+      "person": 345685947.2203935,
+      "household": 124557998.58971302
+    },
+    "output_weight_year": 2026,
+    "input_weight_year": 2024,
+    "per_chunk_peak_rss_gib": [
+      {
+        "chunk_index": 0,
+        "baseline": 13.970840454101562,
+        "ten_twenty": 14.449066162109375,
+        "no_limit": 14.43927001953125
+      },
+      {
+        "chunk_index": 1,
+        "baseline": 13.238922119140625,
+        "ten_twenty": 14.442825317382812,
+        "no_limit": 14.420272827148438
+      },
+      {
+        "chunk_index": 2,
+        "baseline": 14.492813110351562,
+        "ten_twenty": 14.504623413085938,
+        "no_limit": 14.411224365234375
+      },
+      {
+        "chunk_index": 3,
+        "baseline": 9.549545288085938,
+        "ten_twenty": 9.474136352539062,
+        "no_limit": 8.6131591796875
+      },
+      {
+        "chunk_index": 4,
+        "baseline": 10.370834350585938,
+        "ten_twenty": 7.7509002685546875,
+        "no_limit": 10.3037109375
+      },
+      {
+        "chunk_index": 5,
+        "baseline": 10.893753051757812,
+        "ten_twenty": 10.9429931640625,
+        "no_limit": 10.945907592773438
+      },
+      {
+        "chunk_index": 6,
+        "baseline": 12.214523315429688,
+        "ten_twenty": 12.318740844726562,
+        "no_limit": 12.354736328125
+      },
+      {
+        "chunk_index": 7,
+        "baseline": 2.429718017578125,
+        "ten_twenty": 2.42303466796875,
+        "no_limit": 2.484649658203125
+      }
+    ],
+    "workers": [
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0000.h5",
+        "chunk_sha256": "3680b27d1f173f53021a98bbaecddeca93431a63b28492fea32409c95fbadc93",
+        "scenario": "baseline",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 13.970840454101562,
+        "wall_seconds": 106.27667883297545,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0000.h5",
+        "chunk_sha256": "3680b27d1f173f53021a98bbaecddeca93431a63b28492fea32409c95fbadc93",
+        "scenario": "ten_twenty",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 14.449066162109375,
+        "wall_seconds": 128.53486654200242,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0000.h5",
+        "chunk_sha256": "3680b27d1f173f53021a98bbaecddeca93431a63b28492fea32409c95fbadc93",
+        "scenario": "no_limit",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 14.43927001953125,
+        "wall_seconds": 133.2049492500082,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0001.h5",
+        "chunk_sha256": "e14f88f1f18c08849f6fbaf49b64854d1169b35d9586cd56cb969539d5c358a5",
+        "scenario": "baseline",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 13.238922119140625,
+        "wall_seconds": 114.23982108398923,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0001.h5",
+        "chunk_sha256": "e14f88f1f18c08849f6fbaf49b64854d1169b35d9586cd56cb969539d5c358a5",
+        "scenario": "ten_twenty",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 14.442825317382812,
+        "wall_seconds": 69.74020545801613,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0001.h5",
+        "chunk_sha256": "e14f88f1f18c08849f6fbaf49b64854d1169b35d9586cd56cb969539d5c358a5",
+        "scenario": "no_limit",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 14.420272827148438,
+        "wall_seconds": 71.02755845800857,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0002.h5",
+        "chunk_sha256": "df0035522367e60dbf317615a84da1cdcf50262b931ccacb4125557cb7ccade6",
+        "scenario": "baseline",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 14.492813110351562,
+        "wall_seconds": 62.191397583985236,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0002.h5",
+        "chunk_sha256": "df0035522367e60dbf317615a84da1cdcf50262b931ccacb4125557cb7ccade6",
+        "scenario": "ten_twenty",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 14.504623413085938,
+        "wall_seconds": 64.93622329100617,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0002.h5",
+        "chunk_sha256": "df0035522367e60dbf317615a84da1cdcf50262b931ccacb4125557cb7ccade6",
+        "scenario": "no_limit",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 14.411224365234375,
+        "wall_seconds": 134.42882345899125,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0003.h5",
+        "chunk_sha256": "7d3f8e36e5be01372ff3d39bff0f3330d4b4e481f1fe9dc701adb31f00862dab",
+        "scenario": "baseline",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 9.549545288085938,
+        "wall_seconds": 164.77825966701494,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0003.h5",
+        "chunk_sha256": "7d3f8e36e5be01372ff3d39bff0f3330d4b4e481f1fe9dc701adb31f00862dab",
+        "scenario": "ten_twenty",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 9.474136352539062,
+        "wall_seconds": 197.6982124579954,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0003.h5",
+        "chunk_sha256": "7d3f8e36e5be01372ff3d39bff0f3330d4b4e481f1fe9dc701adb31f00862dab",
+        "scenario": "no_limit",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 8.6131591796875,
+        "wall_seconds": 146.21000500000082,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0004.h5",
+        "chunk_sha256": "32d5741574fdbf7fdda7bee46b1c7bcdd03716f59d4411ecbc421e14b8f5089b",
+        "scenario": "baseline",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 10.370834350585938,
+        "wall_seconds": 112.55451041698689,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0004.h5",
+        "chunk_sha256": "32d5741574fdbf7fdda7bee46b1c7bcdd03716f59d4411ecbc421e14b8f5089b",
+        "scenario": "ten_twenty",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 7.7509002685546875,
+        "wall_seconds": 126.3391678330081,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0004.h5",
+        "chunk_sha256": "32d5741574fdbf7fdda7bee46b1c7bcdd03716f59d4411ecbc421e14b8f5089b",
+        "scenario": "no_limit",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 10.3037109375,
+        "wall_seconds": 90.02321783301886,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0005.h5",
+        "chunk_sha256": "bae9e975509d0015ae0191c43d09d2a7bf75c9cda9a7a5a86d1f1eca1652d898",
+        "scenario": "baseline",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 10.893753051757812,
+        "wall_seconds": 70.79138912499184,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0005.h5",
+        "chunk_sha256": "bae9e975509d0015ae0191c43d09d2a7bf75c9cda9a7a5a86d1f1eca1652d898",
+        "scenario": "ten_twenty",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 10.9429931640625,
+        "wall_seconds": 72.49793699997826,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0005.h5",
+        "chunk_sha256": "bae9e975509d0015ae0191c43d09d2a7bf75c9cda9a7a5a86d1f1eca1652d898",
+        "scenario": "no_limit",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 10.945907592773438,
+        "wall_seconds": 67.2201880409848,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0006.h5",
+        "chunk_sha256": "75fb0d8dfb105a7a72399349911f1948c3e522f70ca472213f0e263ed812e77d",
+        "scenario": "baseline",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 12.214523315429688,
+        "wall_seconds": 71.74242337499163,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0006.h5",
+        "chunk_sha256": "75fb0d8dfb105a7a72399349911f1948c3e522f70ca472213f0e263ed812e77d",
+        "scenario": "ten_twenty",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 12.318740844726562,
+        "wall_seconds": 69.18371675000526,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0006.h5",
+        "chunk_sha256": "75fb0d8dfb105a7a72399349911f1948c3e522f70ca472213f0e263ed812e77d",
+        "scenario": "no_limit",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 12.354736328125,
+        "wall_seconds": 60.79975775000639,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0007.h5",
+        "chunk_sha256": "6c42f832a83e07516cf131c1009548d3b3cf9456f4e4a71fd9d128ea25f04a49",
+        "scenario": "baseline",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 2.429718017578125,
+        "wall_seconds": 17.286885459005134,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0007.h5",
+        "chunk_sha256": "6c42f832a83e07516cf131c1009548d3b3cf9456f4e4a71fd9d128ea25f04a49",
+        "scenario": "ten_twenty",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 2.42303466796875,
+        "wall_seconds": 17.04479133398854,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      },
+      {
+        "chunk": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0007.h5",
+        "chunk_sha256": "6c42f832a83e07516cf131c1009548d3b3cf9456f4e4a71fd9d128ea25f04a49",
+        "scenario": "no_limit",
+        "variant": "resource_deeming",
+        "peak_rss_gib": 2.484649658203125,
+        "wall_seconds": 17.17513066600077,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        }
+      }
+    ],
+    "wall_seconds": 3290.358490583021,
+    "uv_pip_freeze_path": "/Users/maxghenis/PolicyEngine/ssi-asset-limits/results/microcosm-625-spm0915-resource-deeming/uv-pip-freeze.txt",
+    "annualization": "MONTH amounts sum all twelve months; MONTH flags are fractions of true months; age and resources use January; YEAR variables are calculated for 2026."
+  }
+}

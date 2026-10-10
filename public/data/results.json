@@ -677,6 +677,91 @@
           ]
         }
       ]
+    },
+    {
+      "key": "resource_deeming",
+      "label": "A spouse's and a parent's savings counted, as SSA does",
+      "description": "Adds federal resource deeming (20 CFR 416.1202) to the certified engine as a reform, ahead of the policyengine-us change that adds it (PolicyEngine/policyengine-us#3557). Counting more resources removes some people from SSI today, and a higher limit lets them back in, so the estimate rises.",
+      "baseline_by_age": [
+        {
+          "age_group": "children_under_18",
+          "label": "Under 18",
+          "policyengine_recipients": 153814.898183217,
+          "ssa_recipients": 1001922
+        },
+        {
+          "age_group": "adults_18_64",
+          "label": "18 to 64",
+          "policyengine_recipients": 3704994.980442278,
+          "ssa_recipients": 3905779
+        },
+        {
+          "age_group": "elderly_65_plus",
+          "label": "65 and over",
+          "policyengine_recipients": 2297645.8625438437,
+          "ssa_recipients": 2382142
+        }
+      ],
+      "scenarios": [
+        {
+          "key": "ten_twenty",
+          "by_age": [
+            {
+              "age_group": "children_under_18",
+              "label": "Under 18",
+              "new_recipients": 0.0,
+              "annual_ssi_cost": 0.0
+            },
+            {
+              "age_group": "adults_18_64",
+              "label": "18 to 64",
+              "new_recipients": 177703.18908921335,
+              "annual_ssi_cost": 1227145040.0701427
+            },
+            {
+              "age_group": "elderly_65_plus",
+              "label": "65 and over",
+              "new_recipients": 419529.71726427774,
+              "annual_ssi_cost": 2985496339.7140503
+            },
+            {
+              "age_group": "total_all_ages",
+              "label": "All ages",
+              "new_recipients": 597232.9063534911,
+              "annual_ssi_cost": 4212641379.784194
+            }
+          ]
+        },
+        {
+          "key": "no_limit",
+          "by_age": [
+            {
+              "age_group": "children_under_18",
+              "label": "Under 18",
+              "new_recipients": 26094.682399999998,
+              "annual_ssi_cost": 296763764.0475718
+            },
+            {
+              "age_group": "adults_18_64",
+              "label": "18 to 64",
+              "new_recipients": 345070.55790335493,
+              "annual_ssi_cost": 2591572055.9175143
+            },
+            {
+              "age_group": "elderly_65_plus",
+              "label": "65 and over",
+              "new_recipients": 707552.4829219526,
+              "annual_ssi_cost": 4992455153.403416
+            },
+            {
+              "age_group": "total_all_ages",
+              "label": "All ages",
+              "new_recipients": 1078717.7232253077,
+              "annual_ssi_cost": 7880790973.368502
+            }
+          ]
+        }
+      ]
     }
   ]
 }

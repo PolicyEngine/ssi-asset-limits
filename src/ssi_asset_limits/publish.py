@@ -417,7 +417,9 @@ SENSITIVITY_LABELS = {
         "A spouse's and a parent's savings counted, as SSA does",
         "Adds federal resource deeming (20 CFR 416.1202) to the certified "
         "engine as a reform, ahead of the policyengine-us change that adds "
-        "it (PolicyEngine/policyengine-us#3557).",
+        "it (PolicyEngine/policyengine-us#3557). Counting more resources "
+        "removes some people from SSI today, and a higher limit lets them "
+        "back in, so the estimate rises.",
     ),
 }
 
