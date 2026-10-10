@@ -577,17 +577,20 @@
     "recipients_by_marital_status": [
       {
         "marital_status": "No spouse",
+        "ssa_category": "No spouse",
         "policyengine_share_pct": 78.50219480723216,
         "ssa_share_pct": 91.8355905610238
       },
       {
-        "marital_status": "Eligible spouse (both recipients)",
-        "policyengine_share_pct": 11.758432371650562,
+        "marital_status": "Spouse also receives SSI",
+        "ssa_category": "Eligible spouse",
+        "policyengine_share_pct": 5.169923824755187,
         "ssa_share_pct": 5.724733884924492
       },
       {
-        "marital_status": "Ineligible spouse",
-        "policyengine_share_pct": 9.739372821117286,
+        "marital_status": "Spouse does not receive SSI",
+        "ssa_category": "Ineligible spouse",
+        "policyengine_share_pct": 16.32788136801266,
         "ssa_share_pct": 2.439675554051695
       }
     ]
@@ -681,7 +684,7 @@
     {
       "key": "resource_deeming",
       "label": "A spouse's and a parent's savings counted, as SSA does",
-      "description": "Adds federal resource deeming (20 CFR 416.1202) to the certified engine as a reform, ahead of the policyengine-us change that adds it (PolicyEngine/policyengine-us#3557). Counting more resources removes some people from SSI today, and a higher limit lets them back in, so the estimate rises.",
+      "description": "Adds federal resource deeming (20 CFR 416.1202) to the certified engine as a reform, ahead of the policyengine-us change that adds it (PolicyEngine/policyengine-us#10040). The certified engine has no links from a child to their parents, so the reform treats people marked as parents in the child's tax unit and household, and their spouses, as the parents. Counting more resources removes some people from SSI today, and a higher limit lets them back in, so the estimate rises.",
       "baseline_by_age": [
         {
           "age_group": "children_under_18",

@@ -2,12 +2,12 @@
 
 The certified bundle pins policyengine-us 2.2.1, whose SSI resource test
 counts only the person's own resources (or a couple's when both spouses are
-eligible). The PolicyEngine/policyengine-us branch ``ssi-resource-deeming``
-("Deem SSI resources from ineligible spouses and parents", fixing
-PolicyEngine/policyengine-us#3557) adds the federal deeming rules. Until a
-certified bundle carries that change, this module installs the same variable
-classes on 2.2.1 so the effect on the certified population can be measured.
-It is a sensitivity variant, never the published estimate.
+eligible). PolicyEngine/policyengine-us#10040 (branch
+``ssi-resource-deeming``, fixing PolicyEngine/policyengine-us#3557) adds the
+federal deeming rules. Until a certified bundle carries that change, this
+module installs the same variable classes on 2.2.1 so the effect on the
+certified population can be measured. It is a sensitivity variant, never the
+published estimate.
 
 This is the branch's own 2.2.1 companion (``backport/`` at commit
 51d64d4904). 2.2.1 has no parent links, so parents are found by the branch's

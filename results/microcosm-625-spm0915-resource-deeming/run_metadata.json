@@ -8,9 +8,9 @@
     "dataset": "populace_us_2024",
     "dataset_build_id": "populace-us-2024-spm-20260915",
     "dataset_sha256": "6496cc4393d4d3c6574f76eca231de5898c803b9067645591fd5c4d3e65aee84",
-    "generated_at": "2026-10-10T01:14:57.558887+00:00",
-    "code_commit": "a11eca134774fc4cbec24250e264e9c84aaa5923",
-    "method_note": "The population was run in household batches, which is exact because every marital, tax, SPM and family unit nests within one household. Sensitivity variant, not the certified engine: SSI resource deeming from ineligible spouses and parents (20 CFR 416.1202) installed on the certified engine as a reform."
+    "generated_at": "2026-10-10T05:59:00.328947+00:00",
+    "code_commit": "efb535b3c402fa3517d2cdd97e2467aa15544ce7",
+    "method_note": "The population was run in household batches. Every marital, tax, SPM and family unit nests within one household, and no output published here depends on other households under this run's settings, which leave health benefits out of household income, so batching gives the same answer as one run. Sensitivity variant, not the certified engine: SSI resource deeming from ineligible spouses and parents (20 CFR 416.1202) installed on the certified engine as a reform."
   },
   "diagnostics": {
     "chunk_paths": [
@@ -187,51 +187,51 @@
     "per_chunk_peak_rss_gib": [
       {
         "chunk_index": 0,
-        "baseline": 13.970840454101562,
-        "ten_twenty": 14.449066162109375,
-        "no_limit": 14.43927001953125
+        "baseline": 14.477340698242188,
+        "ten_twenty": 14.475677490234375,
+        "no_limit": 14.478256225585938
       },
       {
         "chunk_index": 1,
-        "baseline": 13.238922119140625,
-        "ten_twenty": 14.442825317382812,
-        "no_limit": 14.420272827148438
+        "baseline": 14.41998291015625,
+        "ten_twenty": 14.420761108398438,
+        "no_limit": 14.420578002929688
       },
       {
         "chunk_index": 2,
-        "baseline": 14.492813110351562,
-        "ten_twenty": 14.504623413085938,
-        "no_limit": 14.411224365234375
+        "baseline": 14.494430541992188,
+        "ten_twenty": 14.485458374023438,
+        "no_limit": 14.490066528320312
       },
       {
         "chunk_index": 3,
-        "baseline": 9.549545288085938,
-        "ten_twenty": 9.474136352539062,
-        "no_limit": 8.6131591796875
+        "baseline": 11.948699951171875,
+        "ten_twenty": 11.939895629882812,
+        "no_limit": 11.9481201171875
       },
       {
         "chunk_index": 4,
-        "baseline": 10.370834350585938,
-        "ten_twenty": 7.7509002685546875,
-        "no_limit": 10.3037109375
+        "baseline": 10.310821533203125,
+        "ten_twenty": 10.313034057617188,
+        "no_limit": 10.318389892578125
       },
       {
         "chunk_index": 5,
-        "baseline": 10.893753051757812,
-        "ten_twenty": 10.9429931640625,
-        "no_limit": 10.945907592773438
+        "baseline": 10.95916748046875,
+        "ten_twenty": 10.960235595703125,
+        "no_limit": 10.962249755859375
       },
       {
         "chunk_index": 6,
-        "baseline": 12.214523315429688,
-        "ten_twenty": 12.318740844726562,
-        "no_limit": 12.354736328125
+        "baseline": 12.279632568359375,
+        "ten_twenty": 12.27618408203125,
+        "no_limit": 12.287307739257812
       },
       {
         "chunk_index": 7,
-        "baseline": 2.429718017578125,
-        "ten_twenty": 2.42303466796875,
-        "no_limit": 2.484649658203125
+        "baseline": 2.4891357421875,
+        "ten_twenty": 2.48931884765625,
+        "no_limit": 2.4893035888671875
       }
     ],
     "workers": [
@@ -240,8 +240,8 @@
         "chunk_sha256": "3680b27d1f173f53021a98bbaecddeca93431a63b28492fea32409c95fbadc93",
         "scenario": "baseline",
         "variant": "resource_deeming",
-        "peak_rss_gib": 13.970840454101562,
-        "wall_seconds": 106.27667883297545,
+        "peak_rss_gib": 14.477340698242188,
+        "wall_seconds": 57.28031195900985,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -259,8 +259,8 @@
         "chunk_sha256": "3680b27d1f173f53021a98bbaecddeca93431a63b28492fea32409c95fbadc93",
         "scenario": "ten_twenty",
         "variant": "resource_deeming",
-        "peak_rss_gib": 14.449066162109375,
-        "wall_seconds": 128.53486654200242,
+        "peak_rss_gib": 14.475677490234375,
+        "wall_seconds": 54.53554812501534,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -278,8 +278,8 @@
         "chunk_sha256": "3680b27d1f173f53021a98bbaecddeca93431a63b28492fea32409c95fbadc93",
         "scenario": "no_limit",
         "variant": "resource_deeming",
-        "peak_rss_gib": 14.43927001953125,
-        "wall_seconds": 133.2049492500082,
+        "peak_rss_gib": 14.478256225585938,
+        "wall_seconds": 51.272844416002044,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -297,8 +297,8 @@
         "chunk_sha256": "e14f88f1f18c08849f6fbaf49b64854d1169b35d9586cd56cb969539d5c358a5",
         "scenario": "baseline",
         "variant": "resource_deeming",
-        "peak_rss_gib": 13.238922119140625,
-        "wall_seconds": 114.23982108398923,
+        "peak_rss_gib": 14.41998291015625,
+        "wall_seconds": 49.76557329201023,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -316,8 +316,8 @@
         "chunk_sha256": "e14f88f1f18c08849f6fbaf49b64854d1169b35d9586cd56cb969539d5c358a5",
         "scenario": "ten_twenty",
         "variant": "resource_deeming",
-        "peak_rss_gib": 14.442825317382812,
-        "wall_seconds": 69.74020545801613,
+        "peak_rss_gib": 14.420761108398438,
+        "wall_seconds": 49.20051287498791,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -335,8 +335,8 @@
         "chunk_sha256": "e14f88f1f18c08849f6fbaf49b64854d1169b35d9586cd56cb969539d5c358a5",
         "scenario": "no_limit",
         "variant": "resource_deeming",
-        "peak_rss_gib": 14.420272827148438,
-        "wall_seconds": 71.02755845800857,
+        "peak_rss_gib": 14.420578002929688,
+        "wall_seconds": 50.09890570800053,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -354,8 +354,8 @@
         "chunk_sha256": "df0035522367e60dbf317615a84da1cdcf50262b931ccacb4125557cb7ccade6",
         "scenario": "baseline",
         "variant": "resource_deeming",
-        "peak_rss_gib": 14.492813110351562,
-        "wall_seconds": 62.191397583985236,
+        "peak_rss_gib": 14.494430541992188,
+        "wall_seconds": 49.19291216600686,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -373,8 +373,8 @@
         "chunk_sha256": "df0035522367e60dbf317615a84da1cdcf50262b931ccacb4125557cb7ccade6",
         "scenario": "ten_twenty",
         "variant": "resource_deeming",
-        "peak_rss_gib": 14.504623413085938,
-        "wall_seconds": 64.93622329100617,
+        "peak_rss_gib": 14.485458374023438,
+        "wall_seconds": 49.693488124990836,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -392,8 +392,8 @@
         "chunk_sha256": "df0035522367e60dbf317615a84da1cdcf50262b931ccacb4125557cb7ccade6",
         "scenario": "no_limit",
         "variant": "resource_deeming",
-        "peak_rss_gib": 14.411224365234375,
-        "wall_seconds": 134.42882345899125,
+        "peak_rss_gib": 14.490066528320312,
+        "wall_seconds": 50.381675459007965,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -411,8 +411,8 @@
         "chunk_sha256": "7d3f8e36e5be01372ff3d39bff0f3330d4b4e481f1fe9dc701adb31f00862dab",
         "scenario": "baseline",
         "variant": "resource_deeming",
-        "peak_rss_gib": 9.549545288085938,
-        "wall_seconds": 164.77825966701494,
+        "peak_rss_gib": 11.948699951171875,
+        "wall_seconds": 43.31416037501185,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -430,8 +430,8 @@
         "chunk_sha256": "7d3f8e36e5be01372ff3d39bff0f3330d4b4e481f1fe9dc701adb31f00862dab",
         "scenario": "ten_twenty",
         "variant": "resource_deeming",
-        "peak_rss_gib": 9.474136352539062,
-        "wall_seconds": 197.6982124579954,
+        "peak_rss_gib": 11.939895629882812,
+        "wall_seconds": 42.625746000005165,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -449,8 +449,8 @@
         "chunk_sha256": "7d3f8e36e5be01372ff3d39bff0f3330d4b4e481f1fe9dc701adb31f00862dab",
         "scenario": "no_limit",
         "variant": "resource_deeming",
-        "peak_rss_gib": 8.6131591796875,
-        "wall_seconds": 146.21000500000082,
+        "peak_rss_gib": 11.9481201171875,
+        "wall_seconds": 42.29566912501468,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -468,8 +468,8 @@
         "chunk_sha256": "32d5741574fdbf7fdda7bee46b1c7bcdd03716f59d4411ecbc421e14b8f5089b",
         "scenario": "baseline",
         "variant": "resource_deeming",
-        "peak_rss_gib": 10.370834350585938,
-        "wall_seconds": 112.55451041698689,
+        "peak_rss_gib": 10.310821533203125,
+        "wall_seconds": 41.41585295900586,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -487,8 +487,8 @@
         "chunk_sha256": "32d5741574fdbf7fdda7bee46b1c7bcdd03716f59d4411ecbc421e14b8f5089b",
         "scenario": "ten_twenty",
         "variant": "resource_deeming",
-        "peak_rss_gib": 7.7509002685546875,
-        "wall_seconds": 126.3391678330081,
+        "peak_rss_gib": 10.313034057617188,
+        "wall_seconds": 41.04026083400822,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -506,8 +506,8 @@
         "chunk_sha256": "32d5741574fdbf7fdda7bee46b1c7bcdd03716f59d4411ecbc421e14b8f5089b",
         "scenario": "no_limit",
         "variant": "resource_deeming",
-        "peak_rss_gib": 10.3037109375,
-        "wall_seconds": 90.02321783301886,
+        "peak_rss_gib": 10.318389892578125,
+        "wall_seconds": 41.4223734170082,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -525,8 +525,8 @@
         "chunk_sha256": "bae9e975509d0015ae0191c43d09d2a7bf75c9cda9a7a5a86d1f1eca1652d898",
         "scenario": "baseline",
         "variant": "resource_deeming",
-        "peak_rss_gib": 10.893753051757812,
-        "wall_seconds": 70.79138912499184,
+        "peak_rss_gib": 10.95916748046875,
+        "wall_seconds": 40.212257250008406,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -544,8 +544,8 @@
         "chunk_sha256": "bae9e975509d0015ae0191c43d09d2a7bf75c9cda9a7a5a86d1f1eca1652d898",
         "scenario": "ten_twenty",
         "variant": "resource_deeming",
-        "peak_rss_gib": 10.9429931640625,
-        "wall_seconds": 72.49793699997826,
+        "peak_rss_gib": 10.960235595703125,
+        "wall_seconds": 39.61279862499214,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -563,8 +563,8 @@
         "chunk_sha256": "bae9e975509d0015ae0191c43d09d2a7bf75c9cda9a7a5a86d1f1eca1652d898",
         "scenario": "no_limit",
         "variant": "resource_deeming",
-        "peak_rss_gib": 10.945907592773438,
-        "wall_seconds": 67.2201880409848,
+        "peak_rss_gib": 10.962249755859375,
+        "wall_seconds": 40.5816977499926,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -582,8 +582,8 @@
         "chunk_sha256": "75fb0d8dfb105a7a72399349911f1948c3e522f70ca472213f0e263ed812e77d",
         "scenario": "baseline",
         "variant": "resource_deeming",
-        "peak_rss_gib": 12.214523315429688,
-        "wall_seconds": 71.74242337499163,
+        "peak_rss_gib": 12.279632568359375,
+        "wall_seconds": 47.29063887501252,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -601,8 +601,8 @@
         "chunk_sha256": "75fb0d8dfb105a7a72399349911f1948c3e522f70ca472213f0e263ed812e77d",
         "scenario": "ten_twenty",
         "variant": "resource_deeming",
-        "peak_rss_gib": 12.318740844726562,
-        "wall_seconds": 69.18371675000526,
+        "peak_rss_gib": 12.27618408203125,
+        "wall_seconds": 43.183899499999825,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -620,8 +620,8 @@
         "chunk_sha256": "75fb0d8dfb105a7a72399349911f1948c3e522f70ca472213f0e263ed812e77d",
         "scenario": "no_limit",
         "variant": "resource_deeming",
-        "peak_rss_gib": 12.354736328125,
-        "wall_seconds": 60.79975775000639,
+        "peak_rss_gib": 12.287307739257812,
+        "wall_seconds": 42.9807040419837,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -639,8 +639,8 @@
         "chunk_sha256": "6c42f832a83e07516cf131c1009548d3b3cf9456f4e4a71fd9d128ea25f04a49",
         "scenario": "baseline",
         "variant": "resource_deeming",
-        "peak_rss_gib": 2.429718017578125,
-        "wall_seconds": 17.286885459005134,
+        "peak_rss_gib": 2.4891357421875,
+        "wall_seconds": 11.355061458976706,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -658,8 +658,8 @@
         "chunk_sha256": "6c42f832a83e07516cf131c1009548d3b3cf9456f4e4a71fd9d128ea25f04a49",
         "scenario": "ten_twenty",
         "variant": "resource_deeming",
-        "peak_rss_gib": 2.42303466796875,
-        "wall_seconds": 17.04479133398854,
+        "peak_rss_gib": 2.48931884765625,
+        "wall_seconds": 11.358056124998257,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -677,8 +677,8 @@
         "chunk_sha256": "6c42f832a83e07516cf131c1009548d3b3cf9456f4e4a71fd9d128ea25f04a49",
         "scenario": "no_limit",
         "variant": "resource_deeming",
-        "peak_rss_gib": 2.484649658203125,
-        "wall_seconds": 17.17513066600077,
+        "peak_rss_gib": 2.4893035888671875,
+        "wall_seconds": 11.666234167001676,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -692,7 +692,7 @@
         }
       }
     ],
-    "wall_seconds": 3290.358490583021,
+    "wall_seconds": 1344.7135115000128,
     "uv_pip_freeze_path": "/Users/maxghenis/PolicyEngine/ssi-asset-limits/results/microcosm-625-spm0915-resource-deeming/uv-pip-freeze.txt",
     "annualization": "MONTH amounts sum all twelve months; MONTH flags are fractions of true months; age and resources use January; YEAR variables are calculated for 2026."
   }

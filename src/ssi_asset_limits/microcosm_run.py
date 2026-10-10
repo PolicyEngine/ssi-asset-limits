@@ -301,6 +301,16 @@ def _variant_reform(variant: str):
     return getattr(importlib.import_module(module), name)
 
 
+def variant_source_sha256(variant: str | None) -> str | None:
+    """SHA-256 of the module that defines a variant's reform, as installed."""
+    if variant is None:
+        return None
+    import importlib.util
+
+    spec = importlib.util.find_spec(VARIANTS[variant][0])
+    return sha256_file(Path(spec.origin))
+
+
 def run_worker(
     chunk: Path, scenario: str, destination: Path, variant: str | None = None
 ) -> None:
@@ -388,6 +398,7 @@ def run_worker(
         "chunk_sha256": sha256_file(chunk),
         "scenario": scenario,
         "variant": variant,
+        "variant_source_sha256": variant_source_sha256(variant),
         "peak_rss_gib": peak_rss_gib(),
         "wall_seconds": time.monotonic() - started,
         "legacy_input_renames": simulation.policyengine_bundle.get(
@@ -510,6 +521,8 @@ def _finished(
     return (
         receipt.get("scenario") == scenario
         and receipt.get("variant") == variant
+        and receipt.get("variant_source_sha256")
+        == variant_source_sha256(variant)
         and receipt.get("chunk_sha256") == sha256_file(chunk)
         and all(
             (destination / f"{name}.csv.gz").exists()
@@ -592,6 +605,7 @@ def run(
     diagnostics = {
         **manifest,
         "variant": variant,
+        "variant_source_sha256": variant_source_sha256(variant),
         "output_weight_totals": output_weight_totals,
         "output_weight_year": YEAR,
         "input_weight_year": 2024,

@@ -2,6 +2,7 @@
 
 import json
 import subprocess
+from pathlib import Path
 from types import SimpleNamespace
 
 import numpy as np
@@ -435,10 +436,38 @@ def test_variant_workers_are_not_mistaken_for_certified_ones(tmp_path):
     )
     receipt["variant"] = "resource_deeming"
     (destination / "receipt.json").write_text(json.dumps(receipt))
+    # A variant receipt must also name the reform source it ran.
+    assert not microcosm_run._finished(
+        destination, chunk, "baseline", "resource_deeming"
+    )
+    receipt["variant_source_sha256"] = microcosm_run.variant_source_sha256(
+        "resource_deeming"
+    )
+    (destination / "receipt.json").write_text(json.dumps(receipt))
     assert microcosm_run._finished(
         destination, chunk, "baseline", "resource_deeming"
     )
     assert not microcosm_run._finished(destination, chunk, "baseline")
+    receipt["variant_source_sha256"] = "0" * 64
+    (destination / "receipt.json").write_text(json.dumps(receipt))
+    assert not microcosm_run._finished(
+        destination, chunk, "baseline", "resource_deeming"
+    )
+
+
+def test_variant_source_hash_is_the_reform_module():
+    from ssi_asset_limits import microcosm_run
+    from ssi_asset_limits.microcosm_run import sha256_file
+
+    source = (
+        Path(microcosm_run.__file__).parent
+        / "sensitivity"
+        / "ssi_resource_deeming_reform.py"
+    )
+    assert microcosm_run.variant_source_sha256(
+        "resource_deeming"
+    ) == sha256_file(source)
+    assert microcosm_run.variant_source_sha256(None) is None
 
 
 def test_unknown_variant_is_refused_before_anything_runs(tmp_path):
