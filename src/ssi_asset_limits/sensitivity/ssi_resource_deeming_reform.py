@@ -10,7 +10,7 @@ certified population can be measured. It is a sensitivity variant, never the
 published estimate.
 
 This is the branch's own 2.2.1 companion (``backport/`` at commit
-51d64d4904). 2.2.1 has no parent links, so parents are found by the branch's
+190f45824e). 2.2.1 has no parent links, so parents are found by the branch's
 no-link proxy (tax unit and household, over ``is_parent``); every other
 policy class and helper is the branch source, which the branch's checker
 compares class by class. The branch's regulation-sourced cases that 2.2.1 can
@@ -67,29 +67,27 @@ class is_ssi_spousal_resource_deeming_applies(Variable):
     definition_period = MONTH
     reference = (
         "https://www.ecfr.gov/current/title-20/section-416.1202#p-416.1202(a)",
+        "https://www.ecfr.gov/current/title-20/section-416.1160",
         "https://secure.ssa.gov/poms.nsf/lnx/0501330100",
         "https://www.ecfr.gov/current/title-20/section-416.1167",
     )
 
     def formula(person, period, parameters):
-        # Use the same tax-head/spouse convention as SSI income deeming and
-        # ssi_claim_is_joint. A marital unit alone cannot establish marriage:
-        # situations omitting marital units put everyone in one default unit.
-        ineligible = person("is_ssi_ineligible_spouse", period)
-        # Marital units represent spouses living together. Subtract self:
-        # an unmarried ineligible adult is not their own ineligible spouse.
-        has_ineligible_spouse = person.marital_unit.sum(ineligible) > ineligible
-        households = person.household.reference_entity.members_entity_id
-        first_home = person.marital_unit.value_nth_person(0, households, default=-1)
-        second_home = person.marital_unit.value_nth_person(1, households, default=-2)
-        # 416.1167 retains the absent person's household membership. Enter a
-        # temporarily absent spouse in the household they remain a member of.
+        # 416.1160: an ineligible spouse 'lives with you as your husband or
+        # wife and is not eligible for SSI benefits'. Identify the spouse with
+        # the same evidence as a parent's spouse in parental deeming, so one
+        # couple is never married for one rule and not the other. 416.1167
+        # retains an absent person's household membership: enter a temporarily
+        # absent spouse in the household they remain a member of.
+        spouse = _ssi_spouse_index(person, period)
+        aged_blind_disabled = person("is_ssi_aged_blind_disabled", period)
+        # As is_ssi_ineligible_spouse, a spouse who is not aged, blind or
+        # disabled cannot be eligible; two such spouses claim jointly.
+        spouse_ineligible = (spouse >= 0) & ~aged_blind_disabled[np.maximum(spouse, 0)]
         return (
-            person("is_ssi_aged_blind_disabled", period)
-            & person("is_tax_unit_head_or_spouse", period)
+            aged_blind_disabled
             & ~person("ssi_claim_is_joint", period)
-            & has_ineligible_spouse
-            & (first_home == second_home)
+            & spouse_ineligible
         )
 
 
@@ -148,21 +146,29 @@ class ssi_resource_deeming_waiver(Variable):
     """
 
 
-# Source: policyengine_us/variables/gov/ssa/ssi/eligibility/resources/deemed/ssi_resources_deemed_from_ineligible_parent.py
+# Source: policyengine_us/variables/gov/ssa/ssi/eligibility/resources/deemed/_ssi_spouses.py
 def _ssi_established_spouse_indices(person, period, first, second):
     """Rows of established co-resident spouses, with the Medicaid bound.
 
-    As in _medicaid_parents, marriage is shown by the other head/spouse of
-    a joint return, or a two-person marital unit with cohabitating_spouses
-    on either tax unit. A marital unit alone is insufficient: situations
-    omitting marital units put everyone in one. Parent-child links exclude
-    candidates even when tax roles suggest marriage; ambiguous candidates
-    resolve to no spouse. Apply this test to each named parent, without
-    inferring additional relatives beyond their spouses.
+    SSI resource deeming uses this one test for a claimant's spouse
+    (416.1202(a)) and for a parent's spouse (416.1202(b)). As in
+    _medicaid_parents, marriage is shown by the other head/spouse of a
+    married tax unit (here also in the same marital unit, so a tax-unit
+    spouse role alone never makes a spouse of someone with their own marital
+    unit), or by a two-person marital unit with cohabitating_spouses on
+    either tax unit. A marital unit alone is insufficient: situations
+    omitting marital units put everyone in one.
+    Two dependents of one tax unit who share a two-person marital unit are
+    spouses too, since a default marital unit also holds the tax unit's head
+    and so never has two people. tax_unit_married is exactly when
+    filing_status is JOINT; reading filing_status would pull the tax-filing
+    chain (dependents, gross income, retirement-contribution limits) into SSI
+    eligibility. Parent-child links exclude candidates even when tax roles
+    suggest marriage; ambiguous candidates resolve to no spouse.
     """
     head_or_spouse = person("is_tax_unit_head_or_spouse", period)
     tax_unit = person.tax_unit.reference_entity.members_entity_id
-    joint = head_or_spouse & (person.tax_unit("head_spouse_count", period) == 2)
+    joint = head_or_spouse & person.tax_unit("tax_unit_married", period)
     married = person.marital_unit.nb_persons() == 2
     marital_unit = person.marital_unit.reference_entity.members_entity_id
     cohabiting = person.tax_unit("cohabitating_spouses", period)
@@ -182,17 +188,48 @@ def _ssi_established_spouse_indices(person, period, first, second):
             & ~names_applicant
             & ~named_by_applicant
             & (
-                (joint & head_or_spouse[member] & (tax_unit[member] == tax_unit))
+                (
+                    joint
+                    & head_or_spouse[member]
+                    & (tax_unit[member] == tax_unit)
+                    & (marital_unit[member] == marital_unit)
+                )
                 | (
                     married
                     & (marital_unit[member] == marital_unit)
-                    & (cohabiting | cohabiting[member])
+                    & (
+                        cohabiting
+                        | cohabiting[member]
+                        | (
+                            ~head_or_spouse
+                            & ~head_or_spouse[member]
+                            & (tax_unit[member] == tax_unit)
+                        )
+                    )
                 )
             )
         )
         spouse = np.where(shown, member, spouse)
         candidates += shown
     return np.where(candidates == 1, spouse, -1)
+
+
+# Stand-in for co_resident_parent_indices in
+# policyengine_us/variables/household/demographic/person/_parent_links.py.
+# US 2.2.1 has no parent_1_id/parent_2_id: every parent row is unresolved, as
+# in the no-link specialization of _ssi_parental_resource_pool.
+def co_resident_parent_indices(person, period):
+    return (
+        np.full(person.count, -1, dtype=int),
+        np.full(person.count, -1, dtype=int),
+    )
+
+
+# Source: policyengine_us/variables/gov/ssa/ssi/eligibility/resources/deemed/_ssi_spouses.py
+def _ssi_spouse_index(person, period):
+    """The row of each person's established co-resident spouse, or -1."""
+    first, second = co_resident_parent_indices(person, period)
+    return _ssi_established_spouse_indices(person, period, first, second)
 
 
 def _ssi_unlinked_parental_resource_pool(person, resources, parent, spouse):
@@ -206,22 +243,34 @@ def _ssi_unlinked_parental_resource_pool(person, resources, parent, spouse):
     their two spouses), so its fifth column identifies its tax-unit and
     household intersection. Thus keys are exact, with linear memory.
     """
+    named = parent
     parent = parent | ((spouse >= 0) & parent[spouse])
     group = person.tax_unit
     indices = np.arange(person.count)
     households = person.household.reference_entity.members_entity_id
+    tax_units = group.reference_entity.members_entity_id
     total = np.zeros(person.count)
     count = np.zeros(person.count, dtype=int)
     keys = np.full((person.count, 5), -1, dtype=int)
+
+    def add(rows, selected):
+        nonlocal total, count
+        store = selected & (count < 4)
+        keys[indices[store], count[store]] = rows[store]
+        total = total + np.where(selected, resources[np.maximum(rows, 0)], 0)
+        count = count + selected
+
     for position in range(
         int(np.max(group.reference_entity.members_position, initial=-1)) + 1
     ):
         member = group.value_nth_person(position, indices, default=-1)
-        selected = (member >= 0) & (households[member] == households) & parent[member]
-        store = selected & (count < 4)
-        keys[indices[store], count[store]] = member[store]
-        total += np.where(selected, resources[member], 0)
-        count += selected
+        safe = np.maximum(member, 0)
+        selected = (member >= 0) & (households[safe] == households) & parent[safe]
+        add(member, selected)
+        # A parent's established spouse counts wherever they file
+        # (416.1202(b)(1)); members of this tax unit were counted above.
+        partner = np.where(selected & named[safe], spouse[safe], -1)
+        add(partner, (partner >= 0) & (tax_units[np.maximum(partner, 0)] != tax_units))
     keys[:, :4].sort(axis=1)
     large = count > 4
     if np.any(large):
@@ -324,13 +373,12 @@ class ssi_resources_deemed_from_ineligible_spouse(Variable):
 
     def formula(person, period, parameters):
         resources = person("ssi_resources_for_deeming", period)
-        ineligible = person("is_ssi_ineligible_spouse", period)
-        spouse_resources = (
-            person.marital_unit.sum(resources * ineligible) - resources * ineligible
-        )
+        spouse = _ssi_spouse_index(person, period)
         # 416.1202(a): 'whether or not such resources are available'.
-        return person("is_ssi_spousal_resource_deeming_applies", period) * max_(
-            0, spouse_resources
+        return where(
+            person("is_ssi_spousal_resource_deeming_applies", period),
+            resources[np.maximum(spouse, 0)],
+            0,
         )
 
 

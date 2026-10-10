@@ -1,7 +1,7 @@
-# Copied from PolicyEngine/policyengine-us branch ssi-resource-deeming
-# (commit 51d64d4904), policyengine_us/tests/policy/baseline/gov/ssa/ssi/eligibility/resources/deemed/ssi_resources_deemed_from_ineligible_spouse.yaml, without the cases that need parent
+# Copied from PolicyEngine/policyengine-us#10040 (branch ssi-resource-deeming,
+# commit 190f45824e), policyengine_us/tests/policy/baseline/gov/ssa/ssi/eligibility/resources/deemed/ssi_resources_deemed_from_ineligible_spouse.yaml, without the cases that need parent
 # links, which policyengine-us 2.2.1 lacks. Expected values are the
-# branch's, sourced from 20 CFR 416.1202 and POMS SI 01330.
+# branch's, sourced from 20 CFR 416.1160-416.1205 and POMS SI 01330.
 - name: All countable resources held by the ineligible spouse are deemed
   period: 2026-01
   input:
