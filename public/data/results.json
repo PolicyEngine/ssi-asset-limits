@@ -591,5 +591,92 @@
         "ssa_share_pct": 2.439675554051695
       }
     ]
-  }
+  },
+  "sensitivities": [
+    {
+      "key": "restore_cps_social_security",
+      "label": "Social Security that the population file erased, restored",
+      "description": "Reruns the 3,566 households in which the population file set a person's CPS-reported Social Security to zero (PolicyEngine/microcosm#1178), with the benefit restored. Weights are not recalibrated, so the current-law caseload no longer matches SSA's.",
+      "baseline_by_age": [
+        {
+          "age_group": "children_under_18",
+          "label": "Under 18",
+          "policyengine_recipients": 179909.580583217,
+          "ssa_recipients": 1001922
+        },
+        {
+          "age_group": "adults_18_64",
+          "label": "18 to 64",
+          "policyengine_recipients": 3635992.817345959,
+          "ssa_recipients": 3905779
+        },
+        {
+          "age_group": "elderly_65_plus",
+          "label": "65 and over",
+          "policyengine_recipients": 1396371.4581867012,
+          "ssa_recipients": 2382142
+        }
+      ],
+      "scenarios": [
+        {
+          "key": "ten_twenty",
+          "by_age": [
+            {
+              "age_group": "children_under_18",
+              "label": "Under 18",
+              "new_recipients": 0.0,
+              "annual_ssi_cost": 0.0
+            },
+            {
+              "age_group": "adults_18_64",
+              "label": "18 to 64",
+              "new_recipients": 151783.24943567454,
+              "annual_ssi_cost": 976904695.1546481
+            },
+            {
+              "age_group": "elderly_65_plus",
+              "label": "65 and over",
+              "new_recipients": 176726.43790630368,
+              "annual_ssi_cost": 1056903897.9291751
+            },
+            {
+              "age_group": "total_all_ages",
+              "label": "All ages",
+              "new_recipients": 328509.68734197825,
+              "annual_ssi_cost": 2033808593.0838234
+            }
+          ]
+        },
+        {
+          "key": "no_limit",
+          "by_age": [
+            {
+              "age_group": "children_under_18",
+              "label": "Under 18",
+              "new_recipients": 0.0,
+              "annual_ssi_cost": 0.0
+            },
+            {
+              "age_group": "adults_18_64",
+              "label": "18 to 64",
+              "new_recipients": 251596.45561997202,
+              "annual_ssi_cost": 1706754985.2866156
+            },
+            {
+              "age_group": "elderly_65_plus",
+              "label": "65 and over",
+              "new_recipients": 382840.59259136475,
+              "annual_ssi_cost": 2596224246.9641886
+            },
+            {
+              "age_group": "total_all_ages",
+              "label": "All ages",
+              "new_recipients": 634437.0482113367,
+              "annual_ssi_cost": 4302979232.250803
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

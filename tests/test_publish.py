@@ -331,3 +331,43 @@ def test_held_out_checks_are_embedded_when_given(tmp_path):
     ]
     assert "extra" not in tables["recipients_with_social_security"][0]
     assert "held_out_checks" not in publish(run, tmp_path / "out2")
+
+
+def test_sensitivity_runs_are_summarised_beside_the_estimate(tmp_path):
+    persons, households = toy_frames()
+
+    def write_run(path, variant, persons):
+        path.mkdir()
+        persons.to_csv(path / "persons.csv.gz", index=False)
+        households.to_csv(path / "households.csv.gz", index=False)
+        diagnostics = {} if variant is None else {"variant": variant}
+        (path / "run_metadata.json").write_text(
+            json.dumps(
+                {
+                    "provenance": {"analysis_year": 2026},
+                    "diagnostics": diagnostics,
+                }
+            )
+        )
+
+    write_run(tmp_path / "run", None, persons)
+    restored = persons.assign(ssi_ten_twenty=persons["ssi_baseline"])
+    write_run(tmp_path / "restored", "restore_cps_social_security", restored)
+    results = publish(
+        tmp_path / "run",
+        tmp_path / "out",
+        sensitivity_dirs=[tmp_path / "restored"],
+    )
+    (sens,) = results["sensitivities"]
+    assert sens["key"] == "restore_cps_social_security"
+    ten = next(s for s in sens["scenarios"] if s["key"] == "ten_twenty")
+    total = next(
+        r for r in ten["by_age"] if r["age_group"] == "total_all_ages"
+    )
+    assert total["new_recipients"] == 0
+    main_total = next(
+        r
+        for r in results["scenarios"][0]["by_age"]
+        if r["age_group"] == "total_all_ages"
+    )
+    assert main_total["new_recipients"] == pytest.approx(100)

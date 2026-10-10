@@ -39,7 +39,7 @@ const ITEMS = [
   {
     key: "composition",
     title: "The model's SSI recipients are too young and too rarely on Social Security",
-    body: "Within ages 18 to 64 the model has more than twice SSA's number of recipients in their twenties and about an eighth of SSA's number aged 60 to 64; only the total for the age group is calibrated. Among recipients 65 and over, about one in six in the model also receives Social Security, against more than half in SSA's records. Older people are more likely to have savings, and SSA's records show people with Social Security receiving much smaller SSI payments, so both gaps bear on who gains from a higher limit and by how much.",
+    body: "Within ages 18 to 64 the model has more than twice SSA's number of recipients in their twenties and about an eighth of SSA's number aged 60 to 64; only the total for the age group is calibrated. Among recipients 65 and over, about one in six in the model also receives Social Security, against more than half in SSA's records. Older people are more likely to have savings, and SSA's records show people with Social Security receiving much smaller SSI payments, so both gaps bear on who gains from a higher limit and by how much. Part of the Social Security gap is a defect in the population file, which sets Social Security to zero for some people who report it in the Census survey (PolicyEngine/microcosm#1178). Restoring it, in the table above, roughly halves the number of new recipients aged 65 and over.",
   },
   {
     key: "savings",

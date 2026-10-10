@@ -114,10 +114,26 @@ export interface HeldOutChecks {
   recipients_by_marital_status: ShareCheck[];
 }
 
+export interface SensitivityAgeRow {
+  age_group: string;
+  label: string;
+  new_recipients: number;
+  annual_ssi_cost: number;
+}
+
+export interface Sensitivity {
+  key: string;
+  label: string;
+  description: string;
+  baseline_by_age: BaselineAgeRow[];
+  scenarios: { key: string; by_age: SensitivityAgeRow[] }[];
+}
+
 export interface Results {
   provenance: Provenance;
   precision_note: string;
   held_out_checks?: HeldOutChecks;
+  sensitivities?: Sensitivity[];
   baseline: Baseline;
   scenarios: Scenario[];
   comparators: Comparators;

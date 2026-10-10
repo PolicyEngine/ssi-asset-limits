@@ -16,6 +16,7 @@ import CostComparison from "@/src/components/CostComparison";
 import Methodology from "@/src/components/Methodology";
 import ResourceBins from "@/src/components/ResourceBins";
 import ScenarioSummary from "@/src/components/ScenarioSummary";
+import Sensitivities from "@/src/components/Sensitivities";
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
@@ -95,6 +96,13 @@ export default function DashboardClient() {
             <BaselineCheck baseline={results.baseline} />
             {results.held_out_checks && (
               <HeldOutChecks checks={results.held_out_checks} />
+            )}
+            {results.sensitivities && results.sensitivities.length > 0 && (
+              <Sensitivities
+                scenario={scenario}
+                baseline={results.baseline}
+                sensitivities={results.sensitivities}
+              />
             )}
             <Caveats />
             <Methodology provenance={results.provenance} />

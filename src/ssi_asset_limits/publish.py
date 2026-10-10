@@ -404,11 +404,63 @@ def held_out_checks(checks_dir: Path) -> dict:
     }
 
 
+SENSITIVITY_LABELS = {
+    "restore_cps_social_security": (
+        "Social Security that the population file erased, restored",
+        "Reruns the 3,566 households in which the population file set a "
+        "person's CPS-reported Social Security to zero "
+        "(PolicyEngine/microcosm#1178), with the benefit restored. Weights "
+        "are not recalibrated, so the current-law caseload no longer "
+        "matches SSA's.",
+    ),
+    "resource_deeming": (
+        "A spouse's and a parent's savings counted, as SSA does",
+        "Adds federal resource deeming (20 CFR 416.1202) to the certified "
+        "engine as a reform, ahead of the policyengine-us change that adds "
+        "it (PolicyEngine/policyengine-us#3557).",
+    ),
+}
+
+
+def sensitivity(run_dir: Path) -> dict:
+    """Headline rows of one sensitivity run, for comparison on the page."""
+
+    persons = pd.read_csv(run_dir / "persons.csv.gz")
+    metadata = json.loads((run_dir / "run_metadata.json").read_text())
+    variant = metadata["diagnostics"]["variant"]
+    label, description = SENSITIVITY_LABELS[variant]
+    return {
+        "key": variant,
+        "label": label,
+        "description": description,
+        "baseline_by_age": baseline_by_age(persons)["by_age"],
+        "scenarios": [
+            {
+                "key": spec.key,
+                "by_age": [
+                    {
+                        key: row[key]
+                        for key in (
+                            "age_group",
+                            "label",
+                            "new_recipients",
+                            "annual_ssi_cost",
+                        )
+                    }
+                    for row in scenario_by_age(persons, spec.key)
+                ],
+            }
+            for spec in SCENARIOS
+        ],
+    }
+
+
 def publish(
     run_dir: Path,
     out_dir: Path,
     allow_variant: bool = False,
     checks_dir: Path | None = None,
+    sensitivity_dirs: list[Path] | None = None,
 ) -> dict:
     persons = pd.read_csv(run_dir / "persons.csv.gz")
     households = pd.read_csv(run_dir / "households.csv.gz")
@@ -423,6 +475,10 @@ def publish(
     results = build_results(persons, households, metadata)
     if checks_dir is not None:
         results["held_out_checks"] = held_out_checks(checks_dir)
+    if sensitivity_dirs:
+        results["sensitivities"] = [
+            sensitivity(path) for path in sensitivity_dirs
+        ]
     write_outputs(results, out_dir)
     return results
 
@@ -437,8 +493,21 @@ def main(argv: list[str] | None = None) -> None:
         type=Path,
         help="Directory of admin_checks tables for this run to include.",
     )
+    parser.add_argument(
+        "--sensitivity",
+        type=Path,
+        action="append",
+        default=[],
+        help="A finished sensitivity run to show beside the estimate.",
+    )
     args = parser.parse_args(argv)
-    publish(args.run_dir, args.out_dir, args.allow_variant, args.checks_dir)
+    publish(
+        args.run_dir,
+        args.out_dir,
+        args.allow_variant,
+        args.checks_dir,
+        args.sensitivity,
+    )
 
 
 if __name__ == "__main__":
