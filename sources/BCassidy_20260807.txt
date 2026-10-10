@@ -1,0 +1,70 @@
+                                    SOCIAL SECURITY
+                                             Actuarial Services
+
+                                                August 7, 2026
+
+The Honorable Bill Cassidy
+United States Senate
+Washington, D.C. 20510
+
+Dear Senator Cassidy:
+
+I am writing in response to your request for our estimates of the program cost effects on the
+Federal Supplemental Security Income (SSI) program of enacting a proposal similar to S. 1234,
+the “SSI Savings Penalty Elimination Act,” which you and several other Senators introduced on
+April 1, 2025. These updated estimates reflect a different proposed effective date (January 1,
+2027) than was included in the Bill as originally introduced and are based on the assumptions
+underlying the projections presented in the 2025 SSI Annual Report. 1
+
+As with S. 1234, this proposal would increase the limit on countable resources from $2,000 for
+unmarried individuals and $3,000 for married couples to $10,000 for unmarried individuals and
+$20,000 for married couples, and would index these resource limits by the annual percentage
+change in the Consumer Price Index for All Urban Consumers (CPI-U). For the purpose of the
+estimates provided here, we have assumed that the specified increases in limits would apply
+upon enactment in 2027 and would be indexed starting in 2028.
+
+Enactment of this proposal would result in an increase in program cost because some individuals
+who have countable resources above the current-law limits would become eligible or maintain
+eligibility under this proposal. If the proposal became effective for eligibility starting on January
+1, 2027, we estimate the increase in Federal SSI payments would be $8.9 billion over the
+calendar year period 2025 through 2034, the first 10 years of the 2025 SSI Annual Report
+projection period. The table below provides our estimates of the cost increases on an annual basis
+through 2034. This proposal would not have any direct effects on the financial status of the
+Social Security (OASDI) trust funds.
+
+                       Estimated Change in Federal SSI Program Cost for Enacting
+                   the “SSI Savings Penalty Elimination Act” effective January 1, 2027
+                                               (In billions)
+
+                                              Calendar Year                   Total
+                           2025 2026 2027 2028 2029 2030 2031 2032 2033 2034 2025-34
+Estimated change in
+Federal SSI payments           --      --   $0.5   $1.0    $1.1   $1.2    $1.2   $1.3    $1.3    $1.4    $8.9
+
+
+
+
+1
+ See chapter IV in the 2025 SSI Annual Report at https://www.ssa.gov/OACT/ssir/SSI25/index.html for details.
+The assumptions underlying the projections in the 2025 SSI Annual Report are consistent with the intermediate
+assumptions of 2025 Social Security Trustees Report.
+Page 2 – The Honorable Bill Cassidy
+
+
+Our estimates for the proposal reflect analysis of survey data from the Annual Social and
+Economic Supplement to the Current Population Survey (ASEC). The ASEC provides income
+and resource-related information at the individual level, but not at the level of detail available in
+SSA’s administrative data for recipients. Based on the results of our analysis of this data source,
+we have been able to reasonably model the expected effects of the enactment of this proposal.
+
+I hope these estimates are helpful. Please let me know if we can provide further assistance.
+
+
+                                               Sincerely,
+
+
+
+
+                                               Karen P. Glenn, FSA, EA, MAAA
+                                               Chief Actuary
+

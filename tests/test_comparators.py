@@ -1,8 +1,11 @@
 import hashlib
 import re
+import shutil
+import subprocess
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 from ssi_asset_limits.comparators import (
     CBPP_NEW_BENEFICIARIES,
@@ -54,3 +57,53 @@ def test_oact_letters_are_archived_with_their_hashes():
         name = letter["url"].rsplit("/", 1)[-1]
         data = (SOURCES / name).read_bytes()
         assert hashlib.sha256(data).hexdigest() == sums[name]
+
+
+def oact_table(letter):
+    """Years and amounts from the cost table in a letter's text extract."""
+
+    name = letter["url"].rsplit("/", 1)[-1].replace(".pdf", ".txt")
+    lines = (SOURCES / name).read_text().splitlines()
+    header = next(
+        i
+        for i, line in enumerate(lines)
+        if re.fullmatch(r"\s*(\d{4}\s+)+\d{4}-\d{2}\s*", line)
+    )
+    columns = lines[header].split()
+    row = next(line for line in lines[header + 1 :] if "$" in line)
+    amounts = re.findall(r"--|\$[\d.]+", row)
+    return dict(zip(columns, amounts, strict=True))
+
+
+def test_oact_figures_match_the_letters():
+    for letter in OACT_LETTERS:
+        table = oact_table(letter)
+        total_column = letter["total_label"].replace("–", "-")
+        expected = {
+            str(year): "--" if value is None else f"${value:.1f}"
+            for year, value in letter["annual"].items()
+        }
+        expected[total_column] = f"${letter['total_billions']:.1f}"
+        assert table == expected
+
+
+def test_oact_letters_assume_january_eligibility():
+    for letter in OACT_LETTERS:
+        name = letter["url"].rsplit("/", 1)[-1].replace(".pdf", ".txt")
+        text = " ".join((SOURCES / name).read_text().split())
+        year = letter["effective"].split()[-1]
+        assert f"January 1, {year}" in text
+
+
+@pytest.mark.skipif(
+    shutil.which("pdftotext") is None, reason="pdftotext not installed"
+)
+def test_oact_text_extracts_come_from_the_archived_letters(tmp_path):
+    for letter in OACT_LETTERS:
+        name = letter["url"].rsplit("/", 1)[-1]
+        out = tmp_path / name.replace(".pdf", ".txt")
+        subprocess.run(
+            ["pdftotext", "-layout", str(SOURCES / name), str(out)],
+            check=True,
+        )
+        assert out.read_text() == (SOURCES / out.name).read_text()
