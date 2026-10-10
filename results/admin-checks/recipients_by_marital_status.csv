@@ -1,4 +1,4 @@
-marital_status,policyengine_recipients,policyengine_share_pct,ssa_recipients,ssa_share_pct
-No spouse,4936455.155776007,78.50219480723216,6817742,91.8355905610238
-Eligible spouse (both recipients),739405.748430494,11.758432371650562,424996,5.724733884924492
-Ineligible spouse,612441.184541249,9.739372821117286,181118,2.439675554051695
+marital_status,ssa_category,policyengine_recipients,policyengine_share_pct,ssa_recipients,ssa_share_pct
+No spouse,No spouse,4936455.155776007,78.50219480723216,6817742,91.8355905610238
+Spouse also receives SSI,Eligible spouse,325100.427858748,5.169923824755187,424996,5.724733884924492
+Spouse does not receive SSI,Ineligible spouse,1026746.5051129949,16.32788136801266,181118,2.439675554051695

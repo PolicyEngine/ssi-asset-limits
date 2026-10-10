@@ -1,10 +1,13 @@
 """Check a run's current-law SSI caseload against SSA administrative tables.
 
-Only administrative data is used as the standard. The frame is calibrated to
-SSA's recipient counts in three pooled age bands (under 18, 18-64, 65 and
-over), so agreement there shows nothing. Everything tabulated here is held
-out of that calibration: recipients by finer age band, recipients who also
-receive Social Security, and recipients by marital status.
+Only administrative data is used as the standard. The frame's SSI take-up
+draws are set so that December 2024 recipients in three pooled age bands
+(under 18, 18-64, 65 and over) match SSA's counts. The release enforces the
+two adult bands; the child band falls far short because the frame has almost
+no disabled children. Agreement in the adult bands therefore shows little.
+Everything tabulated here is held out of that targeting: recipients by finer
+age band, recipients who also receive Social Security, and recipients by
+whether a spouse lives with them and receives SSI.
 
 The module also splits each reform's new recipients into the factors that
 produce them (the pool that is eligible apart from resources and fails the
@@ -25,6 +28,7 @@ import numpy as np
 import pandas as pd
 
 from .calculators import RESOURCE_BINS
+from .microcosm_run import sha256_file
 
 BASELINE = "baseline"
 REFORMS = ("ten_twenty", "no_limit")
@@ -64,12 +68,21 @@ SSA_WITH_SOCIAL_SECURITY = {
 }
 
 # Same report, Table 12: recipients by marital status (ineligible spouses are
-# not counted as recipients).
+# not counted as recipients). Each model category is paired with the SSA
+# category it is compared to. The model has no SSI eligibility status for a
+# spouse who does not receive SSI, so "spouse does not receive SSI" also
+# counts eligible spouses who do not take it up; SSA's "ineligible spouse"
+# does not.
 SSA_MARITAL = {
     "No spouse": 6_817_742,
-    "Eligible spouse (both recipients)": 424_996,
+    "Eligible spouse": 424_996,
     "Ineligible spouse": 181_118,
 }
+MARITAL_CATEGORIES = [
+    ("No spouse", "No spouse"),
+    ("Spouse also receives SSI", "Eligible spouse"),
+    ("Spouse does not receive SSI", "Ineligible spouse"),
+]
 
 POOLED_BANDS = [
     ("Under 18", None, 18),
@@ -82,6 +95,16 @@ SOCIAL_SECURITY_COLUMNS = [
     "social_security_survivors",
     "social_security_dependents",
 ]
+
+
+# The run outputs every table here is computed from. ``run_checks`` records
+# their hashes so the publisher can refuse tables from a different run.
+RUN_FILES = ("persons.csv.gz", "persons_diagnostics.csv.gz")
+FINGERPRINT_FILE = "run_fingerprint.json"
+
+
+def run_fingerprint(run_dir: Path) -> dict[str, str]:
+    return {name: sha256_file(run_dir / name) for name in RUN_FILES}
 
 
 def _band(age: pd.Series, lower, upper) -> pd.Series:
@@ -115,7 +138,7 @@ def load_frame_inputs(chunk_paths: list[str]) -> pd.DataFrame:
         frame["marital_unit_size"] = frame.groupby("marital_unit_id")[
             "person_id"
         ].transform("size")
-        frames.append(frame.drop(columns="marital_unit_id"))
+        frames.append(frame)
     return pd.concat(frames, ignore_index=True)
 
 
@@ -169,14 +192,26 @@ def recipients_with_social_security(persons: pd.DataFrame) -> pd.DataFrame:
 
 
 def recipients_by_marital_status(persons: pd.DataFrame) -> pd.DataFrame:
+    """Recipients by whether a spouse lives with them and receives SSI.
+
+    A spouse counts as receiving SSI when the other member of the person's
+    marital unit has positive current-law SSI. Whether the pair files a joint
+    claim (``ssi_claim_is_joint``) is not used: it tests aged, blind or
+    disabled status, not payment.
+    """
+    if persons["marital_unit_size"].max() > 2:
+        raise ValueError("a marital unit has more than two people")
     weights = persons["person_weight"]
     recipient = persons[f"ssi_{BASELINE}"] > 0
-    married = persons["marital_unit_size"] >= 2
-    joint = persons[f"ssi_claim_is_joint_{BASELINE}_january"].astype(bool)
-    groups = {
+    married = persons["marital_unit_size"] == 2
+    recipients_in_unit = recipient.groupby(
+        persons["marital_unit_id"]
+    ).transform("sum")
+    partner_receives = married & (recipients_in_unit == 2)
+    masks = {
         "No spouse": recipient & ~married,
-        "Eligible spouse (both recipients)": recipient & married & joint,
-        "Ineligible spouse": recipient & married & ~joint,
+        "Spouse also receives SSI": recipient & partner_receives,
+        "Spouse does not receive SSI": recipient & married & ~partner_receives,
     }
     total = _wsum(weights, recipient)
     ssa_total = sum(SSA_MARITAL.values())
@@ -184,12 +219,15 @@ def recipients_by_marital_status(persons: pd.DataFrame) -> pd.DataFrame:
         [
             {
                 "marital_status": label,
-                "policyengine_recipients": _wsum(weights, mask),
-                "policyengine_share_pct": 100 * _wsum(weights, mask) / total,
-                "ssa_recipients": SSA_MARITAL[label],
-                "ssa_share_pct": 100 * SSA_MARITAL[label] / ssa_total,
+                "ssa_category": ssa_label,
+                "policyengine_recipients": _wsum(weights, masks[label]),
+                "policyengine_share_pct": 100
+                * _wsum(weights, masks[label])
+                / total,
+                "ssa_recipients": SSA_MARITAL[ssa_label],
+                "ssa_share_pct": 100 * SSA_MARITAL[ssa_label] / ssa_total,
             }
-            for label, mask in groups.items()
+            for label, ssa_label in MARITAL_CATEGORIES
         ]
     )
 
@@ -323,7 +361,14 @@ def run_checks(run_dir: Path, out_dir: Path) -> dict[str, pd.DataFrame]:
     keep = [c for c in diagnostics.columns if c not in persons.columns]
     persons = persons.merge(
         diagnostics[["person_id", *keep]], on="person_id", validate="1:1"
-    ).merge(inputs, on="person_id", validate="1:1")
+    ).merge(inputs, on="person_id", validate="1:1", suffixes=("", "_input"))
+    if "marital_unit_id_input" in persons:
+        # The run records marital units too; they must be the frame's.
+        if not persons["marital_unit_id"].equals(
+            persons["marital_unit_id_input"]
+        ):
+            raise ValueError("run and frame disagree on marital units")
+        persons = persons.drop(columns="marital_unit_id_input")
     tables = {
         "recipients_by_fine_age": recipients_by_fine_age(persons),
         "recipients_with_social_security": recipients_with_social_security(
@@ -337,6 +382,9 @@ def run_checks(run_dir: Path, out_dir: Path) -> dict[str, pd.DataFrame]:
     out_dir.mkdir(parents=True, exist_ok=True)
     for name, table in tables.items():
         table.to_csv(out_dir / f"{name}.csv", index=False)
+    (out_dir / FINGERPRINT_FILE).write_text(
+        json.dumps(run_fingerprint(run_dir), indent=2) + "\n"
+    )
     return tables
 
 

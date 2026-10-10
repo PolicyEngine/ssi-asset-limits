@@ -6,6 +6,7 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
+from ssi_asset_limits.admin_checks import FINGERPRINT_FILE, run_fingerprint
 from ssi_asset_limits.comparators import OACT_LETTERS
 from ssi_asset_limits.publish import (
     SCENARIOS,
@@ -82,6 +83,33 @@ def test_summary_hand_checked():
     assert metric(rows, "snap_change") == pytest.approx(-50_000)
 
 
+def test_poverty_rates_count_people_not_households():
+    persons, households = toy_frames()
+    rows = scenario_summary(persons, households, "ten_twenty")
+    # Household 10 has two people who leave poverty; the population is 260
+    # people in 160 weighted households.
+    assert metric(rows, "poverty_rate_reduction") == pytest.approx(200 / 260)
+    assert metric(rows, "deep_poverty_rate_reduction") == 0
+    no_limit = scenario_summary(persons, households, "no_limit")
+    assert metric(no_limit, "poverty_rate_reduction") == pytest.approx(
+        250 / 260
+    )
+    assert metric(no_limit, "deep_poverty_rate_reduction") == pytest.approx(
+        50 / 260
+    )
+
+
+@pytest.mark.parametrize("value", [0.5, "False"])
+def test_publisher_refuses_poverty_flags_that_are_not_true_or_false(value):
+    persons, households = toy_frames()
+    persons["in_poverty_ten_twenty"] = persons["in_poverty_ten_twenty"].astype(
+        object
+    )
+    persons.loc[0, "in_poverty_ten_twenty"] = value
+    with pytest.raises(ValueError, match="in_poverty_ten_twenty"):
+        scenario_summary(persons, households, "ten_twenty")
+
+
 def test_by_age_hand_checked():
     persons, _ = toy_frames()
     rows = {r["age_group"]: r for r in scenario_by_age(persons, "no_limit")}
@@ -133,19 +161,27 @@ def test_publish_round_trip(tmp_path):
 
 @st.composite
 def populations(draw):
+    """People grouped into households of one or more, sharing its weight."""
+
     n = draw(st.integers(min_value=1, max_value=40))
     floats = st.floats(min_value=0, max_value=20_000, allow_nan=False)
+    membership = draw(st.lists(st.integers(0, n - 1), min_size=n, max_size=n))
+    household_of = pd.factorize(pd.Series(membership))[0]
+    count = int(household_of.max()) + 1
+    household_weight = np.array(
+        draw(
+            st.lists(
+                st.floats(min_value=0.1, max_value=1e4),
+                min_size=count,
+                max_size=count,
+            )
+        )
+    )
     persons = pd.DataFrame(
         {
             "person_id": np.arange(n),
-            "household_id": np.arange(n),
-            "person_weight": draw(
-                st.lists(
-                    st.floats(min_value=0.1, max_value=1e4),
-                    min_size=n,
-                    max_size=n,
-                )
-            ),
+            "household_id": household_of,
+            "person_weight": household_weight[household_of],
             "age": draw(st.lists(st.integers(0, 90), min_size=n, max_size=n)),
             "ssi_countable_resources": draw(
                 st.lists(floats, min_size=n, max_size=n)
@@ -154,17 +190,25 @@ def populations(draw):
     )
     for key in KEYS:
         persons[f"ssi_{key}"] = draw(st.lists(floats, min_size=n, max_size=n))
-        flags = draw(st.lists(st.booleans(), min_size=n, max_size=n))
-        persons[f"in_poverty_{key}"] = flags
-        persons[f"in_deep_poverty_{key}"] = flags
+        persons[f"in_poverty_{key}"] = draw(
+            st.lists(st.booleans(), min_size=n, max_size=n)
+        )
+        persons[f"in_deep_poverty_{key}"] = persons[
+            f"in_poverty_{key}"
+        ] & np.array(draw(st.lists(st.booleans(), min_size=n, max_size=n)))
     households = pd.DataFrame(
         {
-            "household_id": persons["household_id"],
-            "household_weight": persons["person_weight"],
+            "household_id": np.arange(count),
+            "household_weight": household_weight,
         }
     )
     for key in KEYS:
-        households[f"household_net_income_{key}"] = persons[f"ssi_{key}"]
+        households[f"household_net_income_{key}"] = (
+            persons.groupby("household_id")[f"ssi_{key}"]
+            .sum()
+            .reindex(households["household_id"])
+            .to_numpy()
+        )
         households[f"snap_{key}"] = 0.0
         households[f"income_tax_{key}"] = 0.0
     return persons, households
@@ -214,6 +258,16 @@ def test_accounting_identities(frames):
         assert metric(summary, "net_fiscal_cost") == pytest.approx(
             total, rel=1e-9, abs=1e-6
         )
+        # Poverty rates are shares of people, not of households.
+        for flag, name in (
+            ("in_poverty", "poverty_rate_reduction"),
+            ("in_deep_poverty", "deep_poverty_rate_reduction"),
+        ):
+            before = float(w[persons[f"{flag}_baseline"]].sum())
+            after = float(w[persons[f"{flag}_{spec.key}"]].sum())
+            assert metric(summary, name) == pytest.approx(
+                (before - after) / float(w.sum()), rel=1e-9, abs=1e-12
+            )
 
 
 @settings(max_examples=60, deadline=None)
@@ -316,10 +370,15 @@ def test_held_out_checks_are_embedded_when_given(tmp_path):
     pd.DataFrame(
         {
             "marital_status": ["No spouse"],
+            "ssa_category": ["No spouse"],
             "policyengine_share_pct": [78.5],
             "ssa_share_pct": [91.8],
         }
     ).to_csv(checks / "recipients_by_marital_status.csv", index=False)
+    persons[["person_id"]].to_csv(
+        run / "persons_diagnostics.csv.gz", index=False
+    )
+    (checks / FINGERPRINT_FILE).write_text(json.dumps(run_fingerprint(run)))
     results = publish(run, tmp_path / "out", checks_dir=checks)
     tables = results["held_out_checks"]
     assert tables["recipients_by_fine_age"] == [
@@ -331,6 +390,12 @@ def test_held_out_checks_are_embedded_when_given(tmp_path):
     ]
     assert "extra" not in tables["recipients_with_social_security"][0]
     assert "held_out_checks" not in publish(run, tmp_path / "out2")
+    # Tables from a different run are refused.
+    persons.assign(age=persons["age"] + 1).to_csv(
+        run / "persons.csv.gz", index=False
+    )
+    with pytest.raises(ValueError, match="different run"):
+        publish(run, tmp_path / "out3", checks_dir=checks)
 
 
 def test_sensitivity_runs_are_summarised_beside_the_estimate(tmp_path):

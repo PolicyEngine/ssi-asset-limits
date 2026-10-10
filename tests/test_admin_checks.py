@@ -1,5 +1,7 @@
 import pandas as pd
 import pytest
+from hypothesis import given
+from hypothesis import strategies as st
 
 from ssi_asset_limits.admin_checks import (
     SSA_AGE_SHARES,
@@ -28,8 +30,9 @@ def toy_persons():
             "ssi_ten_twenty": [8000, 9000, 6000, 0, 0, 7000],
             "ssi_no_limit": [8000, 9000, 6000, 0, 5000, 7000],
             "has_social_security": [False, True, False, True, True, True],
-            "marital_unit_size": [1, 1, 2, 2, 1, 2],
-            "ssi_claim_is_joint_baseline_january": [0, 0, 0, 1, 0, 1],
+            # People 2 and 3 are a married couple; the rest live alone.
+            "marital_unit_id": [0, 1, 2, 2, 4, 5],
+            "marital_unit_size": [1, 1, 2, 2, 1, 1],
             "is_ssi_eligible_no_limit": [1, 1, 1, 1, 1, 1],
             "ssi_amount_if_eligible_no_limit": [9000] * 6,
             "ssi_countable_income_no_limit": [1000, 0, 3000, 2000, 4000, 2000],
@@ -78,19 +81,90 @@ def test_social_security_overlap_by_age():
     )
 
 
-def test_marital_status_partitions_recipients():
-    table = recipients_by_marital_status(toy_persons()).set_index(
-        "marital_status"
+def couples():
+    """Complete couples and singles, with receipt that the claim flag misses.
+
+    Units 10 and 11 are couples in which both spouses are aged, blind or
+    disabled (a joint claim), but in unit 11 only one spouse receives SSI.
+    """
+
+    return pd.DataFrame(
+        {
+            "person_id": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+            "marital_unit_id": [10, 10, 11, 11, 12, 12, 13, 14, 14],
+            "marital_unit_size": [2, 2, 2, 2, 2, 2, 1, 2, 2],
+            "person_weight": [5.0, 5.0, 7.0, 7.0, 4.0, 4.0, 3.0, 9.0, 9.0],
+            "ssi_baseline": [6000, 6000, 6000, 0, 5000, 0, 9000, 0, 0],
+            "ssi_claim_is_joint_baseline_january": [1, 1, 1, 1, 0, 0, 0, 1, 1],
+        }
     )
-    assert table.loc["No spouse", "policyengine_recipients"] == 30
-    assert (
-        table.loc[
-            "Eligible spouse (both recipients)", "policyengine_recipients"
-        ]
-        == 60
+
+
+def test_marital_status_uses_the_spouses_receipt():
+    table = recipients_by_marital_status(couples()).set_index("marital_status")
+    recipients = table["policyengine_recipients"]
+    assert recipients["No spouse"] == 3
+    # Only unit 10: unit 11 files jointly but one spouse is not paid.
+    assert recipients["Spouse also receives SSI"] == 10
+    assert recipients["Spouse does not receive SSI"] == 7 + 4
+    assert recipients.sum() == 3 + 10 + 7 + 4
+    assert table["policyengine_share_pct"].sum() == pytest.approx(100)
+    assert table.loc["Spouse also receives SSI", "ssa_category"] == (
+        "Eligible spouse"
     )
-    assert table.loc["Ineligible spouse", "policyengine_recipients"] == 0
-    assert table["policyengine_recipients"].sum() == 90
+    assert table["ssa_recipients"].sum() == sum(SSA_MARITAL.values())
+
+
+def test_marital_status_rejects_units_larger_than_a_couple():
+    frame = couples()
+    frame.loc[6, "marital_unit_id"] = 10
+    frame["marital_unit_size"] = frame.groupby("marital_unit_id")[
+        "person_id"
+    ].transform("size")
+    with pytest.raises(ValueError, match="more than two"):
+        recipients_by_marital_status(frame)
+
+
+@given(
+    st.lists(
+        st.tuples(
+            st.booleans(),
+            st.booleans(),
+            st.booleans(),
+            st.floats(0.5, 100),
+        ),
+        min_size=1,
+        max_size=30,
+    )
+)
+def test_marital_categories_partition_recipients(units):
+    """Each recipient lands in exactly one category; paid couples pair up."""
+
+    rows = []
+    for unit, (couple, first_paid, second_paid, weight) in enumerate(units):
+        members = [first_paid, second_paid] if couple else [first_paid]
+        for paid in members:
+            rows.append(
+                {
+                    "person_id": len(rows),
+                    "marital_unit_id": unit,
+                    "marital_unit_size": len(members),
+                    "person_weight": weight,
+                    "ssi_baseline": 100 if paid else 0,
+                }
+            )
+    persons = pd.DataFrame(rows)
+    recipients = persons.loc[persons.ssi_baseline > 0, "person_weight"].sum()
+    if recipients == 0:
+        return
+    table = recipients_by_marital_status(persons).set_index("marital_status")
+    assert table["policyengine_recipients"].sum() == pytest.approx(recipients)
+    both = sum(
+        2 * weight for couple, a, b, weight in units if couple and a and b
+    )
+    assert table.loc[
+        "Spouse also receives SSI", "policyengine_recipients"
+    ] == pytest.approx(both)
 
 
 def test_pool_and_decomposition_by_hand():

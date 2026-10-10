@@ -26,6 +26,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from .admin_checks import FINGERPRINT_FILE, run_fingerprint
 from .calculators import CBPP_AGE_GROUPS, RESOURCE_BINS
 from .comparators import (
     CBPP_CITATION,
@@ -37,6 +38,7 @@ from .comparators import (
     SSA_SSI_MONTHLY_DEC_2024_LABEL,
     SSA_SSI_MONTHLY_DEC_2024_URL,
 )
+from .microcosm_run import is_flag
 from .precision import scenario_precision
 
 BASELINE = "baseline"
@@ -82,6 +84,13 @@ def _wsum(weights: pd.Series, values) -> float:
     return float(np.dot(weights.to_numpy(), np.asarray(values, dtype=float)))
 
 
+def _flag(values: pd.Series) -> pd.Series:
+    """A poverty flag as booleans; refuses anything but true/false or 0/1."""
+    if not is_flag(values):
+        raise ValueError(f"{values.name} is not a true/false flag")
+    return values.astype(bool)
+
+
 def scenario_summary(
     persons: pd.DataFrame, households: pd.DataFrame, key: str
 ) -> list[dict]:
@@ -103,10 +112,10 @@ def scenario_summary(
         )
 
     gain_weight = float(w[gainers].sum())
-    base_pov = persons[f"in_poverty_{BASELINE}"].astype(bool)
-    ref_pov = persons[f"in_poverty_{key}"].astype(bool)
-    base_deep = persons[f"in_deep_poverty_{BASELINE}"].astype(bool)
-    ref_deep = persons[f"in_deep_poverty_{key}"].astype(bool)
+    base_pov = _flag(persons[f"in_poverty_{BASELINE}"])
+    ref_pov = _flag(persons[f"in_poverty_{key}"])
+    base_deep = _flag(persons[f"in_deep_poverty_{BASELINE}"])
+    ref_deep = _flag(persons[f"in_deep_poverty_{key}"])
     total_weight = float(w.sum())
 
     rows = [
@@ -387,15 +396,24 @@ HELD_OUT_TABLES = {
     ],
     "recipients_by_marital_status": [
         "marital_status",
+        "ssa_category",
         "policyengine_share_pct",
         "ssa_share_pct",
     ],
 }
 
 
-def held_out_checks(checks_dir: Path) -> dict:
-    """Tables written by ``admin_checks`` for the same run, for the page."""
+def held_out_checks(checks_dir: Path, run_dir: Path) -> dict:
+    """Tables written by ``admin_checks`` for the same run, for the page.
 
+    Refuses tables whose recorded run outputs differ from ``run_dir``'s.
+    """
+
+    recorded = json.loads((checks_dir / FINGERPRINT_FILE).read_text())
+    if recorded != run_fingerprint(run_dir):
+        raise ValueError(
+            f"{checks_dir} was computed from a different run than {run_dir}"
+        )
     return {
         name: pd.read_csv(checks_dir / f"{name}.csv")[columns].to_dict(
             orient="records"
@@ -476,7 +494,7 @@ def publish(
         )
     results = build_results(persons, households, metadata)
     if checks_dir is not None:
-        results["held_out_checks"] = held_out_checks(checks_dir)
+        results["held_out_checks"] = held_out_checks(checks_dir, run_dir)
     if sensitivity_dirs:
         results["sensitivities"] = [
             sensitivity(path) for path in sensitivity_dirs

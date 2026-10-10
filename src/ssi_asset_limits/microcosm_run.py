@@ -100,6 +100,18 @@ def peak_rss_gib() -> float:
     return rss / (2**30 if sys.platform == "darwin" else 2**20)
 
 
+POVERTY_FLAG_PREFIXES = ("in_poverty_", "in_deep_poverty_")
+
+
+def is_flag(values: pd.Series) -> bool:
+    """True for a boolean column or a numeric column of only 0 and 1."""
+    if pd.api.types.is_bool_dtype(values):
+        return True
+    return bool(
+        pd.api.types.is_numeric_dtype(values) and values.isin([0, 1]).all()
+    )
+
+
 def validate_run_frames(
     persons: pd.DataFrame,
     households: pd.DataFrame,
@@ -153,6 +165,11 @@ def validate_run_frames(
     ):
         if (frame[name] < 0).any():
             raise ValueError(f"negative {name}")
+    for column in persons.columns:
+        if column.startswith(POVERTY_FLAG_PREFIXES) and not is_flag(
+            persons[column]
+        ):
+            raise ValueError(f"persons: {column} is not a true/false flag")
 
 
 def write_run_metadata(
@@ -207,9 +224,11 @@ def certified_provenance() -> dict:
         "generated_at": datetime.now(UTC).isoformat(),
         "code_commit": commit,
         "method_note": (
-            "The population was run in household batches, which is exact "
-            "because every marital, tax, SPM and family unit nests within "
-            "one household."
+            "The population was run in household batches. Every marital, "
+            "tax, SPM and family unit nests within one household, and no "
+            "output published here depends on other households under this "
+            "run's settings, which leave health benefits out of household "
+            "income, so batching gives the same answer as one run."
         ),
     }
 

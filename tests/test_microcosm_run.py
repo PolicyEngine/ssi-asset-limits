@@ -229,6 +229,23 @@ def test_invalid_numerical_values_are_rejected(frame_index, column, value):
         validate_run_frames(*frames)
 
 
+@pytest.mark.parametrize("value", [0.5, "False", 2])
+def test_poverty_flags_must_be_true_or_false(value):
+    persons, households, diagnostics = run_frames()
+    persons["in_poverty_baseline"] = persons["in_poverty_baseline"].astype(
+        object
+    )
+    persons.loc[0, "in_poverty_baseline"] = value
+    with pytest.raises(ValueError, match="in_poverty_baseline"):
+        validate_run_frames(persons, households, diagnostics)
+
+
+def test_poverty_flags_may_be_zero_or_one():
+    persons, households, diagnostics = run_frames()
+    persons["in_poverty_baseline"] = persons["in_poverty_baseline"].astype(int)
+    validate_run_frames(persons, households, diagnostics)
+
+
 def test_diagnostics_must_identify_the_same_people():
     persons, households, diagnostics = run_frames()
     diagnostics.loc[0, "person_id"] = 999
