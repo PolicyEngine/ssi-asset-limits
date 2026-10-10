@@ -3,9 +3,10 @@ import { formatCurrency, formatPeople } from "@/src/lib/format";
 import { Scenario } from "@/src/lib/results";
 
 export default function ResourceBins({ scenario }: { scenario: Scenario }) {
+  // Plot in millions of dollars so the axis reads cleanly.
   const chartData = scenario.resource_bins.map((row) => ({
     resource_bin: row.resource_bin,
-    ssi_increase: row.ssi_increase,
+    ssi_increase_millions: row.ssi_increase / 1_000_000,
   }));
 
   return (
@@ -17,10 +18,11 @@ export default function ResourceBins({ scenario }: { scenario: Scenario }) {
         <PEBarChart
           data={chartData}
           xKey="resource_bin"
-          yKey="ssi_increase"
+          yKey="ssi_increase_millions"
+          yLabel="$ millions"
           height={340}
           fillColor="var(--chart-1)"
-          formatTooltip={formatCurrency}
+          formatTooltip={(value) => formatCurrency(value * 1_000_000)}
           margin={{ left: 24, right: 16, bottom: 88 }}
         />
       </ChartContainer>

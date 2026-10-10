@@ -7,24 +7,39 @@ import {
 
 const ITEMS = [
   {
+    key: "precision",
+    title: "The estimates rest on few sample records",
+    body: "The population file has 57,240 households, but about 12,000 of them carry 99 percent of the weight, and a reform that reaches a narrow group ends up resting on a few dozen records. The sampling ranges on this page show how far the estimates could move if the sample were redrawn. They do not include any of the problems listed below, so the real uncertainty is wider.",
+  },
+  {
+    key: "higher",
+    title: "PolicyEngine's estimate is well above the outside estimates",
+    body: "For the $10,000 and $20,000 limits, the added SSI here is about three times what SSA's actuaries estimate for a full year, and the number of new recipients is about twice CBPP's. We have no evidence that the outside estimates are too low. We do have evidence, in the checks below, that the model's SSI population differs from SSA's records in ways that matter for this reform. Read these figures as a rough, probably high estimate, not as a finding that the reform would cost this much.",
+  },
+  {
     key: "static",
     title: "This is a one-year, static estimate",
     body: "The new limits apply for all of 2026 to a population of US households built from 2024 survey data and projected to 2026. The estimate does not model how long it takes people to learn about a change and apply, or any change in how much people save. It covers federal SSI only, not state supplements or the Medicaid coverage that often comes with SSI.",
   },
   {
     key: "claiming",
-    title: "Who claims SSI drives most of the difference from CBPP",
-    body: "Each person in the population carries a fixed yes-or-no flag for whether they would claim SSI if eligible. The flags are drawn at one rate for children, one for adults aged 18 to 64 and one for people 65 and over, each set to match SSA's count of people on SSI today; everyone who reported receiving SSI in the Census survey keeps a yes. Within an age group the rate does not depend on savings, so people who become eligible because of a higher limit claim at the same rate as people with almost no savings. CBPP's model has claiming fall as savings rise, which is likely the main reason its estimate for people 65 and over is far lower. Work to add that savings gradient is tracked in PolicyEngine/microcosm#584.",
+    title: "Who would claim is an assumption",
+    body: "Each person in the population carries a fixed yes-or-no flag for whether they would claim SSI if eligible. The flags are drawn at one rate for children, one for adults aged 18 to 64 and one for people 65 and over, each set to match SSA's count of people on SSI today; everyone who reported receiving SSI in the Census survey keeps a yes. Within an age group the rate does not depend on savings, so people who become eligible because of a higher limit are assumed to claim like people with almost no savings. CBPP's model instead has claiming fall as savings rise. Survey data cannot settle which is right, because people with savings above the limit cannot be on SSI today: among income-eligible older people with savings under $2,000 in the Census Bureau's SIPP, SSI receipt does not fall as savings rise (PolicyEngine/microcosm#584).",
   },
   {
     key: "children",
     title: "Children with disabilities are almost entirely missing",
-    body: "The Census survey behind the population asks its disability questions only from age 15, so the population has almost no children under 15 who meet SSI's disability standard, and no child gains from a higher limit. A stage that adds them from the Census Bureau's SIPP is in review (PolicyEngine/microcosm#509). Separately, PolicyEngine does not yet count a parent's savings when it tests a child's eligibility, although SSA counts a parent's savings above an allowance (20 CFR 416.1202(b)). Until that is fixed (PolicyEngine/policyengine-us#3557), a change in the limit cannot change any child's eligibility in the model.",
+    body: "The Census survey behind the population asks its disability questions only from age 15, so no child under 15 in the population meets SSI's disability standard, and no child gains from a higher limit. A stage that adds them from the Census Bureau's SIPP is not finished (PolicyEngine/microcosm#509). Separately, PolicyEngine does not yet count a parent's savings when it tests a child's eligibility, although SSA counts a parent's savings above an allowance (20 CFR 416.1202(b)). Until that is fixed (PolicyEngine/policyengine-us#3557), a change in the limit cannot change any child's eligibility in the model.",
   },
   {
     key: "couples",
-    title: "Married couples where only one spouse qualifies",
-    body: "When both spouses are aged, blind or disabled, PolicyEngine tests their combined savings against the couple limit, as SSA does. When only one spouse is, SSA also counts the other spouse's savings (20 CFR 416.1202(a)); PolicyEngine does not yet. The population also records each household's savings on a single person, the household's reference person, so when that person is the spouse who does not qualify, the spouse who does is treated as having no savings.",
+    title: "Married people are over-represented, and a spouse's savings are not counted",
+    body: "When both spouses are aged, blind or disabled, PolicyEngine tests their combined savings against the couple limit, as SSA does. When only one spouse is, SSA also counts the other spouse's savings (20 CFR 416.1202(a)); PolicyEngine does not yet. The population also records each household's savings on a single person, the household's reference person, so when that person is the spouse who does not qualify, the spouse who does is treated as having no savings. In the model about one in five current recipients has a spouse, against fewer than one in ten in SSA's records, and most of the people the model adds under higher limits are married.",
+  },
+  {
+    key: "composition",
+    title: "The model's SSI recipients are too young and too rarely on Social Security",
+    body: "Within ages 18 to 64 the model has more than twice SSA's number of recipients in their twenties and about an eighth of SSA's number aged 60 to 64; only the total for the age group is calibrated. Among recipients 65 and over, about one in six in the model also receives Social Security, against more than half in SSA's records. Older people are more likely to have savings, and SSA's records show people with Social Security receiving much smaller SSI payments, so both gaps bear on who gains from a higher limit and by how much.",
   },
   {
     key: "savings",
@@ -44,7 +59,11 @@ export default function Caveats() {
       <h2 className="text-xl font-semibold text-foreground">
         How to read these numbers
       </h2>
-      <Accordion type="multiple" className="rounded-md border border-border">
+      <Accordion
+        type="multiple"
+        defaultValue={["precision", "higher"]}
+        className="rounded-md border border-border"
+      >
         {ITEMS.map((item) => (
           <AccordionItem key={item.key} value={item.key} className="px-4">
             <AccordionTrigger>{item.title}</AccordionTrigger>

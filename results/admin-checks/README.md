@@ -1,0 +1,24 @@
+# Held-out checks against SSA administrative data
+
+Written by `python -m ssi_asset_limits.admin_checks results/microcosm-625-spm0915 --out-dir results/admin-checks`
+from the certified run (policyengine.py 6.2.5, policyengine-us 2.2.1,
+Microcosm `populace_us_2024` build `populace-us-2024-spm-20260915`). The frame
+is calibrated to SSA's recipient counts in three pooled age bands; none of
+the comparisons below is a calibration target.
+
+| File | What it compares | SSA source |
+| --- | --- | --- |
+| `recipients_by_fine_age.csv` | Current-law recipients by detailed age | Annual Statistical Supplement 2025, Table 7.E3 (shares of 7,423,856 federally administered recipients, December 2024) |
+| `recipients_with_social_security.csv` | Share of recipients who also receive Social Security, by age | SSI Annual Statistical Report 2024, Table 9 |
+| `recipients_by_marital_status.csv` | Recipients with no spouse, an eligible spouse, or an ineligible spouse | SSI Annual Statistical Report 2024, Table 12 |
+| `resources_of_the_eligible.csv` | Own countable resources of people the engine would pay with no resource test, by age | (no SSA counterpart; see the SIPP table) |
+| `new_recipient_decomposition.csv` | Each reform's new recipients split into the resource-excluded pool, the part the reform admits, and the take-up flag | (model accounting) |
+| `pool_definition_check.csv` | The pool definition reproduces the engine's own no-limit recipients exactly | (consistency check) |
+| `sipp2023_liquid_assets_unmarried_income_eligible.csv` | SIPP 2023 (December 2022) liquid assets (bank + stock/mutual fund + bond) of unmarried, apparently income-eligible aged or disabled people, and SSI receipt, by asset band | Census SIPP 2023 public-use file |
+
+The SIPP table uses the sample construction of
+`tools/estimate_ssi_asset_gradient.py::prepare_sample` on PolicyEngine/microcosm
+branch `ssi-584-take-up-asset-gradient` (commit 7cae3dd9b), applied to the
+SHA-pinned `pu2023.csv`, with person weights `WPFINWGT`. It is unmarried
+people only, so it is not directly comparable with the model's
+`resources_of_the_eligible.csv`, which includes married people.

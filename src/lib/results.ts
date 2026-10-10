@@ -19,6 +19,7 @@ export interface BaselineAgeRow {
   label: string;
   policyengine_recipients: number;
   ssa_recipients: number;
+  records: number;
 }
 
 export interface Baseline {
@@ -43,6 +44,12 @@ export interface AgeRow {
   annual_ssi_cost: number;
   cbpp_new_beneficiaries: number | null;
   cbpp_note: string;
+  new_recipients_low: number;
+  new_recipients_high: number;
+  annual_ssi_cost_low: number;
+  annual_ssi_cost_high: number;
+  new_recipient_records: number;
+  new_recipient_effective_records: number;
 }
 
 export interface ResourceBinRow {
@@ -88,8 +95,29 @@ export interface Comparators {
   oact: OactLetter[];
 }
 
+export interface FineAgeCheck {
+  age_band: string;
+  policyengine_recipients: number;
+  ssa_recipients: number;
+}
+
+export interface ShareCheck {
+  age_band?: string;
+  marital_status?: string;
+  policyengine_share_pct: number;
+  ssa_share_pct: number;
+}
+
+export interface HeldOutChecks {
+  recipients_by_fine_age: FineAgeCheck[];
+  recipients_with_social_security: ShareCheck[];
+  recipients_by_marital_status: ShareCheck[];
+}
+
 export interface Results {
   provenance: Provenance;
+  precision_note: string;
+  held_out_checks?: HeldOutChecks;
   baseline: Baseline;
   scenarios: Scenario[];
   comparators: Comparators;

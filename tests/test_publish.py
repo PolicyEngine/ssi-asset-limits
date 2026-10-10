@@ -283,3 +283,51 @@ def test_sensitivity_runs_cannot_be_published_as_the_estimate(tmp_path):
         "ten_twenty",
         "no_limit",
     ]
+
+
+def test_held_out_checks_are_embedded_when_given(tmp_path):
+    persons, households = toy_frames()
+    run = tmp_path / "run"
+    run.mkdir()
+    persons.to_csv(run / "persons.csv.gz", index=False)
+    households.to_csv(run / "households.csv.gz", index=False)
+    (run / "run_metadata.json").write_text(
+        json.dumps({"provenance": {"analysis_year": 2026}})
+    )
+    checks = tmp_path / "checks"
+    checks.mkdir()
+    pd.DataFrame(
+        {
+            "age_band": ["60-64"],
+            "policyengine_recipients": [92_000.0],
+            "policyengine_share_pct": [1.5],
+            "ssa_share_pct": [10.5],
+            "ssa_recipients": [779_505.0],
+        }
+    ).to_csv(checks / "recipients_by_fine_age.csv", index=False)
+    pd.DataFrame(
+        {
+            "age_band": ["65 or older"],
+            "policyengine_share_pct": [16.1],
+            "ssa_share_pct": [57.1],
+            "extra": [1],
+        }
+    ).to_csv(checks / "recipients_with_social_security.csv", index=False)
+    pd.DataFrame(
+        {
+            "marital_status": ["No spouse"],
+            "policyengine_share_pct": [78.5],
+            "ssa_share_pct": [91.8],
+        }
+    ).to_csv(checks / "recipients_by_marital_status.csv", index=False)
+    results = publish(run, tmp_path / "out", checks_dir=checks)
+    tables = results["held_out_checks"]
+    assert tables["recipients_by_fine_age"] == [
+        {
+            "age_band": "60-64",
+            "policyengine_recipients": 92_000.0,
+            "ssa_recipients": 779_505.0,
+        }
+    ]
+    assert "extra" not in tables["recipients_with_social_security"][0]
+    assert "held_out_checks" not in publish(run, tmp_path / "out2")

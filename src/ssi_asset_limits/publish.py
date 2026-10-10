@@ -37,6 +37,7 @@ from .comparators import (
     SSA_SSI_MONTHLY_DEC_2024_LABEL,
     SSA_SSI_MONTHLY_DEC_2024_URL,
 )
+from .precision import scenario_precision
 
 BASELINE = "baseline"
 
@@ -290,11 +291,49 @@ def comparators() -> dict:
     }
 
 
+PRECISION_NOTE = (
+    "Ranges are the 5th to 95th percentiles of a household bootstrap with "
+    "2,000 replicates. They show only how much the estimate could move if "
+    "the population sample were redrawn; uncertainty in the imputed savings, "
+    "the claiming flags, the weights and the rules is not included."
+)
+
+
+def with_precision(by_age: list[dict], precision: pd.DataFrame) -> list[dict]:
+    """Attach each row's sampling range and record counts."""
+
+    table = precision.set_index(["statistic", "age_group"])
+    rows = []
+    for row in by_age:
+        new = table.loc[("new_recipients", row["age_group"])]
+        cost = table.loc[("annual_ssi_cost", row["age_group"])]
+        rows.append(
+            {
+                **row,
+                "new_recipients_low": float(new["low"]),
+                "new_recipients_high": float(new["high"]),
+                "annual_ssi_cost_low": float(cost["low"]),
+                "annual_ssi_cost_high": float(cost["high"]),
+                "new_recipient_records": int(new["records"]),
+                "new_recipient_effective_records": float(
+                    new["effective_records"]
+                ),
+            }
+        )
+    return rows
+
+
 def build_results(
     persons: pd.DataFrame, households: pd.DataFrame, metadata: dict
 ) -> dict:
     scenarios = []
+    baseline_records = None
     for spec in SCENARIOS:
+        precision = scenario_precision(persons, spec.key)
+        if baseline_records is None:
+            baseline_records = precision[
+                precision.statistic == "baseline_recipients"
+            ].set_index("age_group")
         scenarios.append(
             {
                 "key": spec.key,
@@ -302,13 +341,19 @@ def build_results(
                 "individual_limit": spec.individual_limit,
                 "couple_limit": spec.couple_limit,
                 "summary": scenario_summary(persons, households, spec.key),
-                "by_age": scenario_by_age(persons, spec.key),
+                "by_age": with_precision(
+                    scenario_by_age(persons, spec.key), precision
+                ),
                 "resource_bins": scenario_resource_bins(persons, spec.key),
             }
         )
+    baseline = baseline_by_age(persons)
+    for row in baseline["by_age"]:
+        row["records"] = int(baseline_records.loc[row["age_group"], "records"])
     return {
         "provenance": metadata["provenance"],
-        "baseline": baseline_by_age(persons),
+        "precision_note": PRECISION_NOTE,
+        "baseline": baseline,
         "scenarios": scenarios,
         "comparators": comparators(),
     }
@@ -329,7 +374,42 @@ def write_outputs(results: dict, out_dir: Path) -> None:
     )
 
 
-def publish(run_dir: Path, out_dir: Path, allow_variant: bool = False) -> dict:
+HELD_OUT_TABLES = {
+    "recipients_by_fine_age": [
+        "age_band",
+        "policyengine_recipients",
+        "ssa_recipients",
+    ],
+    "recipients_with_social_security": [
+        "age_band",
+        "policyengine_share_pct",
+        "ssa_share_pct",
+    ],
+    "recipients_by_marital_status": [
+        "marital_status",
+        "policyengine_share_pct",
+        "ssa_share_pct",
+    ],
+}
+
+
+def held_out_checks(checks_dir: Path) -> dict:
+    """Tables written by ``admin_checks`` for the same run, for the page."""
+
+    return {
+        name: pd.read_csv(checks_dir / f"{name}.csv")[columns].to_dict(
+            orient="records"
+        )
+        for name, columns in HELD_OUT_TABLES.items()
+    }
+
+
+def publish(
+    run_dir: Path,
+    out_dir: Path,
+    allow_variant: bool = False,
+    checks_dir: Path | None = None,
+) -> dict:
     persons = pd.read_csv(run_dir / "persons.csv.gz")
     households = pd.read_csv(run_dir / "households.csv.gz")
     metadata = json.loads((run_dir / "run_metadata.json").read_text())
@@ -341,6 +421,8 @@ def publish(run_dir: Path, out_dir: Path, allow_variant: bool = False) -> dict:
             "public/data to tabulate it"
         )
     results = build_results(persons, households, metadata)
+    if checks_dir is not None:
+        results["held_out_checks"] = held_out_checks(checks_dir)
     write_outputs(results, out_dir)
     return results
 
@@ -350,8 +432,13 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("run_dir", type=Path)
     parser.add_argument("--out-dir", type=Path, default=Path("public/data"))
     parser.add_argument("--allow-variant", action="store_true")
+    parser.add_argument(
+        "--checks-dir",
+        type=Path,
+        help="Directory of admin_checks tables for this run to include.",
+    )
     args = parser.parse_args(argv)
-    publish(args.run_dir, args.out_dir, args.allow_variant)
+    publish(args.run_dir, args.out_dir, args.allow_variant, args.checks_dir)
 
 
 if __name__ == "__main__":

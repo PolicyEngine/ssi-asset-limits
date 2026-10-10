@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle, DataTable } from "@policyengine/ui-kit";
-import { formatCurrency } from "@/src/lib/format";
+import { formatBillionsRange, formatCurrency } from "@/src/lib/format";
 import { OactLetter, Scenario } from "@/src/lib/results";
 
 function letterRow(letter: OactLetter) {
@@ -23,6 +23,9 @@ export default function CostComparison({
   oact: OactLetter[];
 }) {
   const cost = scenario.summary.find((row) => row.metric === "annual_ssi_cost");
+  const total = scenario.by_age.find(
+    (row) => row.age_group === "total_all_ages",
+  );
   if (scenario.key !== "ten_twenty") {
     return (
       <Card>
@@ -53,10 +56,14 @@ export default function CostComparison({
           <strong className="text-foreground">
             {cost ? formatCurrency(cost.value) : "–"}
           </strong>{" "}
-          in federal SSI payments in 2026. SSA&apos;s Office of the Chief
-          Actuary (OACT) estimates the same limits, indexed to inflation, would
-          add about $1.0 billion to $1.4 billion a year once in place. The
-          table shows OACT&apos;s letters year by year.
+          in federal SSI payments in 2026
+          {total
+            ? ` (sampling range ${formatBillionsRange(total.annual_ssi_cost_low, total.annual_ssi_cost_high)})`
+            : ""}
+          . SSA&apos;s Office of the Chief Actuary (OACT) estimates the same
+          limits, indexed to inflation, would add $0.5 billion in the first
+          year and $1.0 billion to $1.4 billion a year after that. The table
+          shows OACT&apos;s letters year by year.
         </p>
         <div className="overflow-x-auto">
           <DataTable

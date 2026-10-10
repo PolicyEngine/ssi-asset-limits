@@ -1,11 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SegmentedControl } from "@policyengine/ui-kit";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+  SegmentedControl,
+} from "@policyengine/ui-kit";
 import { loadResults, Results } from "@/src/lib/results";
 import AgeComparison from "@/src/components/AgeComparison";
 import BaselineCheck from "@/src/components/BaselineCheck";
 import Caveats from "@/src/components/Caveats";
+import HeldOutChecks from "@/src/components/HeldOutChecks";
 import CostComparison from "@/src/components/CostComparison";
 import Methodology from "@/src/components/Methodology";
 import ResourceBins from "@/src/components/ResourceBins";
@@ -60,6 +66,16 @@ export default function DashboardClient() {
         )}
         {results && scenario && (
           <>
+            <Alert>
+              <AlertTitle>A rough estimate, probably too high</AlertTitle>
+              <AlertDescription>
+                These figures come from a model whose SSI population does not
+                yet match SSA&apos;s records well, and they rest on few sample
+                records. They are well above the estimates of SSA&apos;s
+                actuaries and CBPP. See &quot;How to read these numbers&quot;
+                before using them.
+              </AlertDescription>
+            </Alert>
             <SegmentedControl
               value={scenario.key}
               onValueChange={setScenarioKey}
@@ -69,10 +85,17 @@ export default function DashboardClient() {
               }))}
             />
             <ScenarioSummary scenario={scenario} />
-            <AgeComparison scenario={scenario} cbpp={results.comparators.cbpp} />
+            <AgeComparison
+              scenario={scenario}
+              cbpp={results.comparators.cbpp}
+              precisionNote={results.precision_note}
+            />
             <CostComparison scenario={scenario} oact={results.comparators.oact} />
             <ResourceBins scenario={scenario} />
             <BaselineCheck baseline={results.baseline} />
+            {results.held_out_checks && (
+              <HeldOutChecks checks={results.held_out_checks} />
+            )}
             <Caveats />
             <Methodology provenance={results.provenance} />
           </>

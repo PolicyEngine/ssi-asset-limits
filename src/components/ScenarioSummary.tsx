@@ -1,5 +1,9 @@
 import { MetricCard } from "@policyengine/ui-kit";
-import { formatMetricValue } from "@/src/lib/format";
+import {
+  formatBillionsRange,
+  formatMetricValue,
+  formatPeopleRange,
+} from "@/src/lib/format";
 import { Scenario } from "@/src/lib/results";
 
 const HEADLINE_METRICS = [
@@ -16,6 +20,9 @@ export default function ScenarioSummary({ scenario }: { scenario: Scenario }) {
     keys
       .map((key) => scenario.summary.find((row) => row.metric === key))
       .filter((row) => row !== undefined);
+  const total = scenario.by_age.find(
+    (row) => row.age_group === "total_all_ages",
+  );
 
   return (
     <div className="grid gap-4">
@@ -32,6 +39,26 @@ export default function ScenarioSummary({ scenario }: { scenario: Scenario }) {
           />
         ))}
       </div>
+      {total && (
+        <p className="text-sm leading-6 text-muted-foreground">
+          Sampling range (90 percent):{" "}
+          <strong className="text-foreground">
+            {formatBillionsRange(
+              total.annual_ssi_cost_low,
+              total.annual_ssi_cost_high,
+            )}
+          </strong>{" "}
+          in added SSI and{" "}
+          <strong className="text-foreground">
+            {formatPeopleRange(
+              total.new_recipients_low,
+              total.new_recipients_high,
+            )}
+          </strong>{" "}
+          new recipients. The new recipients are represented by{" "}
+          {total.new_recipient_records} sample records.
+        </p>
+      )}
       <div className="grid gap-4 sm:grid-cols-3">
         {pick(SECONDARY_METRICS).map((row) => (
           <MetricCard

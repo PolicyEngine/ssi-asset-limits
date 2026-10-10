@@ -1,0 +1,595 @@
+{
+  "provenance": {
+    "analysis_year": 2026,
+    "policyengine_version": "6.2.5",
+    "bundle_id": "us-6.2.5",
+    "model_package": "policyengine-us",
+    "model_version": "2.2.1",
+    "dataset": "populace_us_2024",
+    "dataset_build_id": "populace-us-2024-spm-20260915",
+    "dataset_sha256": "6496cc4393d4d3c6574f76eca231de5898c803b9067645591fd5c4d3e65aee84",
+    "generated_at": "2026-10-10T00:23:08.942203+00:00",
+    "code_commit": "5cf8d3e47494ebd105204fa95501b07532ccc282",
+    "method_note": "The population was run in household batches, which is exact because every marital, tax, SPM and family unit nests within one household."
+  },
+  "precision_note": "Ranges are the 5th to 95th percentiles of a household bootstrap with 2,000 replicates. They show only how much the estimate could move if the population sample were redrawn; uncertainty in the imputed savings, the claiming flags, the weights and the rules is not included.",
+  "baseline": {
+    "ssa_source_label": "SSI Monthly Statistics, December 2024, Table 1",
+    "ssa_source_url": "https://www.ssa.gov/policy/docs/statcomps/ssi_monthly/2024-12/table01.html",
+    "by_age": [
+      {
+        "age_group": "children_under_18",
+        "label": "Under 18",
+        "policyengine_recipients": 179909.580583217,
+        "ssa_recipients": 1001922,
+        "records": 23
+      },
+      {
+        "age_group": "adults_18_64",
+        "label": "18 to 64",
+        "policyengine_recipients": 3797039.0980287823,
+        "ssa_recipients": 3905779,
+        "records": 561
+      },
+      {
+        "age_group": "elderly_65_plus",
+        "label": "65 and over",
+        "policyengine_recipients": 2311353.4101357507,
+        "ssa_recipients": 2382142,
+        "records": 521
+      }
+    ],
+    "total_recipients": 6288302.088747749,
+    "total_federal_ssi": 57855560106.62134
+  },
+  "scenarios": [
+    {
+      "key": "ten_twenty",
+      "label": "$10,000 / $20,000 limits",
+      "individual_limit": 10000,
+      "couple_limit": 20000,
+      "summary": [
+        {
+          "metric": "annual_ssi_cost",
+          "label": "Added federal SSI, 2026",
+          "value": 3609793338.6720223,
+          "unit": "currency"
+        },
+        {
+          "metric": "new_recipients",
+          "label": "New SSI recipients",
+          "value": 515839.35105612583,
+          "unit": "people"
+        },
+        {
+          "metric": "average_gain",
+          "label": "Average gain per person who gains",
+          "value": 6997.902217582582,
+          "unit": "currency"
+        },
+        {
+          "metric": "people_lifted_from_poverty",
+          "label": "People moved above the SPM poverty line",
+          "value": 79548.19521425886,
+          "unit": "people"
+        },
+        {
+          "metric": "poverty_rate_reduction",
+          "label": "Fall in the SPM poverty rate",
+          "value": 0.00023011694821236216,
+          "unit": "rate"
+        },
+        {
+          "metric": "deep_poverty_rate_reduction",
+          "label": "Fall in the deep poverty rate",
+          "value": 0.0007268016929823503,
+          "unit": "rate"
+        },
+        {
+          "metric": "baseline_recipients",
+          "label": "SSI recipients, current law",
+          "value": 6288302.088747749,
+          "unit": "people"
+        },
+        {
+          "metric": "reform_recipients",
+          "label": "SSI recipients after the change",
+          "value": 6804141.439803876,
+          "unit": "people"
+        },
+        {
+          "metric": "net_fiscal_cost",
+          "label": "Change in household net income",
+          "value": 3623301522.798345,
+          "unit": "currency"
+        },
+        {
+          "metric": "snap_change",
+          "label": "Change in SNAP benefits",
+          "value": -646489033.8764312,
+          "unit": "currency"
+        },
+        {
+          "metric": "income_tax_change",
+          "label": "Change in income tax",
+          "value": 0.0,
+          "unit": "currency"
+        }
+      ],
+      "by_age": [
+        {
+          "age_group": "children_under_18",
+          "label": "Under 18",
+          "new_recipients": 0.0,
+          "annual_ssi_cost": 0.0,
+          "cbpp_new_beneficiaries": 23000,
+          "cbpp_note": "",
+          "new_recipients_low": 0.0,
+          "new_recipients_high": 0.0,
+          "annual_ssi_cost_low": 0.0,
+          "annual_ssi_cost_high": 0.0,
+          "new_recipient_records": 0,
+          "new_recipient_effective_records": 0.0
+        },
+        {
+          "age_group": "adults_18_64",
+          "label": "18 to 64",
+          "new_recipients": 153211.12201356317,
+          "annual_ssi_cost": 1067419784.0444578,
+          "cbpp_new_beneficiaries": 154000,
+          "cbpp_note": "",
+          "new_recipients_low": 74650.50849756935,
+          "new_recipients_high": 240778.79655896145,
+          "annual_ssi_cost_low": 544145629.1476092,
+          "annual_ssi_cost_high": 1651128643.4536173,
+          "new_recipient_records": 35,
+          "new_recipient_effective_records": 11.815857720561379
+        },
+        {
+          "age_group": "elderly_65_plus",
+          "label": "65 and over",
+          "new_recipients": 362628.22904256266,
+          "annual_ssi_cost": 2542373554.6275644,
+          "cbpp_new_beneficiaries": null,
+          "cbpp_note": "CBPP did not publish this row (sample too small); its total less its other rows leaves about 47,000, but its rows may not sum.",
+          "new_recipients_low": 245412.1288240944,
+          "new_recipients_high": 482877.1081547765,
+          "annual_ssi_cost_low": 1670644815.9723032,
+          "annual_ssi_cost_high": 3485657166.3409224,
+          "new_recipient_records": 74,
+          "new_recipient_effective_records": 29.447689073915893
+        },
+        {
+          "age_group": "total_all_ages",
+          "label": "All ages",
+          "new_recipients": 515839.35105612583,
+          "annual_ssi_cost": 3609793338.6720223,
+          "cbpp_new_beneficiaries": 224000,
+          "cbpp_note": "",
+          "new_recipients_low": 373236.5999059115,
+          "new_recipients_high": 663244.5006390515,
+          "annual_ssi_cost_low": 2559099396.470809,
+          "annual_ssi_cost_high": 4672243237.473076,
+          "new_recipient_records": 109,
+          "new_recipient_effective_records": 41.24060434979698
+        }
+      ],
+      "resource_bins": [
+        {
+          "resource_bin": "Under $2,000",
+          "people": 263445498.1612262,
+          "ssi_increase": 782227950.1105627,
+          "average_gain": 2.9692211693511132
+        },
+        {
+          "resource_bin": "$2,000 to $2,999",
+          "people": 5742783.910965923,
+          "ssi_increase": 1095341178.1157541,
+          "average_gain": 190.7334831150769
+        },
+        {
+          "resource_bin": "$3,000 to $9,999",
+          "people": 17547875.478725776,
+          "ssi_increase": 1429144691.5312834,
+          "average_gain": 81.44260501870507
+        },
+        {
+          "resource_bin": "$10,000 to $24,999",
+          "people": 14826541.343406752,
+          "ssi_increase": 303079518.91442245,
+          "average_gain": 20.441687099817084
+        },
+        {
+          "resource_bin": "$25,000 or more",
+          "people": 44123248.32606881,
+          "ssi_increase": 0.0,
+          "average_gain": 0.0
+        }
+      ]
+    },
+    {
+      "key": "no_limit",
+      "label": "No limit",
+      "individual_limit": null,
+      "couple_limit": null,
+      "summary": [
+        {
+          "metric": "annual_ssi_cost",
+          "label": "Added federal SSI, 2026",
+          "value": 6824618895.132553,
+          "unit": "currency"
+        },
+        {
+          "metric": "new_recipients",
+          "label": "New SSI recipients",
+          "value": 946871.3756468964,
+          "unit": "people"
+        },
+        {
+          "metric": "average_gain",
+          "label": "Average gain per person who gains",
+          "value": 7207.545893411359,
+          "unit": "currency"
+        },
+        {
+          "metric": "people_lifted_from_poverty",
+          "label": "People moved above the SPM poverty line",
+          "value": 189692.97342991232,
+          "unit": "people"
+        },
+        {
+          "metric": "poverty_rate_reduction",
+          "label": "Fall in the SPM poverty rate",
+          "value": 0.0005487436644596339,
+          "unit": "rate"
+        },
+        {
+          "metric": "deep_poverty_rate_reduction",
+          "label": "Fall in the deep poverty rate",
+          "value": 0.001479428629596712,
+          "unit": "rate"
+        },
+        {
+          "metric": "baseline_recipients",
+          "label": "SSI recipients, current law",
+          "value": 6288302.088747749,
+          "unit": "people"
+        },
+        {
+          "metric": "reform_recipients",
+          "label": "SSI recipients after the change",
+          "value": 7235173.464394646,
+          "unit": "people"
+        },
+        {
+          "metric": "net_fiscal_cost",
+          "label": "Change in household net income",
+          "value": 7982036812.759188,
+          "unit": "currency"
+        },
+        {
+          "metric": "snap_change",
+          "label": "Change in SNAP benefits",
+          "value": -957832150.1035954,
+          "unit": "currency"
+        },
+        {
+          "metric": "income_tax_change",
+          "label": "Change in income tax",
+          "value": 0.0,
+          "unit": "currency"
+        }
+      ],
+      "by_age": [
+        {
+          "age_group": "children_under_18",
+          "label": "Under 18",
+          "new_recipients": 0.0,
+          "annual_ssi_cost": 0.0,
+          "cbpp_new_beneficiaries": 49000,
+          "cbpp_note": "",
+          "new_recipients_low": 0.0,
+          "new_recipients_high": 0.0,
+          "annual_ssi_cost_low": 0.0,
+          "annual_ssi_cost_high": 0.0,
+          "new_recipient_records": 0,
+          "new_recipient_effective_records": 0.0
+        },
+        {
+          "age_group": "adults_18_64",
+          "label": "18 to 64",
+          "new_recipients": 253026.4403168509,
+          "annual_ssi_cost": 1797293734.009708,
+          "cbpp_new_beneficiaries": 298000,
+          "cbpp_note": "",
+          "new_recipients_low": 150548.34212619235,
+          "new_recipients_high": 365233.03228219214,
+          "annual_ssi_cost_low": 1087163323.3195832,
+          "annual_ssi_cost_high": 2591914258.6729984,
+          "new_recipient_records": 61,
+          "new_recipient_effective_records": 16.28842786383774
+        },
+        {
+          "age_group": "elderly_65_plus",
+          "label": "65 and over",
+          "new_recipients": 693844.9353300455,
+          "annual_ssi_cost": 5027325161.122845,
+          "cbpp_new_beneficiaries": 115000,
+          "cbpp_note": "",
+          "new_recipients_low": 526993.4778293819,
+          "new_recipients_high": 880287.5522956948,
+          "annual_ssi_cost_low": 3711371165.263572,
+          "annual_ssi_cost_high": 6460452477.719415,
+          "new_recipient_records": 187,
+          "new_recipient_effective_records": 51.80821878717162
+        },
+        {
+          "age_group": "total_all_ages",
+          "label": "All ages",
+          "new_recipients": 946871.3756468964,
+          "annual_ssi_cost": 6824618895.132553,
+          "cbpp_new_beneficiaries": 462000,
+          "cbpp_note": "",
+          "new_recipients_low": 744510.3428789276,
+          "new_recipients_high": 1163400.4899756336,
+          "annual_ssi_cost_low": 5303466440.113086,
+          "annual_ssi_cost_high": 8476165028.201841,
+          "new_recipient_records": 248,
+          "new_recipient_effective_records": 67.80395486106823
+        }
+      ],
+      "resource_bins": [
+        {
+          "resource_bin": "Under $2,000",
+          "people": 263445498.1612262,
+          "ssi_increase": 1175506492.0348055,
+          "average_gain": 4.462048128510461
+        },
+        {
+          "resource_bin": "$2,000 to $2,999",
+          "people": 5742783.910965923,
+          "ssi_increase": 1095341178.1157541,
+          "average_gain": 190.7334831150769
+        },
+        {
+          "resource_bin": "$3,000 to $9,999",
+          "people": 17547875.478725776,
+          "ssi_increase": 1429144691.5312834,
+          "average_gain": 81.44260501870507
+        },
+        {
+          "resource_bin": "$10,000 to $24,999",
+          "people": 14826541.343406752,
+          "ssi_increase": 1495990522.7962623,
+          "average_gain": 100.89949423447416
+        },
+        {
+          "resource_bin": "$25,000 or more",
+          "people": 44123248.32606881,
+          "ssi_increase": 1628636010.6544476,
+          "average_gain": 36.91106327029463
+        }
+      ]
+    }
+  ],
+  "comparators": {
+    "cbpp": {
+      "citation": "Romig, Nuñez and Sherman, “The Case for Updating SSI Asset Limits,” Center on Budget and Policy Priorities, September 2023, Table 1",
+      "url": "https://www.cbpp.org/research/social-security/the-case-for-updating-ssi-asset-limits",
+      "data_year": 2014,
+      "note": "CBPP modeled the chance of claiming SSI or SSDI among people with incomes low enough to qualify, using 2014 SIPP data scaled to SSA's caseload by age, with couple limits twice the individual limit. Figures are rounded to the nearest 1,000."
+    },
+    "oact": [
+      {
+        "date": "August 7, 2026",
+        "title": "OACT letter to Sen. Cassidy on a proposal similar to S. 1234, the SSI Savings Penalty Elimination Act",
+        "url": "https://www.ssa.gov/oact/solvency/BCassidy_20260807.pdf",
+        "effective": "January 2027",
+        "indexing": "Limits of $10,000 and $20,000 from 2027, indexed to CPI-U from 2028; 2025 SSI Annual Report assumptions; CPS ASEC data.",
+        "total_label": "2025–34",
+        "total_billions": 8.9,
+        "annual": [
+          {
+            "year": 2025,
+            "billions": null
+          },
+          {
+            "year": 2026,
+            "billions": null
+          },
+          {
+            "year": 2027,
+            "billions": 0.5
+          },
+          {
+            "year": 2028,
+            "billions": 1.0
+          },
+          {
+            "year": 2029,
+            "billions": 1.1
+          },
+          {
+            "year": 2030,
+            "billions": 1.2
+          },
+          {
+            "year": 2031,
+            "billions": 1.2
+          },
+          {
+            "year": 2032,
+            "billions": 1.3
+          },
+          {
+            "year": 2033,
+            "billions": 1.3
+          },
+          {
+            "year": 2034,
+            "billions": 1.4
+          }
+        ]
+      },
+      {
+        "date": "January 29, 2024",
+        "title": "OACT letter to Sens. Brown and Cassidy on S. 2767, the SSI Savings Penalty Elimination Act",
+        "url": "https://www.ssa.gov/OACT/solvency/BrownCassidy_20240129.pdf",
+        "effective": "January 2024",
+        "indexing": "Limits of $10,000 and $20,000 from 2024, indexed to CPI-U from 2025; 2023 SSI Annual Report assumptions.",
+        "total_label": "2023–32",
+        "total_billions": 9.8,
+        "annual": [
+          {
+            "year": 2023,
+            "billions": null
+          },
+          {
+            "year": 2024,
+            "billions": 0.5
+          },
+          {
+            "year": 2025,
+            "billions": 1.0
+          },
+          {
+            "year": 2026,
+            "billions": 1.0
+          },
+          {
+            "year": 2027,
+            "billions": 1.1
+          },
+          {
+            "year": 2028,
+            "billions": 1.1
+          },
+          {
+            "year": 2029,
+            "billions": 1.1
+          },
+          {
+            "year": 2030,
+            "billions": 1.2
+          },
+          {
+            "year": 2031,
+            "billions": 1.3
+          },
+          {
+            "year": 2032,
+            "billions": 1.4
+          }
+        ]
+      }
+    ]
+  },
+  "held_out_checks": {
+    "recipients_by_fine_age": [
+      {
+        "age_band": "Under 5",
+        "policyengine_recipients": 0.0,
+        "ssa_recipients": 126205.552
+      },
+      {
+        "age_band": "5-9",
+        "policyengine_recipients": 0.0,
+        "ssa_recipients": 311801.95200000005
+      },
+      {
+        "age_band": "10-14",
+        "policyengine_recipients": 0.0,
+        "ssa_recipients": 341497.376
+      },
+      {
+        "age_band": "15-17",
+        "policyengine_recipients": 179909.58058321697,
+        "ssa_recipients": 215291.824
+      },
+      {
+        "age_band": "18-21",
+        "policyengine_recipients": 408227.7261787685,
+        "ssa_recipients": 289530.384
+      },
+      {
+        "age_band": "22-29",
+        "policyengine_recipients": 1184817.180888,
+        "ssa_recipients": 534517.6320000001
+      },
+      {
+        "age_band": "30-39",
+        "policyengine_recipients": 1015432.5228129552,
+        "ssa_recipients": 675570.896
+      },
+      {
+        "age_band": "40-49",
+        "policyengine_recipients": 458814.1223509039,
+        "ssa_recipients": 638451.6159999999
+      },
+      {
+        "age_band": "50-59",
+        "policyengine_recipients": 637706.599892259,
+        "ssa_recipients": 1039339.84
+      },
+      {
+        "age_band": "60-64",
+        "policyengine_recipients": 92040.94590589528,
+        "ssa_recipients": 779504.88
+      },
+      {
+        "age_band": "65-69",
+        "policyengine_recipients": 733454.6884520103,
+        "ssa_recipients": 757233.3119999999
+      },
+      {
+        "age_band": "70-74",
+        "policyengine_recipients": 596261.01446964,
+        "ssa_recipients": 608756.1919999999
+      },
+      {
+        "age_band": "75-79",
+        "policyengine_recipients": 455001.4753261365,
+        "ssa_recipients": 452855.216
+      },
+      {
+        "age_band": "80 or older",
+        "policyengine_recipients": 526636.2318879638,
+        "ssa_recipients": 645875.472
+      }
+    ],
+    "recipients_with_social_security": [
+      {
+        "age_band": "Under 18",
+        "policyengine_share_pct": 0.0,
+        "ssa_share_pct": 5.654176392754119
+      },
+      {
+        "age_band": "18-64",
+        "policyengine_share_pct": 9.243711514260664,
+        "ssa_share_pct": 27.34885241554243
+      },
+      {
+        "age_band": "65 or older",
+        "policyengine_share_pct": 16.094269161003492,
+        "ssa_share_pct": 57.132651007268635
+      }
+    ],
+    "recipients_by_marital_status": [
+      {
+        "marital_status": "No spouse",
+        "policyengine_share_pct": 78.50219480723216,
+        "ssa_share_pct": 91.8355905610238
+      },
+      {
+        "marital_status": "Eligible spouse (both recipients)",
+        "policyengine_share_pct": 11.758432371650562,
+        "ssa_share_pct": 5.724733884924492
+      },
+      {
+        "marital_status": "Ineligible spouse",
+        "policyengine_share_pct": 9.739372821117286,
+        "ssa_share_pct": 2.439675554051695
+      }
+    ]
+  }
+}
