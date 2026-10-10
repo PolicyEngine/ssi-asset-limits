@@ -5,7 +5,8 @@ of 2026 and summed; YEAR amounts are calculated for 2026. Monthly diagnostic
 booleans are stored as the fraction of those months that are true (and
 ``*_january`` flags retain January's state for marital-unit checks). Resources
 and age are January snapshots when their variables are monthly. Each engine
-scenario runs in a fresh process admitted by ``heavy --mem 16``. No engine
+scenario runs in a fresh process admitted by ``heavy`` (see
+``WORKER_MEM_GIB``); an interrupted run resumes from the workers that finished. No engine
 calculation runs in the coordinator or unit tests.
 
 Output weights use the model's 2026 weights, including its population
@@ -33,6 +34,10 @@ import pandas as pd
 
 SCENARIOS = ("baseline", "ten_twenty", "no_limit")
 YEAR = 2026
+# Memory declared to the admission gate for each worker, and the ceiling a
+# worker's measured peak may not pass.
+WORKER_MEM_GIB = 18
+ADMISSION_RETRIES = 5
 DATASET_SHA256 = (
     "6496cc4393d4d3c6574f76eca231de5898c803b9067645591fd5c4d3e65aee84"
 )
@@ -398,19 +403,30 @@ def _admitted(arguments: list[str]) -> None:
     command = [
         "heavy",
         "--mem",
-        "16",
+        str(WORKER_MEM_GIB),
         "--",
         sys.executable,
         "-m",
         "ssi_asset_limits.microcosm_run",
         *arguments,
     ]
+    # heavy exits 71 when its queue could not be joined and 75 when it gave
+    # up waiting; neither means the worker ran, so those are retried.
+    for attempt in range(ADMISSION_RETRIES):
+        returncode = _run_in_group(command)
+        if returncode == 0:
+            return
+        if returncode not in (71, 75) or attempt == ADMISSION_RETRIES - 1:
+            raise subprocess.CalledProcessError(returncode, command)
+        time.sleep(60 * (attempt + 1))
+
+
+def _run_in_group(command: list[str]) -> int:
     # A synchronous child in a new group can be terminated on interruption;
     # no engine worker or gate process survives this coordinator.
     process = subprocess.Popen(command, start_new_session=True)
     try:
-        if process.wait() != 0:
-            raise subprocess.CalledProcessError(process.returncode, command)
+        return process.wait()
     except BaseException:
         if process.poll() is None:
             import signal
@@ -422,6 +438,34 @@ def _admitted(arguments: list[str]) -> None:
                 os.killpg(process.pid, signal.SIGKILL)
                 process.wait()
         raise
+
+
+def _prepared(manifest_path: Path, chunk_size: int) -> bool:
+    """True when an interrupted run already split the certified dataset."""
+    if not manifest_path.exists():
+        return False
+    manifest = json.loads(manifest_path.read_text())
+    return (
+        manifest.get("source_sha256") == DATASET_SHA256
+        and manifest.get("chunk_size") == chunk_size
+        and all(Path(path).exists() for path in manifest["chunk_paths"])
+    )
+
+
+def _finished(destination: Path, chunk: Path, scenario: str) -> bool:
+    """True when this worker already wrote its tables for this exact chunk."""
+    receipt_path = destination / "receipt.json"
+    if not receipt_path.exists():
+        return False
+    receipt = json.loads(receipt_path.read_text())
+    return (
+        receipt.get("scenario") == scenario
+        and receipt.get("chunk_sha256") == sha256_file(chunk)
+        and all(
+            (destination / f"{name}.csv.gz").exists()
+            for name in ("persons", "households", "persons_diagnostics")
+        )
+    )
 
 
 def run(out_dir: Path, chunk_size: int, cached_dataset: Path | None) -> None:
@@ -438,11 +482,13 @@ def run(out_dir: Path, chunk_size: int, cached_dataset: Path | None) -> None:
             ["uv", "pip", "freeze", "--python", sys.executable], text=True
         )
     )
-    prep_args = ["_prepare", "--out-dir", str(out_dir)]
-    if cached_dataset:
-        prep_args += ["--cached-dataset", str(cached_dataset)]
-    _admitted([*prep_args, "--chunk-size", str(chunk_size)])
-    manifest = json.loads((out_dir / "chunk_manifest.json").read_text())
+    manifest_path = out_dir / "chunk_manifest.json"
+    if not _prepared(manifest_path, chunk_size):
+        prep_args = ["_prepare", "--out-dir", str(out_dir)]
+        if cached_dataset:
+            prep_args += ["--cached-dataset", str(cached_dataset)]
+        _admitted([*prep_args, "--chunk-size", str(chunk_size)])
+    manifest = json.loads(manifest_path.read_text())
     receipts = []
     for index, chunk in enumerate(manifest["chunk_paths"]):
         for scenario in SCENARIOS:
@@ -451,23 +497,24 @@ def run(out_dir: Path, chunk_size: int, cached_dataset: Path | None) -> None:
                 f"chunk {index + 1}/{manifest['chunk_count']} {scenario}",
                 flush=True,
             )
-            _admitted(
-                [
-                    "_worker",
-                    "--chunk",
-                    chunk,
-                    "--scenario",
-                    scenario,
-                    "--out-dir",
-                    str(destination),
-                ]
-            )
+            if not _finished(destination, Path(chunk), scenario):
+                _admitted(
+                    [
+                        "_worker",
+                        "--chunk",
+                        chunk,
+                        "--scenario",
+                        scenario,
+                        "--out-dir",
+                        str(destination),
+                    ]
+                )
             receipt = json.loads((destination / "receipt.json").read_text())
             receipts.append(receipt)
-            if receipt["peak_rss_gib"] > 15:
+            if receipt["peak_rss_gib"] > WORKER_MEM_GIB:
                 raise RuntimeError(
-                    "Worker peak exceeds 15 GiB; rerun with --chunk-size "
-                    f"{max(1, chunk_size // 2)} before continuing"
+                    f"Worker peak exceeds {WORKER_MEM_GIB} GiB; rerun in a "
+                    f"new directory with --chunk-size {max(1, chunk_size // 2)}"
                 )
     assemble_run(out_dir / "workers", manifest["chunk_count"], out_dir)
     output_weight_totals = {

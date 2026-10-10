@@ -1,6 +1,7 @@
 """Run-directory contract tests without importing or running the engine."""
 
 import json
+import subprocess
 from types import SimpleNamespace
 
 import numpy as np
@@ -307,3 +308,91 @@ def test_execution_diagnostics_cannot_leak_into_provenance(tmp_path):
     extra = {**provenance(), "peak_rss_bytes": 123}
     with pytest.raises(ValueError, match="peak_rss_bytes"):
         write_run_metadata(tmp_path, extra, {})
+
+
+def test_admission_retries_only_gate_failures(monkeypatch):
+    from ssi_asset_limits import microcosm_run
+
+    codes = iter([71, 75, 0])
+    calls = []
+    monkeypatch.setattr(microcosm_run.time, "sleep", lambda seconds: None)
+    monkeypatch.setattr(
+        microcosm_run,
+        "_run_in_group",
+        lambda command: calls.append(command) or next(codes),
+    )
+    microcosm_run._admitted(["_worker"])
+    assert len(calls) == 3
+    assert calls[0][:3] == [
+        "heavy",
+        "--mem",
+        str(microcosm_run.WORKER_MEM_GIB),
+    ]
+
+    monkeypatch.setattr(microcosm_run, "_run_in_group", lambda command: 1)
+    with pytest.raises(subprocess.CalledProcessError):
+        microcosm_run._admitted(["_worker"])
+
+
+def test_admission_gives_up_after_the_retry_budget(monkeypatch):
+    from ssi_asset_limits import microcosm_run
+
+    calls = []
+    monkeypatch.setattr(microcosm_run.time, "sleep", lambda seconds: None)
+    monkeypatch.setattr(
+        microcosm_run,
+        "_run_in_group",
+        lambda command: calls.append(command) or 71,
+    )
+    with pytest.raises(subprocess.CalledProcessError):
+        microcosm_run._admitted(["_worker"])
+    assert len(calls) == microcosm_run.ADMISSION_RETRIES
+
+
+def test_finished_worker_is_recognised_only_for_the_same_chunk(tmp_path):
+    from ssi_asset_limits import microcosm_run
+
+    chunk = tmp_path / "chunk_0000.h5"
+    chunk.write_bytes(b"first batch")
+    destination = tmp_path / "workers" / "chunk_0000" / "baseline"
+    destination.mkdir(parents=True)
+    assert not microcosm_run._finished(destination, chunk, "baseline")
+    for name in ("persons", "households", "persons_diagnostics"):
+        (destination / f"{name}.csv.gz").write_bytes(b"")
+    (destination / "receipt.json").write_text(
+        json.dumps(
+            {
+                "scenario": "baseline",
+                "chunk_sha256": microcosm_run.sha256_file(chunk),
+            }
+        )
+    )
+    assert microcosm_run._finished(destination, chunk, "baseline")
+    assert not microcosm_run._finished(destination, chunk, "no_limit")
+    chunk.write_bytes(b"a different batch")
+    assert not microcosm_run._finished(destination, chunk, "baseline")
+    chunk.write_bytes(b"first batch")
+    (destination / "persons.csv.gz").unlink()
+    assert not microcosm_run._finished(destination, chunk, "baseline")
+
+
+def test_prepared_requires_the_certified_source_and_chunk_size(tmp_path):
+    from ssi_asset_limits import microcosm_run
+
+    manifest_path = tmp_path / "chunk_manifest.json"
+    assert not microcosm_run._prepared(manifest_path, 8_000)
+    chunk = tmp_path / "chunk_0000.h5"
+    chunk.write_bytes(b"x")
+    manifest = {
+        "source_sha256": microcosm_run.DATASET_SHA256,
+        "chunk_size": 8_000,
+        "chunk_paths": [str(chunk)],
+    }
+    manifest_path.write_text(json.dumps(manifest))
+    assert microcosm_run._prepared(manifest_path, 8_000)
+    assert not microcosm_run._prepared(manifest_path, 4_000)
+    manifest_path.write_text(json.dumps({**manifest, "source_sha256": "0"}))
+    assert not microcosm_run._prepared(manifest_path, 8_000)
+    manifest_path.write_text(json.dumps(manifest))
+    chunk.unlink()
+    assert not microcosm_run._prepared(manifest_path, 8_000)
