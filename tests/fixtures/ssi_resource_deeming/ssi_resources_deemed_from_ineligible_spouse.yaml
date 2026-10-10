@@ -1,0 +1,164 @@
+# Copied from PolicyEngine/policyengine-us#10040 (branch ssi-resource-deeming,
+# commit e7171e8639), policyengine_us/tests/policy/baseline/gov/ssa/ssi/eligibility/resources/deemed/ssi_resources_deemed_from_ineligible_spouse.yaml, without the cases that need parent
+# links, which policyengine-us 2.2.1 lacks. Expected values are the
+# branch's, sourced from 20 CFR 416.1160-416.1205, 416.1856 and POMS SI 01330.
+- name: All countable resources held by the ineligible spouse are deemed
+  period: 2026-01
+  input:
+    people:
+      claimant:
+        age: 40
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_head: true
+        ssi_countable_resources:
+          '2026': 0
+      spouse:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_spouse: true
+        ssi_countable_resources:
+          '2026': 3001
+    tax_units:
+      family:
+        members:
+        - claimant
+        - spouse
+    marital_units:
+      family_couple_0:
+        members:
+        - claimant
+        - spouse
+    households:
+      family:
+        members:
+        - claimant
+        - spouse
+  output:
+    ssi_resources_deemed_from_ineligible_spouse:
+    - 3001
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - false
+- name: Qualified unspent military retroactive pay is excluded from spousal resources
+  period: 2026-01
+  input:
+    people:
+      claimant:
+        age: 40
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_head: true
+        ssi_countable_resources:
+          '2026': 0
+      spouse:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_spouse: true
+        ssi_countable_resources:
+          '2026': 4000
+        ssi_resource_deeming_excluded_military_resources: 1000
+    tax_units:
+      family:
+        members:
+        - claimant
+        - spouse
+    marital_units:
+      family_couple_0:
+        members:
+        - claimant
+        - spouse
+    households:
+      family:
+        members:
+        - claimant
+        - spouse
+  output:
+    ssi_resources_deemed_from_ineligible_spouse:
+    - 3000
+    - 0
+    meets_ssi_resource_test:
+    - true
+    - false
+- name: Excluding military resources cannot produce negative spousal deeming
+  period: 2026-01
+  input:
+    people:
+      claimant:
+        age: 40
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_head: true
+        ssi_countable_resources:
+          '2026': 0
+      spouse:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_spouse: true
+        ssi_countable_resources:
+          '2026': 1000
+        ssi_resource_deeming_excluded_military_resources: 1500
+    tax_units:
+      family:
+        members:
+        - claimant
+        - spouse
+    marital_units:
+      family_couple_0:
+        members:
+        - claimant
+        - spouse
+    households:
+      family:
+        members:
+        - claimant
+        - spouse
+  output:
+    ssi_resources_deemed_from_ineligible_spouse:
+    - 0
+    - 0
+- name: Spouse liquid asset sources count while home and one vehicle remain excluded
+  period: 2026-01
+  input:
+    people:
+      claimant:
+        age: 40
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_head: true
+      spouse:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_spouse: true
+        bank_account_assets:
+          '2026': 1000
+        stock_assets:
+          '2026': 1500
+        bond_assets:
+          '2026': 501
+        primary_residence_value:
+          '2026': 500000
+    tax_units:
+      family:
+        members:
+        - claimant
+        - spouse
+    marital_units:
+      family_couple_0:
+        members:
+        - claimant
+        - spouse
+    households:
+      family:
+        members:
+        - claimant
+        - spouse
+        household_vehicles_value:
+          '2026': 3000
+  output:
+    ssi_countable_resources:
+    - 0
+    - 3001
+    ssi_resources_deemed_from_ineligible_spouse:
+    - 3001
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - false

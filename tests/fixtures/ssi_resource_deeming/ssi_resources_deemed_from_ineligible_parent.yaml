@@ -1,0 +1,1975 @@
+# Copied from PolicyEngine/policyengine-us#10040 (branch ssi-resource-deeming,
+# commit e7171e8639), policyengine_us/tests/policy/baseline/gov/ssa/ssi/eligibility/resources/deemed/ssi_resources_deemed_from_ineligible_parent.yaml, without the cases that need parent
+# links, which policyengine-us 2.2.1 lacks. Expected values are the
+# branch's, sourced from 20 CFR 416.1160-416.1205, 416.1856 and POMS SI 01330.
+- name: One and two ineligible parents below at and above each allowance
+  period: 2026-01
+  input:
+    people:
+      n1_total1999_parent0:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 1999
+      n1_total1999_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+      n1_total2000_parent0:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 2000
+      n1_total2000_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+      n1_total2001_parent0:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 2001
+      n1_total2001_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+      n1_total3999_parent0:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 3999
+      n1_total3999_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+      n1_total4000_parent0:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 4000
+      n1_total4000_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+      n1_total4001_parent0:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 4001
+      n1_total4001_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+      n2_total2999_parent0:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 1499
+      n2_total2999_parent1:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_spouse: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 1500
+      n2_total2999_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+      n2_total3000_parent0:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 1500
+      n2_total3000_parent1:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_spouse: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 1500
+      n2_total3000_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+      n2_total3001_parent0:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 1500
+      n2_total3001_parent1:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_spouse: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 1501
+      n2_total3001_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+      n2_total4999_parent0:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 2499
+      n2_total4999_parent1:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_spouse: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 2500
+      n2_total4999_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+      n2_total5000_parent0:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 2500
+      n2_total5000_parent1:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_spouse: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 2500
+      n2_total5000_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+      n2_total5001_parent0:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 2500
+      n2_total5001_parent1:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_spouse: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 2501
+      n2_total5001_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+    tax_units:
+      n1_total1999:
+        members:
+        - n1_total1999_parent0
+        - n1_total1999_child
+      n1_total2000:
+        members:
+        - n1_total2000_parent0
+        - n1_total2000_child
+      n1_total2001:
+        members:
+        - n1_total2001_parent0
+        - n1_total2001_child
+      n1_total3999:
+        members:
+        - n1_total3999_parent0
+        - n1_total3999_child
+      n1_total4000:
+        members:
+        - n1_total4000_parent0
+        - n1_total4000_child
+      n1_total4001:
+        members:
+        - n1_total4001_parent0
+        - n1_total4001_child
+      n2_total2999:
+        members:
+        - n2_total2999_parent0
+        - n2_total2999_parent1
+        - n2_total2999_child
+      n2_total3000:
+        members:
+        - n2_total3000_parent0
+        - n2_total3000_parent1
+        - n2_total3000_child
+      n2_total3001:
+        members:
+        - n2_total3001_parent0
+        - n2_total3001_parent1
+        - n2_total3001_child
+      n2_total4999:
+        members:
+        - n2_total4999_parent0
+        - n2_total4999_parent1
+        - n2_total4999_child
+      n2_total5000:
+        members:
+        - n2_total5000_parent0
+        - n2_total5000_parent1
+        - n2_total5000_child
+      n2_total5001:
+        members:
+        - n2_total5001_parent0
+        - n2_total5001_parent1
+        - n2_total5001_child
+    marital_units:
+      n1_total1999_n1_total1999_parent0:
+        members:
+        - n1_total1999_parent0
+      n1_total1999_n1_total1999_child:
+        members:
+        - n1_total1999_child
+      n1_total2000_n1_total2000_parent0:
+        members:
+        - n1_total2000_parent0
+      n1_total2000_n1_total2000_child:
+        members:
+        - n1_total2000_child
+      n1_total2001_n1_total2001_parent0:
+        members:
+        - n1_total2001_parent0
+      n1_total2001_n1_total2001_child:
+        members:
+        - n1_total2001_child
+      n1_total3999_n1_total3999_parent0:
+        members:
+        - n1_total3999_parent0
+      n1_total3999_n1_total3999_child:
+        members:
+        - n1_total3999_child
+      n1_total4000_n1_total4000_parent0:
+        members:
+        - n1_total4000_parent0
+      n1_total4000_n1_total4000_child:
+        members:
+        - n1_total4000_child
+      n1_total4001_n1_total4001_parent0:
+        members:
+        - n1_total4001_parent0
+      n1_total4001_n1_total4001_child:
+        members:
+        - n1_total4001_child
+      n2_total2999_couple_0:
+        members:
+        - n2_total2999_parent0
+        - n2_total2999_parent1
+      n2_total2999_n2_total2999_child:
+        members:
+        - n2_total2999_child
+      n2_total3000_couple_0:
+        members:
+        - n2_total3000_parent0
+        - n2_total3000_parent1
+      n2_total3000_n2_total3000_child:
+        members:
+        - n2_total3000_child
+      n2_total3001_couple_0:
+        members:
+        - n2_total3001_parent0
+        - n2_total3001_parent1
+      n2_total3001_n2_total3001_child:
+        members:
+        - n2_total3001_child
+      n2_total4999_couple_0:
+        members:
+        - n2_total4999_parent0
+        - n2_total4999_parent1
+      n2_total4999_n2_total4999_child:
+        members:
+        - n2_total4999_child
+      n2_total5000_couple_0:
+        members:
+        - n2_total5000_parent0
+        - n2_total5000_parent1
+      n2_total5000_n2_total5000_child:
+        members:
+        - n2_total5000_child
+      n2_total5001_couple_0:
+        members:
+        - n2_total5001_parent0
+        - n2_total5001_parent1
+      n2_total5001_n2_total5001_child:
+        members:
+        - n2_total5001_child
+    households:
+      n1_total1999:
+        members:
+        - n1_total1999_parent0
+        - n1_total1999_child
+      n1_total2000:
+        members:
+        - n1_total2000_parent0
+        - n1_total2000_child
+      n1_total2001:
+        members:
+        - n1_total2001_parent0
+        - n1_total2001_child
+      n1_total3999:
+        members:
+        - n1_total3999_parent0
+        - n1_total3999_child
+      n1_total4000:
+        members:
+        - n1_total4000_parent0
+        - n1_total4000_child
+      n1_total4001:
+        members:
+        - n1_total4001_parent0
+        - n1_total4001_child
+      n2_total2999:
+        members:
+        - n2_total2999_parent0
+        - n2_total2999_parent1
+        - n2_total2999_child
+      n2_total3000:
+        members:
+        - n2_total3000_parent0
+        - n2_total3000_parent1
+        - n2_total3000_child
+      n2_total3001:
+        members:
+        - n2_total3001_parent0
+        - n2_total3001_parent1
+        - n2_total3001_child
+      n2_total4999:
+        members:
+        - n2_total4999_parent0
+        - n2_total4999_parent1
+        - n2_total4999_child
+      n2_total5000:
+        members:
+        - n2_total5000_parent0
+        - n2_total5000_parent1
+        - n2_total5000_child
+      n2_total5001:
+        members:
+        - n2_total5001_parent0
+        - n2_total5001_parent1
+        - n2_total5001_child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 1
+    - 0
+    - 1999
+    - 0
+    - 2000
+    - 0
+    - 2001
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 1
+    - 0
+    - 0
+    - 1999
+    - 0
+    - 0
+    - 2000
+    - 0
+    - 0
+    - 2001
+    meets_ssi_resource_test:
+    - true
+    - true
+    - true
+    - true
+    - false
+    - true
+    - false
+    - true
+    - false
+    - true
+    - false
+    - false
+    - true
+    - true
+    - true
+    - true
+    - true
+    - true
+    - true
+    - true
+    - true
+    - false
+    - false
+    - true
+    - false
+    - false
+    - true
+    - false
+    - false
+    - false
+- name: Child own resources plus parental excess include the individual limit boundary
+  period: 2026-01
+  input:
+    people:
+      own1499_parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 2500
+      own1499_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 1499
+      own1500_parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 2500
+      own1500_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 1500
+      own1501_parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 2500
+      own1501_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 1501
+    tax_units:
+      own1499:
+        members:
+        - own1499_parent
+        - own1499_child
+      own1500:
+        members:
+        - own1500_parent
+        - own1500_child
+      own1501:
+        members:
+        - own1501_parent
+        - own1501_child
+    marital_units:
+      own1499_own1499_parent:
+        members:
+        - own1499_parent
+      own1499_own1499_child:
+        members:
+        - own1499_child
+      own1500_own1500_parent:
+        members:
+        - own1500_parent
+      own1500_own1500_child:
+        members:
+        - own1500_child
+      own1501_own1501_parent:
+        members:
+        - own1501_parent
+      own1501_own1501_child:
+        members:
+        - own1501_child
+    households:
+      own1499:
+        members:
+        - own1499_parent
+        - own1499_child
+      own1500:
+        members:
+        - own1500_parent
+        - own1500_child
+      own1501:
+        members:
+        - own1501_parent
+        - own1501_child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 500
+    - 0
+    - 500
+    - 0
+    - 500
+    meets_ssi_resource_test:
+    - false
+    - true
+    - false
+    - true
+    - false
+    - false
+- name: POMS White eligible parent leaves no excess resources to deem
+  period: 2024-01
+  input:
+    people:
+      other_parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2024': 1000
+      abd_parent:
+        age: 40
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_spouse: true
+        is_parent: true
+        ssi_countable_resources:
+          '2024': 200
+      child:
+        age: 6
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2024': 0
+    tax_units:
+      family:
+        members:
+        - other_parent
+        - abd_parent
+        - child
+    marital_units:
+      family_couple_0:
+        members:
+        - other_parent
+        - abd_parent
+      family_child:
+        members:
+        - child
+    households:
+      family:
+        members:
+        - other_parent
+        - abd_parent
+        - child
+  output:
+    is_ssi_resource_deeming_child:
+    - false
+    - false
+    - true
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 0
+    meets_ssi_resource_test:
+    - true
+    - true
+    - true
+- name: POMS Ryder parent failing resources contributes to the parental pool
+  period: 2024-01
+  input:
+    people:
+      other_parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2024': 2000
+      abd_parent:
+        age: 40
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_spouse: true
+        is_parent: true
+        ssi_countable_resources:
+          '2024': 1100
+      child:
+        age: 14
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2024': 200
+    tax_units:
+      family:
+        members:
+        - other_parent
+        - abd_parent
+        - child
+    marital_units:
+      family_couple_0:
+        members:
+        - other_parent
+        - abd_parent
+      family_child:
+        members:
+        - child
+    households:
+      family:
+        members:
+        - other_parent
+        - abd_parent
+        - child
+  output:
+    is_ssi_resource_deeming_child:
+    - false
+    - false
+    - true
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 100
+    meets_ssi_resource_test:
+    - true
+    - false
+    - true
+- name: POMS Blake two parents with 4000 resources deem 1000 to Thomas
+  period: 2026-01
+  input:
+    people:
+      first_parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 2000
+      second_parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_spouse: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 2000
+      thomas:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+    tax_units:
+      family:
+        members:
+        - first_parent
+        - second_parent
+        - thomas
+    marital_units:
+      family_couple_0:
+        members:
+        - first_parent
+        - second_parent
+      family_thomas:
+        members:
+        - thomas
+    households:
+      family:
+        members:
+        - first_parent
+        - second_parent
+        - thomas
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 1000
+    meets_ssi_resource_test:
+    - true
+    - true
+    - true
+- name: POMS Goode parent and stepparent divide excess equally between two children
+  period: 2026-01
+  input:
+    people:
+      parker:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 2700
+      peter:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_spouse: true
+        is_parent: false
+        ssi_countable_resources:
+          '2026': 2100
+      john:
+        age: 15
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 225
+      joan:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 500
+    tax_units:
+      family:
+        members:
+        - parker
+        - peter
+        - john
+        - joan
+    marital_units:
+      family_couple_0:
+        members:
+        - parker
+        - peter
+      family_john:
+        members:
+        - john
+      family_joan:
+        members:
+        - joan
+    households:
+      family:
+        members:
+        - parker
+        - peter
+        - john
+        - joan
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 900
+    - 900
+    meets_ssi_resource_test:
+    - false
+    - false
+    - true
+    - true
+- name: POMS Goode resource failure reallocates parental excess to the remaining child
+  period: 2026-01
+  input:
+    people:
+      parker:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 2700
+      peter:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_spouse: true
+        is_parent: false
+        ssi_countable_resources:
+          '2026': 2100
+      john:
+        age: 15
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 225
+      joan:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 1500
+    tax_units:
+      family:
+        members:
+        - parker
+        - peter
+        - john
+        - joan
+    marital_units:
+      family_couple_0:
+        members:
+        - parker
+        - peter
+      family_john:
+        members:
+        - john
+      family_joan:
+        members:
+        - joan
+    households:
+      family:
+        members:
+        - parker
+        - peter
+        - john
+        - joan
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 1800
+    - 900
+    meets_ssi_resource_test:
+    - false
+    - false
+    - false
+    - false
+- name: Otherwise ineligible child does not share the parental resource allocation
+  period: 2026-01
+  input:
+    people:
+      parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 3800
+      first_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 225
+      ineligible_child:
+        age: 15
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+        ssi_resource_deeming_child_is_ineligible: true
+    tax_units:
+      family:
+        members:
+        - parent
+        - first_child
+        - ineligible_child
+    marital_units:
+      family_parent:
+        members:
+        - parent
+      family_first_child:
+        members:
+        - first_child
+      family_ineligible_child:
+        members:
+        - ineligible_child
+    households:
+      family:
+        members:
+        - parent
+        - first_child
+        - ineligible_child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 1800
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - false
+    - true
+- name: Child already over own resource limit receives no parental share
+  period: 2026-01
+  input:
+    people:
+      parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 6000
+      child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 2001
+    tax_units:
+      family:
+        members:
+        - parent
+        - child
+    marital_units:
+      family_parent:
+        members:
+        - parent
+      family_child:
+        members:
+        - child
+    households:
+      family:
+        members:
+        - parent
+        - child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - false
+- name: Qualified military pay is excluded before the parental allowance
+  period: 2026-01
+  input:
+    people:
+      parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 5000
+        ssi_resource_deeming_excluded_military_resources: 2000
+      child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+    tax_units:
+      family:
+        members:
+        - parent
+        - child
+    marital_units:
+      family_parent:
+        members:
+        - parent
+      family_child:
+        members:
+        - child
+    households:
+      family:
+        members:
+        - parent
+        - child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 1000
+    meets_ssi_resource_test:
+    - false
+    - true
+- name: Parental deeming stops when a child attains age eighteen
+  period: 2026-01
+  input:
+    people:
+      parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 6000
+      child:
+        age: 18
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 100
+    tax_units:
+      family:
+        members:
+        - parent
+        - child
+    marital_units:
+      family_parent:
+        members:
+        - parent
+      family_child:
+        members:
+        - child
+    households:
+      family:
+        members:
+        - parent
+        - child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - true
+- name: Medical treatment facility exception prevents parental resource deeming
+  period: 2026-01
+  input:
+    people:
+      parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 6000
+      child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 100
+        ssi_lives_in_medical_treatment_facility: true
+    tax_units:
+      family:
+        members:
+        - parent
+        - child
+    marital_units:
+      family_parent:
+        members:
+        - parent
+      family_child:
+        members:
+        - child
+    households:
+      family:
+        members:
+        - parent
+        - child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - true
+- name: Certified Medicaid waiver exception prevents parental resource deeming
+  period: 2026-01
+  input:
+    people:
+      parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 6000
+      child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 100
+        ssi_resource_deeming_waiver: true
+    tax_units:
+      family:
+        members:
+        - parent
+        - child
+    marital_units:
+      family_parent:
+        members:
+        - parent
+      family_child:
+        members:
+        - child
+    households:
+      family:
+        members:
+        - parent
+        - child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - true
+- name: A non ABD child receives no deemed resources
+  period: 2026-01
+  input:
+    people:
+      parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 6000
+      child:
+        age: 16
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 100
+    tax_units:
+      family:
+        members:
+        - parent
+        - child
+    marital_units:
+      family_parent:
+        members:
+        - parent
+      family_child:
+        members:
+        - child
+    households:
+      family:
+        members:
+        - parent
+        - child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - true
+- name: A child household head does not meet the SSI child definition
+  period: 2026-01
+  input:
+    people:
+      parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 6000
+      child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 100
+        is_household_head: true
+    tax_units:
+      family:
+        members:
+        - parent
+        - child
+    marital_units:
+      family_parent:
+        members:
+        - parent
+      family_child:
+        members:
+        - child
+    households:
+      family:
+        members:
+        - parent
+        - child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - true
+- name: An adult without a parent relationship does not deem to a child
+  period: 2026-01
+  input:
+    people:
+      parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: false
+        ssi_countable_resources:
+          '2026': 6000
+      child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        is_parent: false
+        ssi_countable_resources:
+          '2026': 100
+    tax_units:
+      family:
+        members:
+        - parent
+        - child
+    marital_units:
+      family_parent:
+        members:
+        - parent
+      family_child:
+        members:
+        - child
+    households:
+      family:
+        members:
+        - parent
+        - child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - true
+- name: Married child is not subject to parental resource deeming
+  period: 2026-01
+  input:
+    people:
+      parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 6000
+      child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 100
+      child_spouse:
+        age: 19
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+    tax_units:
+      family:
+        members:
+        - parent
+        - child
+        - child_spouse
+    marital_units:
+      family_couple_0:
+        members:
+        - child
+        - child_spouse
+      family_parent:
+        members:
+        - parent
+    households:
+      family:
+        members:
+        - parent
+        - child
+        - child_spouse
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 0
+- name: Nonresident parent resources are not deemed within a shared tax unit
+  period: 2026-01
+  input:
+    people:
+      parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 6000
+      child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+    tax_units:
+      family:
+        members:
+        - parent
+        - child
+    marital_units:
+      family_parent:
+        members:
+        - parent
+      family_child:
+        members:
+        - child
+    households:
+      parent_home:
+        members:
+        - parent
+      child_home:
+        members:
+        - child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - true
+- name: Without parent links the tax unit proxy cannot distinguish a grandparent
+  period: 2026-01
+  input:
+    people:
+      grandparent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: false
+        is_household_head: false
+        ssi_countable_resources:
+          '2026': 5000
+        is_parent: true
+      mother:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: true
+        is_household_head: false
+        ssi_countable_resources:
+          '2026': 0
+        is_parent: true
+      child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: true
+        is_household_head: false
+        ssi_countable_resources:
+          '2026': 1
+    tax_units:
+      family:
+        members:
+        - grandparent
+        - mother
+        - child
+    marital_units:
+      grandparent:
+        members:
+        - grandparent
+      mother:
+        members:
+        - mother
+      child:
+        members:
+        - child
+    households:
+      home:
+        members:
+        - grandparent
+        - mother
+        - child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 2000
+    meets_ssi_resource_test:
+    - false
+    - true
+    - false
+- name: Immigration ineligible sibling does not dilute citizen child parental excess
+  period: 2026-01
+  input:
+    people:
+      parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: false
+        is_household_head: false
+        ssi_countable_resources:
+          '2026': 5000
+        is_parent: true
+      citizen_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: true
+        is_household_head: false
+        ssi_countable_resources:
+          '2026': 0
+        immigration_status: CITIZEN
+      undocumented_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: true
+        is_household_head: false
+        ssi_countable_resources:
+          '2026': 0
+        immigration_status: UNDOCUMENTED
+        is_ssi_qualified_noncitizen: false
+    tax_units:
+      family:
+        members:
+        - parent
+        - citizen_child
+        - undocumented_child
+    marital_units:
+      parent:
+        members:
+        - parent
+      citizen_child:
+        members:
+        - citizen_child
+      undocumented_child:
+        members:
+        - undocumented_child
+    households:
+      home:
+        members:
+        - parent
+        - citizen_child
+        - undocumented_child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 3000
+    - 0
+    meets_ssi_resource_test:
+    - false
+    - false
+    - true
+    is_ssi_resource_deeming_child:
+    - false
+    - true
+    - false
+    is_ssi_eligible:
+    - false
+    - false
+    - false
+- name: Qualified noncitizen child shares parental resources with a citizen sibling
+  period: 2026-01
+  input:
+    people:
+      parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: false
+        is_household_head: false
+        ssi_countable_resources:
+          '2026': 5000
+        is_parent: true
+      citizen_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: true
+        is_household_head: false
+        ssi_countable_resources:
+          '2026': 0
+        immigration_status: CITIZEN
+      qualified_child:
+        age: 16
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: true
+        is_household_head: false
+        ssi_countable_resources:
+          '2026': 0
+        immigration_status: REFUGEE
+        is_ssi_qualified_noncitizen: true
+    tax_units:
+      family:
+        members:
+        - parent
+        - citizen_child
+        - qualified_child
+    marital_units:
+      parent:
+        members:
+        - parent
+      citizen_child:
+        members:
+        - citizen_child
+      qualified_child:
+        members:
+        - qualified_child
+    households:
+      home:
+        members:
+        - parent
+        - citizen_child
+        - qualified_child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 1500
+    - 1500
+    meets_ssi_resource_test:
+    - false
+    - true
+    - true
+    is_ssi_resource_deeming_child:
+    - false
+    - true
+    - true
+- name: Without parent links a parent's spouse in another tax unit counts
+  period: 2026-01
+  input:
+    people:
+      mother:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 2500
+      stepfather:
+        age: 42
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        ssi_countable_resources:
+          '2026': 5000
+      child:
+        age: 10
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+    tax_units:
+      mother_unit:
+        members:
+        - mother
+        - child
+        cohabitating_spouses: true
+      stepfather_unit:
+        members:
+        - stepfather
+    marital_units:
+      parents:
+        members:
+        - mother
+        - stepfather
+      child_unit:
+        members:
+        - child
+    households:
+      home:
+        members:
+        - mother
+        - stepfather
+        - child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 4500
+    meets_ssi_resource_test:
+    - false
+    - false
+    - false
+- name: Without parent links a parent filing apart from the stepparent who claims the child
+    counts
+  period: 2026-01
+  input:
+    people:
+      mother:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 5001
+      stepfather:
+        age: 42
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: false
+        ssi_countable_resources:
+          '2026': 0
+      child:
+        age: 10
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+    tax_units:
+      mother_unit:
+        members:
+        - mother
+      stepfather_unit:
+        members:
+        - stepfather
+        - child
+    marital_units:
+      parents:
+        members:
+        - mother
+        - stepfather
+      child_unit:
+        members:
+        - child
+    households:
+      home:
+        members:
+        - mother
+        - stepfather
+        - child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 2001
+    meets_ssi_resource_test:
+    - false
+    - true
+    - false
+- name: Omitted marital units do not marry a child to the parent who claims them
+  period: 2026-01
+  input:
+    people:
+      parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 5000
+      child:
+        age: 10
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+    tax_units:
+      family:
+        members:
+        - parent
+        - child
+    households:
+      home:
+        members:
+        - parent
+        - child
+  output:
+    is_ssi_resource_deeming_child:
+    - false
+    - true
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 3000
+    meets_ssi_resource_test:
+    - false
+    - false
+- name: Children in two tax units with the same six deemors share one pool
+  period: 2026-01
+  input:
+    people:
+      a1:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 1000
+      b1:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 1000
+      a2:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: false
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 1000
+      b2:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: false
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 1000
+      a3:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: false
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 1000
+      b3:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: false
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 1000
+      child_a:
+        age: 10
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+      child_b:
+        age: 10
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+    tax_units:
+      unit_a:
+        members:
+        - a1
+        - a2
+        - a3
+        - child_a
+      unit_b:
+        members:
+        - b1
+        - b2
+        - b3
+        - child_b
+    marital_units:
+      couple_1:
+        members:
+        - a1
+        - b1
+      couple_2:
+        members:
+        - a2
+        - b2
+      couple_3:
+        members:
+        - a3
+        - b3
+      child_a_unit:
+        members:
+        - child_a
+      child_b_unit:
+        members:
+        - child_b
+    households:
+      home:
+        members:
+        - a1
+        - b1
+        - a2
+        - b2
+        - a3
+        - b3
+        - child_a
+        - child_b
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 1500
+    - 1500
+    meets_ssi_resource_test:
+    - true
+    - true
+    - true
+    - true
+    - true
+    - true
+    - true
+    - true
+- name: An income-ineligible sibling does not share the parental excess
+  period: 2026-01
+  input:
+    people:
+      mother:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 5000
+      child:
+        age: 10
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+      sibling:
+        age: 12
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+        ssi_countable_income:
+          '2026': 120000
+    tax_units:
+      family:
+        members:
+        - mother
+        - child
+        - sibling
+    marital_units:
+      mother_unit:
+        members:
+        - mother
+      child_unit:
+        members:
+        - child
+      sibling_unit:
+        members:
+        - sibling
+    households:
+      home:
+        members:
+        - mother
+        - child
+        - sibling
+  output:
+    is_ssi_resource_deeming_child:
+    - false
+    - true
+    - true
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 3000
+    - 3000
+    meets_ssi_resource_test:
+    - false
+    - false
+    - false
+- name: A married minor in an explicit marital unit is not a child for deeming
+  period: 2026-01
+  input:
+    people:
+      mother:
+        age: 45
+        is_ssi_aged_blind_disabled: false
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 6000
+      minor:
+        age: 17
+        is_ssi_aged_blind_disabled: true
+        ssi_countable_resources:
+          '2026': 0
+      spouse:
+        age: 19
+        is_ssi_aged_blind_disabled: false
+        ssi_countable_resources:
+          '2026': 0
+    tax_units:
+      family:
+        members:
+        - mother
+        - minor
+        - spouse
+    marital_units:
+      mother_unit:
+        members:
+        - mother
+      couple:
+        members:
+        - minor
+        - spouse
+    households:
+      home:
+        members:
+        - mother
+        - minor
+        - spouse
+  output:
+    is_ssi_resource_deeming_child:
+    - false
+    - false
+    - false
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 0
+- name: An income-ineligible only child is still deemed the whole excess
+  period: 2026-01
+  input:
+    people:
+      mother:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 10000
+      child:
+        age: 10
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+        ssi_countable_income:
+          '2026': 120000
+    tax_units:
+      family:
+        members:
+        - mother
+        - child
+    marital_units:
+      mother_unit:
+        members:
+        - mother
+      child_unit:
+        members:
+        - child
+    households:
+      home:
+        members:
+        - mother
+        - child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 8000
+    meets_ssi_resource_test:
+    - false
+    - false

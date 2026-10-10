@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/_zones/ssi-asset-limits/_next/:path*",
+      "destination": "/_next/:path*"
+    }
+  ]
+}

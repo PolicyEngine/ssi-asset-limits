@@ -1,0 +1,120 @@
+{
+  "provenance": {
+    "analysis_year": 2026,
+    "policyengine_version": "6.2.5",
+    "bundle_id": "us-6.2.5",
+    "model_package": "policyengine-us",
+    "model_version": "2.2.1",
+    "dataset": "populace_us_2024",
+    "dataset_build_id": "populace-us-2024-spm-20260915",
+    "dataset_sha256": "6496cc4393d4d3c6574f76eca231de5898c803b9067645591fd5c4d3e65aee84",
+    "generated_at": "2026-10-10T08:31:44.298508+00:00",
+    "code_commit": "d865d2bc3ced5882185c3fa9b0d24ea17cb91166",
+    "method_note": "The population was run in household batches, which is exact because every marital, tax, SPM and family unit nests within one household. Sensitivity, not the certified population: households where the PUF channel erased a CPS-reported Social Security benefit were rerun with that benefit restored (PolicyEngine/microcosm#1178) and spliced into the certified run, without redrawing claiming flags."
+  },
+  "diagnostics": {
+    "household_count": 57240,
+    "person_count": 166321,
+    "source_uri": "hf://policyengine/populace-us/populace_us_2024.h5@populace-us-2024-spm-20260915",
+    "source_sha256": "6496cc4393d4d3c6574f76eca231de5898c803b9067645591fd5c4d3e65aee84",
+    "annualization": "MONTH amounts sum all twelve months; MONTH flags are fractions of true months; age and resources use January; YEAR variables are calculated for 2026.",
+    "certified_chunk_paths": [
+      "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0000.h5",
+      "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0001.h5",
+      "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0002.h5",
+      "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0003.h5",
+      "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0004.h5",
+      "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0005.h5",
+      "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0006.h5",
+      "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0007.h5"
+    ],
+    "repaired_chunk": "results/microcosm-625-spm0915-ss-restored/chunks/affected_households_repaired.h5",
+    "variant": "restore_cps_social_security",
+    "candidate": {
+      "households": 3566,
+      "persons": 9226,
+      "restored_person_rows": 4495,
+      "sha256": "91066242ccc040ae5bd86a9ddcc3560605f8bf452d28ba172237d65278d4e369"
+    },
+    "spliced_into": {
+      "run": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915",
+      "code_commit": "5cf8d3e47494ebd105204fa95501b07532ccc282",
+      "generated_at": "2026-10-10T00:23:08.942203+00:00"
+    },
+    "workers": [
+      {
+        "chunk": "results/microcosm-625-spm0915-ss-restored/chunks/affected_households_repaired.h5",
+        "chunk_sha256": "91066242ccc040ae5bd86a9ddcc3560605f8bf452d28ba172237d65278d4e369",
+        "scenario": "baseline",
+        "variant": null,
+        "variant_source_sha256": null,
+        "code_commit": "d865d2bc3ced5882185c3fa9b0d24ea17cb91166",
+        "code_dirty": false,
+        "peak_rss_gib": 6.5390625,
+        "wall_seconds": 22.001017083006445,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        },
+        "finished_at": "2026-10-10T08:30:22.592340+00:00"
+      },
+      {
+        "chunk": "results/microcosm-625-spm0915-ss-restored/chunks/affected_households_repaired.h5",
+        "chunk_sha256": "91066242ccc040ae5bd86a9ddcc3560605f8bf452d28ba172237d65278d4e369",
+        "scenario": "no_limit",
+        "variant": null,
+        "variant_source_sha256": null,
+        "code_commit": "d865d2bc3ced5882185c3fa9b0d24ea17cb91166",
+        "code_dirty": false,
+        "peak_rss_gib": 7.09674072265625,
+        "wall_seconds": 27.834659250016557,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        },
+        "finished_at": "2026-10-10T08:31:44.298508+00:00"
+      },
+      {
+        "chunk": "results/microcosm-625-spm0915-ss-restored/chunks/affected_households_repaired.h5",
+        "chunk_sha256": "91066242ccc040ae5bd86a9ddcc3560605f8bf452d28ba172237d65278d4e369",
+        "scenario": "ten_twenty",
+        "variant": null,
+        "variant_source_sha256": null,
+        "code_commit": "d865d2bc3ced5882185c3fa9b0d24ea17cb91166",
+        "code_dirty": false,
+        "peak_rss_gib": 7.09881591796875,
+        "wall_seconds": 27.109338249982102,
+        "legacy_input_renames": {
+          "would_claim_wic": "takes_up_wic_if_eligible"
+        },
+        "spm": {
+          "forecast_content_sha256": "3d86d5c4c0423480e6b69b75d222ffa4a7a2639e4094df5ba2504af01be17173",
+          "scenario": "ce_trend",
+          "geography_kind": "county",
+          "geography_id": null,
+          "county_vintage": "2020",
+          "as_of": null
+        },
+        "finished_at": "2026-10-10T08:31:03.330653+00:00"
+      }
+    ],
+    "output_weight_totals": {
+      "person": 345685947.2203935,
+      "household": 124557998.58971302
+    }
+  }
+}

@@ -1,0 +1,453 @@
+{
+  "A_baseline": {
+    "recipients": {
+      "under_18": {
+        "against_ssa": {
+          "value": 153814.898183217,
+          "reference": 1001922.0,
+          "difference": -848107.101816783,
+          "relative_difference": -0.8464801669359321,
+          "more_than_10_percent_off": true
+        },
+        "against_july_build_p": {
+          "value": 153814.898183217,
+          "reference": 180000.0,
+          "difference": -26185.10181678299,
+          "relative_difference": -0.1454727878710166,
+          "more_than_10_percent_off": true
+        }
+      },
+      "18_64": {
+        "against_ssa": {
+          "value": 3704994.980442278,
+          "reference": 3905779.0,
+          "difference": -200784.0195577219,
+          "relative_difference": -0.051406907446049026,
+          "more_than_10_percent_off": false
+        },
+        "against_july_build_p": {
+          "value": 3704994.980442278,
+          "reference": 3800000.0,
+          "difference": -95005.01955772191,
+          "relative_difference": -0.025001320936242608,
+          "more_than_10_percent_off": false
+        }
+      },
+      "65_plus": {
+        "against_ssa": {
+          "value": 2290482.1732191434,
+          "reference": 2382142.0,
+          "difference": -91659.82678085659,
+          "relative_difference": -0.03847790214893008,
+          "more_than_10_percent_off": false
+        },
+        "against_july_build_p": {
+          "value": 2290482.1732191434,
+          "reference": 2310000.0,
+          "difference": -19517.826780856587,
+          "relative_difference": -0.00844927566270848,
+          "more_than_10_percent_off": false
+        }
+      },
+      "total": {
+        "against_ssa": {
+          "value": 6149292.051844638,
+          "reference": 7289843.0,
+          "difference": -1140550.9481553622,
+          "relative_difference": -0.15645754622635386,
+          "more_than_10_percent_off": true
+        },
+        "against_july_build_p": {
+          "value": 6149292.051844638,
+          "reference": 6290000.0,
+          "difference": -140707.94815536216,
+          "relative_difference": -0.022370103045367594,
+          "more_than_10_percent_off": false
+        }
+      }
+    },
+    "annual_federal_ssi": {
+      "against_ssa": {
+        "value": 56713940946.05539,
+        "reference": 62760000000.0,
+        "difference": -6046059053.944611,
+        "relative_difference": -0.09633618632798933,
+        "more_than_10_percent_off": false
+      },
+      "against_july_build_p": {
+        "value": 56713940946.05539,
+        "reference": 57900000000.0,
+        "difference": -1186059053.9446106,
+        "relative_difference": -0.02048461233064958,
+        "more_than_10_percent_off": false
+      }
+    },
+    "ssa_source_url": "https://www.ssa.gov/policy/docs/statcomps/ssi_monthly/2024-12/table01.html",
+    "comparison_note": "2026 annual model recipients are compared with December 2024 federal-payment recipients; the approximate $5.23 billion December payment is multiplied by 12. July Build P figures are the earlier run supplied with this analysis, some rounded."
+  },
+  "B_reform_deltas": {
+    "ten_twenty": {
+      "annual_ssi_change": {
+        "value": 4212641379.784194,
+        "reference": 3610000000.0,
+        "difference": 602641379.784194,
+        "relative_difference": 0.16693667030033074,
+        "more_than_10_percent_off": true
+      },
+      "new_recipients": {
+        "value": 597232.9063534911,
+        "reference": 516000.0,
+        "difference": 81232.90635349113,
+        "relative_difference": 0.1574281130881611,
+        "more_than_10_percent_off": true
+      },
+      "by_age": {
+        "under_18": {
+          "annual_ssi_change": 0.0,
+          "new_recipients": 0.0,
+          "new_recipients_against_july_build_p": {
+            "value": 0.0,
+            "reference": 0.0,
+            "difference": 0.0,
+            "relative_difference": null,
+            "more_than_10_percent_off": false
+          }
+        },
+        "18_64": {
+          "annual_ssi_change": 1227145040.0701427,
+          "new_recipients": 177703.18908921335,
+          "new_recipients_against_july_build_p": {
+            "value": 177703.18908921335,
+            "reference": 153211.0,
+            "difference": 24492.189089213352,
+            "relative_difference": 0.15985920781936905,
+            "more_than_10_percent_off": true
+          }
+        },
+        "65_plus": {
+          "annual_ssi_change": 2985496339.7140503,
+          "new_recipients": 419529.71726427774,
+          "new_recipients_against_july_build_p": {
+            "value": 419529.71726427774,
+            "reference": 362628.0,
+            "difference": 56901.717264277744,
+            "relative_difference": 0.1569148473484611,
+            "more_than_10_percent_off": true
+          }
+        }
+      }
+    },
+    "no_limit": {
+      "annual_ssi_change": {
+        "value": 7966238055.698498,
+        "reference": 6830000000.0,
+        "difference": 1136238055.6984978,
+        "relative_difference": 0.16635989102467025,
+        "more_than_10_percent_off": true
+      },
+      "new_recipients": {
+        "value": 1085881.4125500075,
+        "reference": 947000.0,
+        "difference": 138881.41255000746,
+        "relative_difference": 0.14665407872228875,
+        "more_than_10_percent_off": true
+      },
+      "by_age": {
+        "under_18": {
+          "annual_ssi_change": 296763764.0475718,
+          "new_recipients": 26094.682399999998
+        },
+        "18_64": {
+          "annual_ssi_change": 2591572055.9175143,
+          "new_recipients": 345070.55790335493
+        },
+        "65_plus": {
+          "annual_ssi_change": 5077902235.733412,
+          "new_recipients": 714716.1722466527
+        }
+      }
+    }
+  },
+  "C_chunking": {
+    "nesting": {
+      "all_nested": true,
+      "person_count": 166321,
+      "person_foreign_key_columns": {
+        "household": "person_household_id",
+        "marital_unit": "person_marital_unit_id",
+        "tax_unit": "person_tax_unit_id",
+        "spm_unit": "person_spm_unit_id",
+        "family": "person_family_id"
+      },
+      "entities": {
+        "marital_unit": {
+          "unit_count": 130729,
+          "cross_household_unit_count": 0
+        },
+        "tax_unit": {
+          "unit_count": 79729,
+          "cross_household_unit_count": 0
+        },
+        "spm_unit": {
+          "unit_count": 59900,
+          "cross_household_unit_count": 0
+        },
+        "family": {
+          "unit_count": 65206,
+          "cross_household_unit_count": 0
+        }
+      }
+    },
+    "weight_totals": {
+      "person": {
+        "full_file": 340077322.65364885,
+        "summed_chunks": 340077322.65364885,
+        "difference": 0.0,
+        "equal_within_floating_point_tolerance": true
+      },
+      "household": {
+        "full_file": 122537091.8856833,
+        "summed_chunks": 122537091.8856833,
+        "difference": 0.0,
+        "equal_within_floating_point_tolerance": true
+      }
+    }
+  },
+  "D_frame": {
+    "flag_period": "January 2026 snapshots when available; annual flags for variables defined annually. SSI amounts are annual 2026.",
+    "weighted_zero_countable_resources_share": 0.6726370307843887,
+    "nonzero_resources_per_household": [
+      {
+        "persons_with_nonzero_resources": 0,
+        "households": 4603,
+        "weighted_households": 11393220.49153395,
+        "weighted_household_share": 0.09146920005565096
+      },
+      {
+        "persons_with_nonzero_resources": 1,
+        "households": 52637,
+        "weighted_households": 113164778.09817907,
+        "weighted_household_share": 0.908530799944349
+      }
+    ],
+    "maximum_persons_per_household_with_nonzero_resources": 1,
+    "at_most_one_person_with_nonzero_resources_per_household": true,
+    "negative_resource_person_rows": 0,
+    "disability_by_age": [
+      {
+        "age_band": "0_14",
+        "weighted_persons": 60691913.76873049,
+        "is_disabled_rate": 0.0,
+        "meets_ssi_disability_criteria_rate": 4.568827258547661e-11
+      },
+      {
+        "age_band": "15_17",
+        "weighted_persons": 17255763.423677713,
+        "is_disabled_rate": 0.07783035869026916,
+        "meets_ssi_disability_criteria_rate": 0.011026419726818186
+      },
+      {
+        "age_band": "18_64",
+        "weighted_persons": 205561516.07294583,
+        "is_disabled_rate": 0.1157441803047802,
+        "meets_ssi_disability_criteria_rate": 0.058404420814289044
+      },
+      {
+        "age_band": "65_plus",
+        "weighted_persons": 62176753.95503943,
+        "is_disabled_rate": 0.2586297660499949,
+        "meets_ssi_disability_criteria_rate": 0.08735980924194242
+      }
+    ],
+    "takes_up_ssi_if_eligible_by_age": {
+      "baseline": [
+        {
+          "age_band": "under_18",
+          "overall_true_rate": 0.48779923562011873,
+          "baseline_eligible_true_rate": 0.7319082827543932,
+          "weighted_baseline_eligible_persons": 229647.01794548752
+        },
+        {
+          "age_band": "18_64",
+          "overall_true_rate": 0.3972727839492718,
+          "baseline_eligible_true_rate": 0.6015646611832938,
+          "weighted_baseline_eligible_persons": 9017432.11047474
+        },
+        {
+          "age_band": "65_plus",
+          "overall_true_rate": 0.45153719902597317,
+          "baseline_eligible_true_rate": 0.4747013534056447,
+          "weighted_baseline_eligible_persons": 23314705.740857482
+        }
+      ],
+      "ten_twenty": [
+        {
+          "age_band": "under_18",
+          "overall_true_rate": 0.48779923562011873,
+          "baseline_eligible_true_rate": 0.7319082827543932,
+          "weighted_baseline_eligible_persons": 229647.01794548752
+        },
+        {
+          "age_band": "18_64",
+          "overall_true_rate": 0.3972727839492718,
+          "baseline_eligible_true_rate": 0.6015646611832938,
+          "weighted_baseline_eligible_persons": 9017432.11047474
+        },
+        {
+          "age_band": "65_plus",
+          "overall_true_rate": 0.45153719902597317,
+          "baseline_eligible_true_rate": 0.4747013534056447,
+          "weighted_baseline_eligible_persons": 23314705.740857482
+        }
+      ],
+      "no_limit": [
+        {
+          "age_band": "under_18",
+          "overall_true_rate": 0.48779923562011873,
+          "baseline_eligible_true_rate": 0.7319082827543932,
+          "weighted_baseline_eligible_persons": 229647.01794548752
+        },
+        {
+          "age_band": "18_64",
+          "overall_true_rate": 0.3972727839492718,
+          "baseline_eligible_true_rate": 0.6015646611832938,
+          "weighted_baseline_eligible_persons": 9017432.11047474
+        },
+        {
+          "age_band": "65_plus",
+          "overall_true_rate": 0.45153719902597317,
+          "baseline_eligible_true_rate": 0.4747013534056447,
+          "weighted_baseline_eligible_persons": 23314705.740857482
+        }
+      ]
+    },
+    "abd_persons_by_age": {
+      "baseline": [
+        {
+          "age_band": "under_18",
+          "weighted_abd_persons": 307318.9973813219
+        },
+        {
+          "age_band": "18_64",
+          "weighted_abd_persons": 11623164.268307477
+        },
+        {
+          "age_band": "65_plus",
+          "weighted_abd_persons": 62176753.95503943
+        }
+      ],
+      "ten_twenty": [
+        {
+          "age_band": "under_18",
+          "weighted_abd_persons": 307318.9973813219
+        },
+        {
+          "age_band": "18_64",
+          "weighted_abd_persons": 11623164.268307477
+        },
+        {
+          "age_band": "65_plus",
+          "weighted_abd_persons": 62176753.95503943
+        }
+      ],
+      "no_limit": [
+        {
+          "age_band": "under_18",
+          "weighted_abd_persons": 307318.9973813219
+        },
+        {
+          "age_band": "18_64",
+          "weighted_abd_persons": 11623164.268307477
+        },
+        {
+          "age_band": "65_plus",
+          "weighted_abd_persons": 62176753.95503943
+        }
+      ]
+    }
+  },
+  "E_monotonicity": {
+    "scenarios": {
+      "ten_twenty": {
+        "person_rows_with_ssi_decline": 0,
+        "weighted_persons_with_ssi_decline": 0.0,
+        "annual_ssi_loss": 0.0,
+        "causes": [],
+        "unexplained_person_rows": 0,
+        "person_rows_needing_mechanism_investigation": 0,
+        "unexplained_person_ids_first_20": [],
+        "all_ssi_changes_nonnegative": true
+      },
+      "no_limit": {
+        "person_rows_with_ssi_decline": 0,
+        "weighted_persons_with_ssi_decline": 0.0,
+        "annual_ssi_loss": 0.0,
+        "causes": [],
+        "unexplained_person_rows": 0,
+        "person_rows_needing_mechanism_investigation": 0,
+        "unexplained_person_ids_first_20": [],
+        "all_ssi_changes_nonnegative": true
+      }
+    },
+    "case_details_file": "monotonicity_cases.csv.gz",
+    "classification_note": "January 2026 marital flags and annual benefit components are retained for every decline. Formula identities must reproduce both benefits before classifying an amount or income effect. Joint claims in pe-US 2.2.1 depend on ABD status and tax-unit roles rather than the resource test, so spouse resource eligibility alone cannot start couple computation.",
+    "model_sources": [
+      {
+        "path": "policyengine_us/variables/gov/ssa/ssi/ssi_claim_is_joint.py",
+        "lines": [
+          11,
+          15
+        ],
+        "finding": "Joint claim is based on ABD and head/spouse roles."
+      },
+      {
+        "path": "policyengine_us/variables/gov/ssa/ssi/ssi_couple_computation_applies.py",
+        "lines": [
+          18,
+          36
+        ],
+        "finding": "Couple computation uses joint claim and facility status."
+      },
+      {
+        "path": "policyengine_us/variables/gov/ssa/ssi/ssi_amount_if_eligible.py",
+        "lines": [
+          28,
+          41
+        ],
+        "finding": "Couple computation sets the base rate to couple rate / 2."
+      },
+      {
+        "path": "policyengine_us/variables/gov/ssa/ssi/uncapped_ssi.py",
+        "lines": [
+          11,
+          16
+        ],
+        "finding": "Eligible person's maximum less countable income."
+      },
+      {
+        "path": "policyengine_us/variables/gov/ssa/ssi/eligibility/income/ssi_countable_income.py",
+        "lines": [
+          68,
+          85
+        ],
+        "finding": "Countable income halves the couple pool or adds spousal deemed income."
+      },
+      {
+        "path": "policyengine_us/variables/gov/ssa/ssi/ssi_if_takes_up.py",
+        "lines": [
+          20,
+          39
+        ],
+        "finding": "Benefit is floored at zero and capped for spousal deeming."
+      },
+      {
+        "path": "policyengine_us/variables/gov/ssa/ssi/ssi.py",
+        "lines": [
+          12,
+          13
+        ],
+        "finding": "Payment requires take-up."
+      }
+    ]
+  }
+}

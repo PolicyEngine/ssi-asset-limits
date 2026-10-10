@@ -1,0 +1,12 @@
+metric,label,value,unit
+annual_ssi_cost,"Added federal SSI, 2026",6824618895.132553,currency
+new_recipients,New SSI recipients,946871.3756468964,people
+average_gain,Average gain per person who gains,7207.545893411359,currency
+people_lifted_from_poverty,People moved above the SPM poverty line,189692.97342991232,people
+poverty_rate_reduction,Fall in the SPM poverty rate,0.0005487436644596339,rate
+deep_poverty_rate_reduction,Fall in the deep poverty rate,0.001479428629596712,rate
+baseline_recipients,"SSI recipients, current law",6288302.088747749,people
+reform_recipients,SSI recipients after the change,7235173.464394646,people
+net_fiscal_cost,Change in household net income,7982036812.759188,currency
+snap_change,Change in SNAP benefits,-957832150.1035954,currency
+income_tax_change,Change in income tax,0.0,currency

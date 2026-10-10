@@ -1,0 +1,8 @@
+Source: https://www.ssa.gov/policy/docs/statcomps/ssi_monthly/2024-12/table01.html (retrieved 2026-10-09 via browser)
+SSI Monthly Statistics, December 2024, Table 1 (all federally administered payments)
+Number of recipients by age:            All        Under 18   18-64      65+
+Total (federally administered)          7,423,856  1,002,887  3,951,866  2,469,103
+Total with federal payment              7,289,843  1,001,922  3,905,779  2,382,142
+Total payments (thousands of dollars, December 2024):
+Federal payments                        5,233,633    885,088  3,072,111  1,276,435
+Notes: payments include retroactive payments. SOURCE: SSA Supplemental Security Record, 100 percent data.

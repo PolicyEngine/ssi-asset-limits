@@ -1,0 +1,5 @@
+age_group,label,new_recipients,annual_ssi_cost,cbpp_new_beneficiaries,cbpp_note,new_recipients_low,new_recipients_high,annual_ssi_cost_low,annual_ssi_cost_high,new_recipient_records,new_recipient_effective_records
+children_under_18,Under 18,0.0,0.0,23000.0,,0.0,0.0,0.0,0.0,0,0.0
+adults_18_64,18 to 64,153211.12201356317,1067419784.0444578,154000.0,,74650.50849756935,240778.79655896145,544145629.1476092,1651128643.4536173,35,11.815857720561379
+elderly_65_plus,65 and over,362628.22904256266,2542373554.6275644,,"CBPP did not publish this row (sample too small); its total less its other rows leaves about 47,000, but its rows may not sum.",245412.1288240944,482877.1081547765,1670644815.9723032,3485657166.3409224,74,29.447689073915893
+total_all_ages,All ages,515839.35105612583,3609793338.6720223,224000.0,,373236.5999059115,663244.5006390515,2559099396.470809,4672243237.473076,109,41.24060434979698

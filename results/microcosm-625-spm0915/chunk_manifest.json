@@ -1,0 +1,166 @@
+{
+  "chunk_paths": [
+    "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0000.h5",
+    "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0001.h5",
+    "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0002.h5",
+    "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0003.h5",
+    "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0004.h5",
+    "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0005.h5",
+    "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0006.h5",
+    "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0007.h5"
+  ],
+  "household_count": 57240,
+  "person_count": 166321,
+  "chunk_count": 8,
+  "chunk_size": 8000,
+  "nesting": {
+    "all_nested": true,
+    "person_count": 166321,
+    "person_foreign_key_columns": {
+      "household": "person_household_id",
+      "marital_unit": "person_marital_unit_id",
+      "tax_unit": "person_tax_unit_id",
+      "spm_unit": "person_spm_unit_id",
+      "family": "person_family_id"
+    },
+    "entities": {
+      "marital_unit": {
+        "unit_count": 130729,
+        "cross_household_unit_count": 0
+      },
+      "tax_unit": {
+        "unit_count": 79729,
+        "cross_household_unit_count": 0
+      },
+      "spm_unit": {
+        "unit_count": 59900,
+        "cross_household_unit_count": 0
+      },
+      "family": {
+        "unit_count": 65206,
+        "cross_household_unit_count": 0
+      }
+    }
+  },
+  "person_weight_source": "household.household_weight mapped to persons",
+  "full_weight_totals": {
+    "household": 122537091.8856833,
+    "person": 340077322.65364885
+  },
+  "chunk_weight_totals": [
+    {
+      "household": 19449863.395431682,
+      "person": 54864095.130439185
+    },
+    {
+      "household": 17641111.728432506,
+      "person": 47165057.09405108
+    },
+    {
+      "household": 17347141.274989564,
+      "person": 48313525.910818085
+    },
+    {
+      "household": 17241886.33489637,
+      "person": 48631696.54465583
+    },
+    {
+      "household": 14753670.444294728,
+      "person": 40910206.153310545
+    },
+    {
+      "household": 17048111.04880338,
+      "person": 47355191.186657414
+    },
+    {
+      "household": 15703383.826415336,
+      "person": 42910794.476900056
+    },
+    {
+      "household": 3351923.8324197233,
+      "person": 9926756.156816635
+    }
+  ],
+  "summed_chunk_weight_totals": {
+    "household": 122537091.8856833,
+    "person": 340077322.65364885
+  },
+  "chunks": [
+    {
+      "path": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0000.h5",
+      "household_count": 8000,
+      "person_count": 23630,
+      "weight_totals": {
+        "household": 19449863.395431682,
+        "person": 54864095.130439185
+      }
+    },
+    {
+      "path": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0001.h5",
+      "household_count": 8000,
+      "person_count": 23540,
+      "weight_totals": {
+        "household": 17641111.728432506,
+        "person": 47165057.09405108
+      }
+    },
+    {
+      "path": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0002.h5",
+      "household_count": 8000,
+      "person_count": 23850,
+      "weight_totals": {
+        "household": 17347141.274989564,
+        "person": 48313525.910818085
+      }
+    },
+    {
+      "path": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0003.h5",
+      "household_count": 8000,
+      "person_count": 22685,
+      "weight_totals": {
+        "household": 17241886.33489637,
+        "person": 48631696.54465583
+      }
+    },
+    {
+      "path": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0004.h5",
+      "household_count": 8000,
+      "person_count": 22700,
+      "weight_totals": {
+        "household": 14753670.444294728,
+        "person": 40910206.153310545
+      }
+    },
+    {
+      "path": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0005.h5",
+      "household_count": 8000,
+      "person_count": 22994,
+      "weight_totals": {
+        "household": 17048111.04880338,
+        "person": 47355191.186657414
+      }
+    },
+    {
+      "path": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0006.h5",
+      "household_count": 8000,
+      "person_count": 23195,
+      "weight_totals": {
+        "household": 15703383.826415336,
+        "person": 42910794.476900056
+      }
+    },
+    {
+      "path": "/Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits/results/microcosm-625-spm0915/chunks/population/chunk_0007.h5",
+      "household_count": 1240,
+      "person_count": 3727,
+      "weight_totals": {
+        "household": 3351923.8324197233,
+        "person": 9926756.156816635
+      }
+    }
+  ],
+  "source_uri": "hf://policyengine/populace-us/populace_us_2024.h5@populace-us-2024-spm-20260915",
+  "source_sha256": "6496cc4393d4d3c6574f76eca231de5898c803b9067645591fd5c4d3e65aee84",
+  "preparation_peak_rss_gib": 1.93878173828125,
+  "preparation_wall_seconds": 16.080364415975055
+}

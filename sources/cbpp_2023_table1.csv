@@ -1,0 +1,21 @@
+scenario,age_group,new_beneficiaries,note
+ten_twenty,total_all_ages,224000,
+ten_twenty,children_under_18,23000,
+ten_twenty,adults_18_64,154000,
+ten_twenty,elderly_65_plus,,n/a in Table 1 (small sample)
+ten_twenty_excluding_retirement,total_all_ages,263000,
+ten_twenty_excluding_retirement,children_under_18,23000,
+ten_twenty_excluding_retirement,adults_18_64,176000,
+ten_twenty_excluding_retirement,elderly_65_plus,,n/a in Table 1 (small sample)
+hundred_two_hundred,total_all_ages,380000,
+hundred_two_hundred,children_under_18,47000,
+hundred_two_hundred,adults_18_64,248000,
+hundred_two_hundred,elderly_65_plus,86000,
+hundred_two_hundred_excluding_retirement,total_all_ages,403000,
+hundred_two_hundred_excluding_retirement,children_under_18,47000,
+hundred_two_hundred_excluding_retirement,adults_18_64,257000,
+hundred_two_hundred_excluding_retirement,elderly_65_plus,99000,
+no_limit,total_all_ages,462000,
+no_limit,children_under_18,49000,
+no_limit,adults_18_64,298000,
+no_limit,elderly_65_plus,115000,

@@ -1,0 +1,64 @@
+                                    SOCIAL SECURITY
+                                         Office of the Chief Actuary
+
+                                                January 29, 2024
+
+The Honorable Sherrod Brown                                The Honorable Bill Cassidy
+United States Senate                                       United States Senate
+Washington, D.C. 20510                                     Washington, D.C. 20510
+
+Dear Senator Brown and Senator Cassidy:
+
+I am writing in response to your request for our estimate of the program cost effects for the
+Federal Supplemental Security Income (SSI) program of enacting S. 2767, the “SSI Savings
+Penalty Elimination Act,” which you and several other Senators introduced on September 12,
+2023. This Bill, as introduced, would increase the limit on countable resources from $2,000 for
+unmarried individuals and $3,000 for married couples to $10,000 for unmarried individuals and
+$20,000 for married couples in 2023 and index these resource limits in 2024 and later by the
+annual percentage change in the Consumer Price Index for All Urban Consumers (CPI-U). For
+the purpose of estimates provided here we are assuming that the specified increases in limits
+would apply upon enactment in 2024, and would be indexed in years thereafter, starting in 2025.
+We have enjoyed working with Chad Bolt, David Timmons, and Parker Reynolds in the
+development of this proposal. Our analysis and estimates provided for this proposal reflect the
+efforts of many in the Office of the Chief Actuary, but particularly Amir Levy, Chelsea Shudtz,
+and Michael Stephens.
+
+Enactment of this Bill would result in an increase in program cost because some individuals who
+have countable resources above the current-law limits would become eligible or maintain
+eligibility under this proposal. If the bill became effective for eligibility starting January 1, 2024,
+we estimate the increase in Federal SSI payments would be $9.8 billion over the calendar year
+period 2023 through 2032. Table 1 below provides our estimates of the cost increases on an
+annual basis through 2032. All estimates are based on the assumptions underlying the projections
+presented in the 2023 SSI Annual Report.1 This Bill would not have any direct effects on the
+financial status of the Social Security trust funds.
+
+We hope these estimates will be helpful. Please let us know if we may provide further assistance.
+
+                                                       Sincerely,
+
+
+
+
+                                                      Stephen C. Goss, ASA, MAAA
+                                                      Chief Actuary
+
+
+
+1
+  See chapter IV in the report at https://www.ssa.gov/OACT/ssir/SSI23/index.html for details. The projections in this
+report are consistent with the intermediate projections in the 2023 Social Security Trustees Report.
+      Page 2 – The Honorable Sherrod Brown and Bill Cassidy
+
+
+
+
+                          Table 1: Estimated Change in Federal SSI Program Cost for Enacting
+                                   S. 2767, the “SSI Savings Penalty Elimination Act”
+                                                       (In billions)
+                                                                           Calendar Year                                      Total
+                                           2023    2024    2025    2026     2027     2028    2029    2030    2031    2032    2023-32
+Estimated change in Federal SSI payments      --    $0.5    $1.0    $1.0     $1.1     $1.1    $1.1    $1.2    $1.3    $1.4     $9.8
+
+                                                                                                      Office of the Chief Actuary, SSA
+                                                                                                                      January 29, 2024
+

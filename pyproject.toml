@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ssi-asset-limits"
+version = "0.1.0"
+description = "PolicyEngine analysis of removing SSI asset limits"
+readme = "README.md"
+requires-python = ">=3.13"
+license = {text = "MIT"}
+dependencies = [
+    "microdf-python>=1.2.1",
+    "pandas>=2.3.0",
+    "policyengine[us]==6.2.5",
+    "scikit-learn>=1.5.0",
+    "statsmodels>=0.14.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "hypothesis>=6.100",
+    "pytest>=8.0",
+    "ruff>=0.9.0",
+]
+
+[project.scripts]
+ssi-asset-limits-data = "ssi_asset_limits.cli:main"
+ssi-asset-limits-fit-cbpp = "ssi_asset_limits.cbpp_fit_cli:main"
+ssi-asset-limits-holdout = "ssi_asset_limits.holdout_cli:main"
+ssi-asset-limits-decomposition = "ssi_asset_limits.decomposition_cli:main"
+ssi-asset-limits-publish = "ssi_asset_limits.publish:main"
+ssi-asset-limits-run = "ssi_asset_limits.microcosm_run:main"
+ssi-asset-limits-admin-checks = "ssi_asset_limits.admin_checks:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["ssi_asset_limits*"]
+
+[tool.ruff]
+line-length = 79
+# Copied verbatim from the policyengine-us branch it mirrors (its own style).
+extend-exclude = [
+    "src/ssi_asset_limits/sensitivity/ssi_resource_deeming_reform.py",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

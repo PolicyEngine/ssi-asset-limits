@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v8.1.0
+      - uses: oven-sh/setup-bun@v2
+      - name: Install Python package
+        run: |
+          uv venv --python 3.13
+          uv pip install -e ".[dev]"
+      - name: Python lint
+        run: |
+          uv run ruff check src tests
+          uv run ruff format --check src tests
+      - name: Python tests
+        run: uv run pytest
+      - name: Install frontend
+        run: bun install --frozen-lockfile
+      - name: Frontend tests
+        run: bun run test
+      - name: Build frontend
+        run: bun run build

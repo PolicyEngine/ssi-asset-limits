@@ -1,0 +1,4 @@
+age_group,label,policyengine_recipients,ssa_recipients,records
+children_under_18,Under 18,179909.580583217,1001922,23
+adults_18_64,18 to 64,3797039.0980287823,3905779,561
+elderly_65_plus,65 and over,2311353.4101357507,2382142,521
