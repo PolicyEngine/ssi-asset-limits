@@ -110,9 +110,9 @@ export default function HeldOutChecks({ checks }: { checks: Checks }) {
               />
             </div>
             <p>
-              The model does not record whether a spouse who gets no SSI is
-              eligible, so its last row also counts eligible spouses who do not
-              claim, unlike SSA&apos;s ineligible-spouse row.
+              The model&apos;s last row counts every spouse who gets no SSI,
+              including any who would qualify but do not claim; SSA&apos;s
+              ineligible-spouse row counts only spouses who do not qualify.
             </p>
           </div>
         </div>

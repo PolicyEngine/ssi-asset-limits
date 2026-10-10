@@ -69,10 +69,9 @@ SSA_WITH_SOCIAL_SECURITY = {
 
 # Same report, Table 12: recipients by marital status (ineligible spouses are
 # not counted as recipients). Each model category is paired with the SSA
-# category it is compared to. The model has no SSI eligibility status for a
-# spouse who does not receive SSI, so "spouse does not receive SSI" also
-# counts eligible spouses who do not take it up; SSA's "ineligible spouse"
-# does not.
+# category it is compared to. "Spouse does not receive SSI" counts every
+# spouse without SSI, including any who would qualify but do not take it up;
+# SSA's "ineligible spouse" counts only spouses who do not qualify.
 SSA_MARITAL = {
     "No spouse": 6_817_742,
     "Eligible spouse": 424_996,

@@ -13,7 +13,7 @@ is a target.
 | --- | --- | --- |
 | `recipients_by_fine_age.csv` | Current-law recipients by detailed age | Annual Statistical Supplement 2025, Table 7.E3 (shares of 7,423,856 federally administered recipients, December 2024) |
 | `recipients_with_social_security.csv` | Share of recipients who also receive Social Security, by age | SSI Annual Statistical Report 2024, Table 9 |
-| `recipients_by_marital_status.csv` | Recipients with no spouse, a spouse who also receives SSI, or a spouse who does not (compared with SSA's no spouse, eligible spouse and ineligible spouse; the model's last row also counts eligible spouses who do not claim) | SSI Annual Statistical Report 2024, Table 12 |
+| `recipients_by_marital_status.csv` | Recipients with no spouse, a spouse who also receives SSI, or a spouse who does not (compared with SSA's no spouse, eligible spouse and ineligible spouse; the model's last row counts every spouse without SSI, including any who would qualify but do not claim) | SSI Annual Statistical Report 2024, Table 12 |
 | `resources_of_the_eligible.csv` | Own countable resources of people the engine would pay with no resource test, by age | (no SSA counterpart; see the SIPP table) |
 | `new_recipient_decomposition.csv` | Each reform's new recipients split into the resource-excluded pool, the part the reform admits, and the take-up flag | (model accounting) |
 | `pool_definition_check.csv` | The pool definition reproduces the engine's own no-limit recipients exactly | (consistency check) |
