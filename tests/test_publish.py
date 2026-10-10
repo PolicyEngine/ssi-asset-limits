@@ -400,6 +400,19 @@ def test_held_out_checks_are_embedded_when_given(tmp_path):
             "weighted": [307_319.0],
         }
     ).to_csv(checks / "children.csv", index=False)
+    pd.DataFrame(
+        {
+            "scenario": ["ten_twenty"],
+            "age_band": ["65 or older"],
+            "new_recipients": [362_628.0],
+            "with_erased_social_security": [195_000.0],
+            "share_pct": [53.8],
+            "records": [41],
+            "median_reported_social_security": [24_111.0],
+        }
+    ).to_csv(
+        checks / "new_recipients_with_erased_social_security.csv", index=False
+    )
     persons[["person_id"]].to_csv(
         run / "persons_diagnostics.csv.gz", index=False
     )
@@ -487,6 +500,15 @@ def test_sensitivity_runs_are_summarised_beside_the_estimate(tmp_path):
     )
     (sens,) = results["sensitivities"]
     assert sens["key"] == "restore_cps_social_security"
+    by_age = {
+        row["age_group"]: row
+        for row in next(
+            s for s in sens["scenarios"] if s["key"] == "no_limit"
+        )["by_age"]
+    }
+    # Persons 1 (70) and 3 (30) are new under removal.
+    assert by_age["elderly_65_plus"]["new_recipient_records"] == 1
+    assert by_age["total_all_ages"]["new_recipient_records"] == 2
     assert "3,566 households" in sens["description"]
     assert sens["provenance"]["code_commit"] == "beef"
     assert sens["provenance"]["variant_source_sha256"] == "f00d"
@@ -518,6 +540,7 @@ def test_sensitivity_runs_are_summarised_beside_the_estimate(tmp_path):
         ({"model_version": "2.38.1"}, "model_version"),
         ("people", "different people"),
         ("weights", "different person weights"),
+        ("swapped", "different person weights"),
     ],
 )
 def test_sensitivity_runs_must_share_the_published_population(
@@ -531,6 +554,11 @@ def test_sensitivity_runs_must_share_the_published_population(
         other = persons.assign(person_id=persons["person_id"] + 100)
     elif change == "weights":
         other = persons.assign(person_weight=persons["person_weight"] * 1.01)
+    elif change == "swapped":
+        # Same total, but two people trade weights.
+        swapped = persons["person_weight"].to_numpy().copy()
+        swapped[[2, 3]] = swapped[[3, 2]]
+        other = persons.assign(person_weight=swapped)
     else:
         overrides = change
     write_run(
@@ -546,3 +574,36 @@ def test_sensitivity_runs_must_share_the_published_population(
             tmp_path / "out",
             sensitivity_dirs=[tmp_path / "variant"],
         )
+
+
+def test_a_spliced_rerun_may_change_only_the_households_it_reran(tmp_path):
+    persons, households = toy_frames()
+    write_run(tmp_path / "run", persons, households)
+    # The restore rerun reran one household (candidate count 3,566 in the
+    # helper); shrink that to 1 and change two households.
+    changed = persons.assign(
+        ssi_no_limit=persons["ssi_no_limit"] + [1.0, 0.0, 1.0, 0.0]
+    )
+    write_run(
+        tmp_path / "restored",
+        changed,
+        households,
+        "restore_cps_social_security",
+    )
+    metadata_path = tmp_path / "restored" / "run_metadata.json"
+    metadata = json.loads(metadata_path.read_text())
+    metadata["diagnostics"]["candidate"]["households"] = 1
+    metadata_path.write_text(json.dumps(metadata))
+    with pytest.raises(ValueError, match="changes 2 households"):
+        publish(
+            tmp_path / "run",
+            tmp_path / "out",
+            sensitivity_dirs=[tmp_path / "restored"],
+        )
+    metadata["diagnostics"]["candidate"]["households"] = 2
+    metadata_path.write_text(json.dumps(metadata))
+    publish(
+        tmp_path / "run",
+        tmp_path / "out2",
+        sensitivity_dirs=[tmp_path / "restored"],
+    )

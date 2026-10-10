@@ -51,11 +51,12 @@ export default function Sensitivities({
           Each row below reruns the microsimulation with one known problem
           corrected and the others left in place. The resource-deeming row is
           a full rerun. The Social Security row reruns only the households the
-          problem touches and splices them into the published run; because
-          the claiming flags were set to match SSA&apos;s count with the
-          benefit erased, it also shrinks the current-law caseload, so compare
-          new recipients with each run&apos;s own current recipients. These are
-          diagnostics, not alternative estimates.
+          problem touches and splices them into the published run. Restored
+          income makes some current recipients ineligible, and the claiming
+          flags, set to match SSA&apos;s count with the benefit erased, are not
+          redrawn to offset that, so compare new recipients with each
+          run&apos;s own current recipients. These are diagnostics, not
+          alternative estimates.
         </p>
         <div className="overflow-x-auto">
           <DataTable

@@ -179,11 +179,23 @@ def main() -> None:
 def write_metadata(certified: Path, metadata: dict, out_dir: Path) -> None:
     """Describe this rerun, not the certified run it was spliced into."""
 
+    workers = []
+    for path in sorted((out_dir / "workers").glob("*/receipt.json")):
+        receipt = json.loads(path.read_text())
+        receipt["finished_at"] = datetime.fromtimestamp(
+            path.stat().st_mtime, UTC
+        ).isoformat()
+        workers.append(receipt)
+    commits = {receipt.get("code_commit") for receipt in workers}
+    if len(commits) != 1 or None in commits:
+        raise ValueError(
+            f"workers ran under commits {sorted(map(str, commits))}"
+        )
+    if any(receipt.get("code_dirty") for receipt in workers):
+        raise ValueError("a worker ran with uncommitted changes")
     provenance = dict(metadata["provenance"])
-    provenance["generated_at"] = datetime.now(UTC).isoformat()
-    provenance["code_commit"] = subprocess.check_output(
-        ["git", "rev-parse", "HEAD"], text=True
-    ).strip()
+    provenance["generated_at"] = max(r["finished_at"] for r in workers)
+    provenance["code_commit"] = commits.pop()
     provenance["method_note"] += (
         " Sensitivity, not the certified population: households where the "
         "PUF channel erased a CPS-reported Social Security benefit were rerun "
@@ -194,7 +206,6 @@ def write_metadata(certified: Path, metadata: dict, out_dir: Path) -> None:
     diagnostics = {
         key: certified_diagnostics[key]
         for key in (
-            "chunk_paths",
             "household_count",
             "person_count",
             "source_uri",
@@ -202,6 +213,12 @@ def write_metadata(certified: Path, metadata: dict, out_dir: Path) -> None:
             "annualization",
         )
     }
+    # The certified chunks still hold the erased Social Security; the
+    # repaired households are in the candidate file.
+    diagnostics["certified_chunk_paths"] = certified_diagnostics["chunk_paths"]
+    diagnostics["repaired_chunk"] = str(
+        out_dir / "chunks" / "affected_households_repaired.h5"
+    )
     diagnostics["variant"] = "restore_cps_social_security"
     diagnostics["candidate"] = json.loads(
         (out_dir / "candidate.json").read_text()
@@ -211,13 +228,6 @@ def write_metadata(certified: Path, metadata: dict, out_dir: Path) -> None:
         "code_commit": metadata["provenance"]["code_commit"],
         "generated_at": metadata["provenance"]["generated_at"],
     }
-    workers = []
-    for path in sorted((out_dir / "workers").glob("*/receipt.json")):
-        receipt = json.loads(path.read_text())
-        receipt["finished_at"] = datetime.fromtimestamp(
-            path.stat().st_mtime, UTC
-        ).isoformat()
-        workers.append(receipt)
     diagnostics["workers"] = workers
     diagnostics["output_weight_totals"] = {
         entity: float(

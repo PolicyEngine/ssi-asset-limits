@@ -63,10 +63,21 @@ AGE_LABELS = {
     "elderly_65_plus": "65 and over",
 }
 
+
+def _cbpp_residual(scenario: str) -> int:
+    rows = CBPP_NEW_BENEFICIARIES[scenario]
+    return (
+        rows["total_all_ages"]
+        - rows["children_under_18"]
+        - rows["adults_18_64"]
+    )
+
+
 CBPP_NOTES = {
     ("ten_twenty", "elderly_65_plus"): (
         "CBPP did not publish this row (sample too small); its total less "
-        "its other rows leaves about 47,000, but its rows may not sum."
+        f"its other rows leaves about {_cbpp_residual('ten_twenty'):,}, but "
+        "its rows may not sum."
     ),
 }
 
@@ -438,6 +449,15 @@ HELD_OUT_TABLES = {
         "share_pct",
     ],
     "children": ["measure", "records", "weighted"],
+    "new_recipients_with_erased_social_security": [
+        "scenario",
+        "age_band",
+        "new_recipients",
+        "with_erased_social_security",
+        "share_pct",
+        "records",
+        "median_reported_social_security",
+    ],
 }
 
 
@@ -503,25 +523,60 @@ SENSITIVITY_PROVENANCE = (
 )
 
 
+def new_recipient_records(persons: pd.DataFrame, key: str) -> dict:
+    """Sample records behind each age group's new recipients."""
+    new = (persons[f"ssi_{BASELINE}"] <= 0) & (persons[f"ssi_{key}"] > 0)
+    records = {"total_all_ages": int(new.sum())}
+    for group, _, lower, upper in CBPP_AGE_GROUPS:
+        in_group = new & _age_mask(persons["age"], lower, upper)
+        records[group] = int(in_group.sum())
+    return records
+
+
 def check_sensitivity(
     persons: pd.DataFrame,
     metadata: dict,
     main_persons: pd.DataFrame,
     main_metadata: dict,
 ) -> None:
-    """A sensitivity run must be the published run's population."""
+    """A sensitivity run must be the published run's population.
+
+    Every person must carry the published weight. A spliced rerun (one with
+    a ``candidate``) may differ from the published run only in the
+    households it reran.
+    """
 
     for key in ("dataset_sha256", "model_version", "analysis_year"):
         if metadata["provenance"][key] != main_metadata["provenance"][key]:
             raise ValueError(f"sensitivity run differs in {key}")
     if set(persons["person_id"]) != set(main_persons["person_id"]):
         raise ValueError("sensitivity run has different people")
-    totals = (
-        float(frame["person_weight"].sum())
-        for frame in (persons, main_persons)
-    )
-    if not np.isclose(*totals, rtol=1e-12, atol=0):
+    shared = [
+        column
+        for column in main_persons.columns
+        if column in persons.columns and column != "person_id"
+    ]
+    main = main_persons.set_index("person_id").sort_index()
+    variant = persons.set_index("person_id").sort_index()
+    if not np.allclose(
+        variant["person_weight"], main["person_weight"], rtol=1e-12, atol=0
+    ):
         raise ValueError("sensitivity run has different person weights")
+    candidate = metadata["diagnostics"].get("candidate")
+    if candidate is not None:
+        numeric = [
+            c for c in shared if np.issubdtype(main[c].dtype, np.number)
+        ]
+        changed = ~np.isclose(
+            variant[numeric].to_numpy(dtype=float),
+            main[numeric].to_numpy(dtype=float),
+        ).all(axis=1)
+        households = main.loc[changed, "household_id"].nunique()
+        if households > candidate["households"]:
+            raise ValueError(
+                f"spliced rerun changes {households} households, more than "
+                f"the {candidate['households']} it reran"
+            )
 
 
 def sensitivity(
@@ -556,13 +611,18 @@ def sensitivity(
                 "key": spec.key,
                 "by_age": [
                     {
-                        key: row[key]
-                        for key in (
-                            "age_group",
-                            "label",
-                            "new_recipients",
-                            "annual_ssi_cost",
-                        )
+                        **{
+                            key: row[key]
+                            for key in (
+                                "age_group",
+                                "label",
+                                "new_recipients",
+                                "annual_ssi_cost",
+                            )
+                        },
+                        "new_recipient_records": new_recipient_records(
+                            persons, spec.key
+                        )[row["age_group"]],
                     }
                     for row in scenario_by_age(persons, spec.key)
                 ],

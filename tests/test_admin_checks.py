@@ -7,12 +7,15 @@ from ssi_asset_limits.admin_checks import (
     SSA_AGE_SHARES,
     SSA_MARITAL,
     SSA_WITH_SOCIAL_SECURITY,
+    _weighted_median,
+    check_reporters_take_up,
     children,
     eligible_apart_from_resources,
     load_frame_inputs,
     new_recipient_decomposition,
     new_recipients_by_marital_status,
     new_recipients_by_reporting,
+    new_recipients_with_erased_social_security,
     pool_definition_check,
     recipients_by_fine_age,
     recipients_by_marital_status,
@@ -49,6 +52,8 @@ def toy_persons():
             "takes_up_ssi_if_eligible_baseline": [1, 1, 1, 0, 1, 1],
             # Person 2 reports SSI in the CPS but is kept off it by savings.
             "reports_ssi": [True, False, True, False, False, True],
+            "social_security_erased": [False, False, True, False, True, False],
+            "reported_social_security": [0, 0, 18_000, 9_000, 24_000, 0],
         }
     )
     return frame
@@ -278,17 +283,19 @@ def test_reporters_are_found_across_chunks_by_source_person(tmp_path):
             "person_source_id": ["s1", "s2"],
             "person_support_channel": ["asec", "asec"],
             "SSI_VAL": [5000.0, 0.0],
+            "SS_VAL": [0.0, 9000.0],
         },
     )
     second = chunk(
         "b.h5",
         {
-            "person_id": [3, 4],
-            "person_marital_unit_id": [12, 12],
-            "person_source_id": ["s1", "s3"],
-            "person_support_channel": ["puf_tax_detail", "puf_tax_detail"],
-            # A support row's own SSI_VAL does not make it a reporter.
-            "SSI_VAL": [0.0, 7000.0],
+            "person_id": [3, 4, 5],
+            "person_marital_unit_id": [12, 12, 13],
+            "person_source_id": ["s1", "s3", "s4"],
+            "person_support_channel": ["puf_tax_detail"] * 3,
+            # s3's ASEC row was pruned; its support row carries its report.
+            "SSI_VAL": [0.0, 7000.0, 0.0],
+            "SS_VAL": [0.0, 0.0, 0.0],
         },
     )
     inputs = load_frame_inputs([first, second]).set_index("person_id")
@@ -296,9 +303,18 @@ def test_reporters_are_found_across_chunks_by_source_person(tmp_path):
         1: True,
         2: False,
         3: True,
-        4: False,
+        4: True,
+        5: False,
     }
     assert inputs.loc[3, "marital_unit_size"] == 2
+    # Person 2 reported 9,000 of Social Security that the frame zeroed.
+    assert inputs["social_security_erased"].to_dict() == {
+        1: False,
+        2: True,
+        3: False,
+        4: False,
+        5: False,
+    }
 
 
 def test_children_by_hand():
@@ -321,3 +337,32 @@ def test_children_by_hand():
         table.loc["Under 18 and receiving SSI under current law", "weighted"]
         == 10
     )
+
+
+def test_new_recipients_with_erased_social_security_by_hand():
+    table = new_recipients_with_erased_social_security(toy_persons())
+    table = table.set_index(["scenario", "age_band"])
+    # Removal adds person 2 (62, weight 30, erased 18,000) and person 4
+    # (72, weight 50, erased 24,000).
+    adults = table.loc[("no_limit", "18-64")]
+    assert adults["with_erased_social_security"] == 30
+    assert adults["records"] == 1
+    assert adults["median_reported_social_security"] == 18_000
+    older = table.loc[("no_limit", "65 or older")]
+    assert older["share_pct"] == 100
+    assert older["median_reported_social_security"] == 24_000
+
+
+def test_weighted_median_uses_weights():
+    values = pd.Series([1.0, 2.0, 3.0])
+    assert _weighted_median(values, pd.Series([1.0, 1.0, 10.0])) == 3.0
+    assert _weighted_median(values, pd.Series([10.0, 1.0, 1.0])) == 1.0
+    assert _weighted_median(pd.Series([], dtype=float), pd.Series([])) == 0
+
+
+def test_reporters_must_carry_the_take_up_flag():
+    persons = toy_persons()
+    check_reporters_take_up(persons)
+    persons.loc[0, "takes_up_ssi_if_eligible_baseline"] = 0
+    with pytest.raises(ValueError, match="1 CPS SSI reporters"):
+        check_reporters_take_up(persons)

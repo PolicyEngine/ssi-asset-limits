@@ -127,10 +127,14 @@ def _wsum(weights: pd.Series, mask) -> float:
     return float(weights[np.asarray(mask, dtype=bool)].sum())
 
 
-# The take-up stage keeps a yes for every CPS ASEC person with SSI_VAL > 0
-# and copies that decision to each support row of the same source person.
+# CPS-reported SSI. Microcosm's take-up stage keeps a yes for every source
+# person who reported SSI, chosen before support rows are pruned, and copies
+# it to each support row of that person; a reporter can survive only as a
+# PUF support row, which carries the donor's SSI_VAL. So a person reports
+# SSI when any row of their source person has SSI_VAL > 0. run_checks
+# refuses a run in which such a person lacks the take-up flag.
 SSI_REPORT_COLUMN = "SSI_VAL"
-ASEC_CHANNEL = "asec"
+SOCIAL_SECURITY_REPORT_COLUMN = "SS_VAL"
 
 
 def load_frame_inputs(chunk_paths: list[str]) -> pd.DataFrame:
@@ -147,10 +151,10 @@ def load_frame_inputs(chunk_paths: list[str]) -> pd.DataFrame:
                 ).to_numpy(),
                 "marital_unit_id": person["person_marital_unit_id"].to_numpy(),
                 "source_id": person["person_source_id"].to_numpy(),
-                "asec_reporter": (
-                    (person["person_support_channel"] == ASEC_CHANNEL)
-                    & (person[SSI_REPORT_COLUMN] > 0)
-                ).to_numpy(),
+                "row_reports_ssi": (person[SSI_REPORT_COLUMN] > 0).to_numpy(),
+                "reported_social_security": person[
+                    SOCIAL_SECURITY_REPORT_COLUMN
+                ].to_numpy(),
             }
         )
         frame["marital_unit_size"] = frame.groupby("marital_unit_id")[
@@ -158,9 +162,14 @@ def load_frame_inputs(chunk_paths: list[str]) -> pd.DataFrame:
         ].transform("size")
         frames.append(frame)
     inputs = pd.concat(frames, ignore_index=True)
-    reporters = set(inputs.loc[inputs["asec_reporter"], "source_id"])
+    reporters = set(inputs.loc[inputs["row_reports_ssi"], "source_id"])
     inputs["reports_ssi"] = inputs["source_id"].isin(reporters)
-    return inputs.drop(columns=["source_id", "asec_reporter"])
+    # Social Security the CPS respondent reported but the frame zeroed
+    # (PolicyEngine/microcosm#1178).
+    inputs["social_security_erased"] = (
+        inputs["reported_social_security"] > 0
+    ) & ~inputs["has_social_security"]
+    return inputs.drop(columns=["source_id", "row_reports_ssi"])
 
 
 def recipients_by_fine_age(persons: pd.DataFrame) -> pd.DataFrame:
@@ -347,6 +356,17 @@ def new_recipient_decomposition(persons: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def check_reporters_take_up(persons: pd.DataFrame) -> None:
+    """Every CPS SSI reporter must carry the take-up flag the frame sets."""
+    unflagged = persons["reports_ssi"] & ~(
+        persons[f"takes_up_ssi_if_eligible_{BASELINE}"] > 0
+    )
+    if unflagged.any():
+        raise ValueError(
+            f"{int(unflagged.sum())} CPS SSI reporters lack the take-up flag"
+        )
+
+
 def _new_recipients(persons: pd.DataFrame, reform: str) -> pd.Series:
     return (persons[f"ssi_{BASELINE}"] <= 0) & (persons[f"ssi_{reform}"] > 0)
 
@@ -374,6 +394,47 @@ def new_recipients_by_reporting(persons: pd.DataFrame) -> pd.DataFrame:
                     "recipients": total,
                     "reporting_ssi_in_cps": reporting,
                     "share_pct": 100 * reporting / total if total else 0.0,
+                }
+            )
+    return pd.DataFrame(rows)
+
+
+def _weighted_median(values: pd.Series, weights: pd.Series) -> float:
+    if values.empty:
+        return 0.0
+    order = np.argsort(values.to_numpy())
+    cumulative = np.cumsum(weights.to_numpy()[order])
+    index = np.searchsorted(cumulative, cumulative[-1] / 2)
+    return float(values.to_numpy()[order][index])
+
+
+def new_recipients_with_erased_social_security(
+    persons: pd.DataFrame,
+) -> pd.DataFrame:
+    """New recipients whose CPS-reported Social Security the frame zeroed."""
+    weights = persons["person_weight"]
+    erased = persons["social_security_erased"]
+    rows = []
+    for reform in REFORMS:
+        new = _new_recipients(persons, reform)
+        for label, lower, upper in POOLED_BANDS:
+            band = new & _band(persons["age"], lower, upper)
+            affected = band & erased
+            total = _wsum(weights, band)
+            rows.append(
+                {
+                    "scenario": reform,
+                    "age_band": label,
+                    "new_recipients": total,
+                    "with_erased_social_security": _wsum(weights, affected),
+                    "share_pct": 100 * _wsum(weights, affected) / total
+                    if total
+                    else 0.0,
+                    "records": int(affected.sum()),
+                    "median_reported_social_security": _weighted_median(
+                        persons.loc[affected, "reported_social_security"],
+                        weights[affected],
+                    ),
                 }
             )
     return pd.DataFrame(rows)
@@ -476,6 +537,7 @@ def run_checks(run_dir: Path, out_dir: Path) -> dict[str, pd.DataFrame]:
         ):
             raise ValueError("run and frame disagree on marital units")
         persons = persons.drop(columns="marital_unit_id_input")
+    check_reporters_take_up(persons)
     tables = {
         "recipients_by_fine_age": recipients_by_fine_age(persons),
         "recipients_with_social_security": recipients_with_social_security(
@@ -489,6 +551,9 @@ def run_checks(run_dir: Path, out_dir: Path) -> dict[str, pd.DataFrame]:
             persons
         ),
         "children": children(persons),
+        "new_recipients_with_erased_social_security": (
+            new_recipients_with_erased_social_security(persons)
+        ),
         "pool_definition_check": pool_definition_check(persons),
     }
     out_dir.mkdir(parents=True, exist_ok=True)

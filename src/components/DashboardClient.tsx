@@ -25,13 +25,20 @@ const SHARED_WARNING =
   "These figures come from a model whose SSI population does not yet match SSA\u2019s records well, and they rest on few sample records.";
 
 function warningText(results: Results, scenario: Scenario): string {
-  const ratio = times(totalRatioToCbpp(scenario));
+  const ratio = totalRatioToCbpp(scenario);
   const cost = costRatioToOact(results, scenario);
-  const comparison =
-    scenario.key === "ten_twenty" && cost
-      ? `Added SSI is ${times(cost.ratio)} SSA\u2019s actuaries\u2019 estimate for ${results.provenance.analysis_year}, and new recipients are ${ratio} CBPP\u2019s count.`
-      : `SSA\u2019s actuaries have not estimated this change. New recipients are ${ratio} CBPP\u2019s count.`;
-  return `${SHARED_WARNING} ${comparison} We suspect the model overstates gains for people 65 and over, while other gaps push the other way. See \u201cHow to read these numbers\u201d before using them.`;
+  const year = results.provenance.analysis_year;
+  const outside = [
+    cost
+      ? `Added SSI is ${times(cost.ratio)} SSA\u2019s actuaries\u2019 estimate for ${year}.`
+      : scenario.key === "no_limit"
+        ? "SSA\u2019s actuaries have not estimated removing the limits."
+        : `SSA\u2019s actuaries have no estimate of this change for ${year}.`,
+    ratio !== null && `New recipients are ${times(ratio)} CBPP\u2019s count.`,
+  ]
+    .filter(Boolean)
+    .join(" ");
+  return `${SHARED_WARNING} ${outside} We suspect the model overstates gains for people 65 and over, while other gaps push the other way. See \u201cHow to read these numbers\u201d before using them.`;
 }
 
 export default function DashboardClient() {

@@ -42,11 +42,13 @@ leave health benefits out of household income; so batching gives the same
 answer as a single run. Each batch is admitted with 18 GB of memory.
 
 `ssi-asset-limits-admin-checks` compares the run's current-law caseload with
-SSA tables it is not targeted to, and records the hashes of the run tables it
-read; `ssi-asset-limits-publish` refuses check tables whose hashes do not
-match the run it publishes. The two sensitivity runs are shown beside the
-estimate and are never published as it: the publisher refuses a variant run
-as its main input.
+SSA tables it is not targeted to, and records the hashes of the run tables
+and household chunks it read; `ssi-asset-limits-publish` refuses check tables
+whose hashes do not match the run it publishes. The two sensitivity runs are
+shown beside the estimate and are never published as it: the publisher
+refuses a variant run as its main input, and refuses a sensitivity run whose
+dataset, model, people or per-person weights differ from the published run's,
+or a spliced rerun that changes more households than it reran.
 
 `ssi-asset-limits-publish` turns the run into the app's data; every figure is
 a weighted sum over that run, with nothing scaled from other runs.
@@ -69,15 +71,24 @@ Copies of the SSA and OACT sources are in `sources/` with SHA-256 hashes.
 ## Known gaps
 
 The page's "How to read these numbers" section explains these in plain
-language:
+language, with every figure computed from the published data:
 
-- Claiming: each person's take-up flag is drawn at one rate per age group and
-  does not fall with savings (PolicyEngine/microcosm#584).
+- Claiming: everyone who reported SSI in the CPS keeps a yes; everyone else
+  is drawn at one rate per age group that does not fall with savings
+  (PolicyEngine/microcosm#584). Some new recipients aged 18 to 64 report SSI
+  in the CPS but are kept off it by imputed savings
+  (`results/admin-checks/new_recipients_by_reporting.csv`).
+- Social Security: the population file zeroes CPS-reported Social Security
+  for many people (PolicyEngine/microcosm#1178); a spliced rerun with it
+  restored is shown as a sensitivity.
 - Children: the population has almost no children under 15 who meet SSI's
-  disability standard (PolicyEngine/microcosm#453), and PolicyEngine does not
-  yet deem a parent's resources to a child (PolicyEngine/policyengine-us#3557).
-- Couples: PolicyEngine does not yet deem an ineligible spouse's resources,
-  and the population records each household's savings on one person.
+  disability standard (PolicyEngine/microcosm#509), and policyengine-us 2.2.1
+  does not deem a parent's resources to a child
+  (PolicyEngine/policyengine-us#10040 adds it; its 2.2.1 companion runs as a
+  sensitivity).
+- Couples: policyengine-us 2.2.1 does not deem an ineligible spouse's
+  resources (same PR), and the population records each household's savings
+  on one person.
 - Savings: imputed from SIPP 2023 and SCF 2022, not calibrated; only bank
   accounts, stocks and bonds count.
 
@@ -99,6 +110,7 @@ uv run pytest
 uv run ruff check src tests
 uv run ruff format --check src tests
 bun install --frozen-lockfile
+bun run test
 bun run build
 ```
 

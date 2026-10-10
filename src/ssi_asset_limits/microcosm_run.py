@@ -301,6 +301,26 @@ def _variant_reform(variant: str):
     return getattr(importlib.import_module(module), name)
 
 
+def code_state() -> dict:
+    """The analysis code's commit and whether tracked files differ from it."""
+    root = Path(__file__).resolve().parents[2]
+    commit = subprocess.check_output(
+        ["git", "-C", str(root), "rev-parse", "HEAD"], text=True
+    ).strip()
+    dirty = subprocess.check_output(
+        [
+            "git",
+            "-C",
+            str(root),
+            "status",
+            "--porcelain",
+            "--untracked-files=no",
+        ],
+        text=True,
+    ).strip()
+    return {"code_commit": commit, "code_dirty": bool(dirty)}
+
+
 def variant_source_sha256(variant: str | None) -> str | None:
     """SHA-256 of the module that defines a variant's reform, as installed."""
     if variant is None:
@@ -399,6 +419,7 @@ def run_worker(
         "scenario": scenario,
         "variant": variant,
         "variant_source_sha256": variant_source_sha256(variant),
+        **code_state(),
         "peak_rss_gib": peak_rss_gib(),
         "wall_seconds": time.monotonic() - started,
         "legacy_input_renames": simulation.policyengine_bundle.get(

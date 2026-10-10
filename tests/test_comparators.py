@@ -93,7 +93,9 @@ def test_oact_letters_assume_january_eligibility():
         text = " ".join((SOURCES / name).read_text().split())
         year = letter["effective"].split()[-1]
         # The date must be the one the estimate assumes, not any mention.
-        pattern = rf"(?:effective|starting)[^.]{{0,40}}January 1, {year}"
+        pattern = (
+            rf"effective for eligibility starting (?:on )?January 1, {year}"
+        )
         assert re.search(pattern, text), letter["date"]
 
 
