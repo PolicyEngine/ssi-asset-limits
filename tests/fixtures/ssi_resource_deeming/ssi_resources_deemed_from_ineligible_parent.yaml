@@ -1,7 +1,7 @@
 # Copied from PolicyEngine/policyengine-us#10040 (branch ssi-resource-deeming,
-# commit 190f45824e), policyengine_us/tests/policy/baseline/gov/ssa/ssi/eligibility/resources/deemed/ssi_resources_deemed_from_ineligible_parent.yaml, without the cases that need parent
+# commit e7171e8639), policyengine_us/tests/policy/baseline/gov/ssa/ssi/eligibility/resources/deemed/ssi_resources_deemed_from_ineligible_parent.yaml, without the cases that need parent
 # links, which policyengine-us 2.2.1 lacks. Expected values are the
-# branch's, sourced from 20 CFR 416.1160-416.1205 and POMS SI 01330.
+# branch's, sourced from 20 CFR 416.1160-416.1205, 416.1856 and POMS SI 01330.
 - name: One and two ineligible parents below at and above each allowance
   period: 2026-01
   input:
@@ -1545,7 +1545,7 @@
     - false
     - true
     - true
-- name: Without parent links a parent's cohabiting spouse in another tax unit counts
+- name: Without parent links a parent's spouse in another tax unit counts
   period: 2026-01
   input:
     people:
@@ -1598,5 +1598,378 @@
     - 4500
     meets_ssi_resource_test:
     - false
+    - false
+    - false
+- name: Without parent links a parent filing apart from the stepparent who claims the child
+    counts
+  period: 2026-01
+  input:
+    people:
+      mother:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 5001
+      stepfather:
+        age: 42
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: false
+        ssi_countable_resources:
+          '2026': 0
+      child:
+        age: 10
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+    tax_units:
+      mother_unit:
+        members:
+        - mother
+      stepfather_unit:
+        members:
+        - stepfather
+        - child
+    marital_units:
+      parents:
+        members:
+        - mother
+        - stepfather
+      child_unit:
+        members:
+        - child
+    households:
+      home:
+        members:
+        - mother
+        - stepfather
+        - child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 2001
+    meets_ssi_resource_test:
+    - false
+    - true
+    - false
+- name: Omitted marital units do not marry a child to the parent who claims them
+  period: 2026-01
+  input:
+    people:
+      parent:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 5000
+      child:
+        age: 10
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+    tax_units:
+      family:
+        members:
+        - parent
+        - child
+    households:
+      home:
+        members:
+        - parent
+        - child
+  output:
+    is_ssi_resource_deeming_child:
+    - false
+    - true
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 3000
+    meets_ssi_resource_test:
+    - false
+    - false
+- name: Children in two tax units with the same six deemors share one pool
+  period: 2026-01
+  input:
+    people:
+      a1:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 1000
+      b1:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 1000
+      a2:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: false
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 1000
+      b2:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: false
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 1000
+      a3:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: false
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 1000
+      b3:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: false
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 1000
+      child_a:
+        age: 10
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+      child_b:
+        age: 10
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+    tax_units:
+      unit_a:
+        members:
+        - a1
+        - a2
+        - a3
+        - child_a
+      unit_b:
+        members:
+        - b1
+        - b2
+        - b3
+        - child_b
+    marital_units:
+      couple_1:
+        members:
+        - a1
+        - b1
+      couple_2:
+        members:
+        - a2
+        - b2
+      couple_3:
+        members:
+        - a3
+        - b3
+      child_a_unit:
+        members:
+        - child_a
+      child_b_unit:
+        members:
+        - child_b
+    households:
+      home:
+        members:
+        - a1
+        - b1
+        - a2
+        - b2
+        - a3
+        - b3
+        - child_a
+        - child_b
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 1500
+    - 1500
+    meets_ssi_resource_test:
+    - true
+    - true
+    - true
+    - true
+    - true
+    - true
+    - true
+    - true
+- name: An income-ineligible sibling does not share the parental excess
+  period: 2026-01
+  input:
+    people:
+      mother:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 5000
+      child:
+        age: 10
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+      sibling:
+        age: 12
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+        ssi_countable_income:
+          '2026': 120000
+    tax_units:
+      family:
+        members:
+        - mother
+        - child
+        - sibling
+    marital_units:
+      mother_unit:
+        members:
+        - mother
+      child_unit:
+        members:
+        - child
+      sibling_unit:
+        members:
+        - sibling
+    households:
+      home:
+        members:
+        - mother
+        - child
+        - sibling
+  output:
+    is_ssi_resource_deeming_child:
+    - false
+    - true
+    - true
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 3000
+    - 3000
+    meets_ssi_resource_test:
+    - false
+    - false
+    - false
+- name: A married minor in an explicit marital unit is not a child for deeming
+  period: 2026-01
+  input:
+    people:
+      mother:
+        age: 45
+        is_ssi_aged_blind_disabled: false
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 6000
+      minor:
+        age: 17
+        is_ssi_aged_blind_disabled: true
+        ssi_countable_resources:
+          '2026': 0
+      spouse:
+        age: 19
+        is_ssi_aged_blind_disabled: false
+        ssi_countable_resources:
+          '2026': 0
+    tax_units:
+      family:
+        members:
+        - mother
+        - minor
+        - spouse
+    marital_units:
+      mother_unit:
+        members:
+        - mother
+      couple:
+        members:
+        - minor
+        - spouse
+    households:
+      home:
+        members:
+        - mother
+        - minor
+        - spouse
+  output:
+    is_ssi_resource_deeming_child:
+    - false
+    - false
+    - false
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 0
+    - 0
+- name: An income-ineligible only child is still deemed the whole excess
+  period: 2026-01
+  input:
+    people:
+      mother:
+        age: 40
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        is_parent: true
+        ssi_countable_resources:
+          '2026': 10000
+      child:
+        age: 10
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+        ssi_countable_income:
+          '2026': 120000
+    tax_units:
+      family:
+        members:
+        - mother
+        - child
+    marital_units:
+      mother_unit:
+        members:
+        - mother
+      child_unit:
+        members:
+        - child
+    households:
+      home:
+        members:
+        - mother
+        - child
+  output:
+    ssi_resources_deemed_from_ineligible_parent:
+    - 0
+    - 8000
+    meets_ssi_resource_test:
     - false
     - false

@@ -1,7 +1,7 @@
 # Copied from PolicyEngine/policyengine-us#10040 (branch ssi-resource-deeming,
-# commit 190f45824e), policyengine_us/tests/policy/baseline/gov/ssa/ssi/eligibility/resources/deemed/is_ssi_spousal_resource_deeming_applies.yaml, without the cases that need parent
+# commit e7171e8639), policyengine_us/tests/policy/baseline/gov/ssa/ssi/eligibility/resources/deemed/is_ssi_spousal_resource_deeming_applies.yaml, without the cases that need parent
 # links, which policyengine-us 2.2.1 lacks. Expected values are the
-# branch's, sourced from 20 CFR 416.1160-416.1205 and POMS SI 01330.
+# branch's, sourced from 20 CFR 416.1160-416.1205, 416.1856 and POMS SI 01330.
 - name: ABD claimant with an ineligible spouse applies resource deeming without income
   period: 2026-01
   input:
@@ -284,7 +284,7 @@
     - true
     - false
     - false
-- name: Omitted marital units do not make a co-resident head of another tax unit a spouse
+- name: A co-resident adult in their own marital unit is not a spouse
   period: 2026-01
   input:
     people:
@@ -307,6 +307,13 @@
       son_unit:
         members:
         - son
+    marital_units:
+      claimant_unit:
+        members:
+        - claimant
+      son_unit:
+        members:
+        - son
     households:
       home:
         members:
@@ -322,7 +329,7 @@
     meets_ssi_resource_test:
     - false
     - true
-- name: Cohabiting spouses filing separately deem the ineligible spouse's resources
+- name: Spouses filing separately in one marital unit count each other's resources
   period: 2026-01
   input:
     people:
@@ -342,7 +349,6 @@
       claimant_unit:
         members:
         - claimant
-        cohabitating_spouses: true
       spouse_unit:
         members:
         - spouse
@@ -366,46 +372,226 @@
     meets_ssi_resource_test:
     - false
     - false
-- name: Separate filers without cohabitation evidence do not deem resources
+- name: Disabled married dependents count each other's resources
   period: 2026-01
   input:
     people:
-      claimant:
-        age: 70
-        is_ssi_aged_blind_disabled: true
-        is_tax_unit_head: true
-        ssi_countable_resources:
-          '2026': 0
-      partner:
-        age: 68
+      mother:
+        age: 55
         is_ssi_aged_blind_disabled: false
         is_tax_unit_head: true
+        is_tax_unit_spouse: false
+        ssi_countable_resources:
+          '2026': 0
+      claimant:
+        age: 25
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+      spouse:
+        age: 25
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: true
         ssi_countable_resources:
           '2026': 3001
     tax_units:
-      claimant_unit:
+      family:
         members:
+        - mother
         - claimant
-      partner_unit:
-        members:
-        - partner
+        - spouse
     marital_units:
+      mother_unit:
+        members:
+        - mother
       couple:
         members:
         - claimant
-        - partner
+        - spouse
     households:
       home:
         members:
+        - mother
         - claimant
-        - partner
+        - spouse
   output:
     is_ssi_spousal_resource_deeming_applies:
     - false
-    - false
+    - true
+    - true
     ssi_resources_deemed_from_ineligible_spouse:
     - 0
+    - 3001
     - 0
     meets_ssi_resource_test:
+    - true
+    - false
+    - false
+- name: Married adults in a parent's tax unit with roles omitted count each other's resources
+  period: 2026-01
+  input:
+    people:
+      mother:
+        age: 55
+        is_ssi_aged_blind_disabled: false
+        ssi_countable_resources:
+          '2026': 0
+      claimant:
+        age: 25
+        is_ssi_aged_blind_disabled: true
+        ssi_countable_resources:
+          '2026': 0
+      spouse:
+        age: 25
+        is_ssi_aged_blind_disabled: true
+        ssi_countable_resources:
+          '2026': 3001
+    tax_units:
+      family:
+        members:
+        - mother
+        - claimant
+        - spouse
+    marital_units:
+      mother_unit:
+        members:
+        - mother
+      couple:
+        members:
+        - claimant
+        - spouse
+    households:
+      home:
+        members:
+        - mother
+        - claimant
+        - spouse
+  output:
+    ssi_resources_deemed_from_ineligible_spouse:
+    - 0
+    - 3001
+    - 0
+    meets_ssi_resource_test:
+    - true
+    - false
+    - false
+- name: An eligible spouse's resources count without ineligible-spouse exclusions
+  period: 2026-01
+  input:
+    people:
+      mother:
+        age: 55
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        ssi_countable_resources:
+          '2026': 0
+      claimant:
+        age: 30
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 2000
+        ssi_resource_deeming_excluded_military_resources: 2000
+      spouse:
+        age: 30
+        is_ssi_aged_blind_disabled: true
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 2000
+        ssi_resource_deeming_excluded_military_resources: 2000
+    tax_units:
+      family:
+        members:
+        - mother
+        - claimant
+        - spouse
+    marital_units:
+      mother_unit:
+        members:
+        - mother
+      couple:
+        members:
+        - claimant
+        - spouse
+    households:
+      home:
+        members:
+        - mother
+        - claimant
+        - spouse
+  output:
+    ssi_resources_deemed_from_ineligible_spouse:
+    - 0
+    - 2000
+    - 2000
+    meets_ssi_resource_test:
+    - true
+    - false
+    - false
+- name: An immigration-ineligible disabled spouse keeps ineligible-spouse exclusions
+  period: 2026-01
+  input:
+    people:
+      mother:
+        age: 55
+        is_ssi_aged_blind_disabled: false
+        is_tax_unit_head: true
+        ssi_countable_resources:
+          '2026': 0
+      claimant:
+        age: 30
+        is_ssi_aged_blind_disabled: true
+        immigration_status: CITIZEN
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 0
+      spouse:
+        age: 30
+        is_ssi_aged_blind_disabled: true
+        immigration_status: UNDOCUMENTED
+        is_tax_unit_head: false
+        is_tax_unit_spouse: false
+        is_tax_unit_dependent: true
+        ssi_countable_resources:
+          '2026': 3001
+        ssi_resource_deeming_excluded_military_resources: 2000
+    tax_units:
+      family:
+        members:
+        - mother
+        - claimant
+        - spouse
+    marital_units:
+      mother_unit:
+        members:
+        - mother
+      couple:
+        members:
+        - claimant
+        - spouse
+    households:
+      home:
+        members:
+        - mother
+        - claimant
+        - spouse
+  output:
+    ssi_resources_deemed_from_ineligible_spouse:
+    - 0
+    - 1001
+    - 0
+    meets_ssi_resource_test:
+    - true
     - true
     - false

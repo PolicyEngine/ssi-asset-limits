@@ -1,7 +1,7 @@
 # Copied from PolicyEngine/policyengine-us#10040 (branch ssi-resource-deeming,
-# commit 190f45824e), policyengine_us/tests/policy/baseline/gov/ssa/ssi/eligibility/resources/meets_ssi_resource_test.yaml, without the cases that need parent
+# commit e7171e8639), policyengine_us/tests/policy/baseline/gov/ssa/ssi/eligibility/resources/meets_ssi_resource_test.yaml, without the cases that need parent
 # links, which policyengine-us 2.2.1 lacks. Expected values are the
-# branch's, sourced from 20 CFR 416.1160-416.1205 and POMS SI 01330.
+# branch's, sourced from 20 CFR 416.1160-416.1205, 416.1856 and POMS SI 01330.
 - name: Ineligible spouse holds all resources above the couple limit
   period: 2026-01
   input:
