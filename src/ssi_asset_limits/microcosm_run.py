@@ -301,8 +301,12 @@ def _variant_reform(variant: str):
     return getattr(importlib.import_module(module), name)
 
 
+# Paths whose contents decide what a run computes; result files are not code.
+CODE_PATHS = ("src", "scripts", "pyproject.toml", "uv.lock")
+
+
 def code_state() -> dict:
-    """The analysis code's commit and whether tracked files differ from it."""
+    """The analysis code's commit and whether the code differs from it."""
     root = Path(__file__).resolve().parents[2]
     commit = subprocess.check_output(
         ["git", "-C", str(root), "rev-parse", "HEAD"], text=True
@@ -315,6 +319,8 @@ def code_state() -> dict:
             "status",
             "--porcelain",
             "--untracked-files=no",
+            "--",
+            *CODE_PATHS,
         ],
         text=True,
     ).strip()
