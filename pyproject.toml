@@ -38,6 +38,10 @@ include = ["ssi_asset_limits*"]
 
 [tool.ruff]
 line-length = 79
+# Copied verbatim from the policyengine-us branch it mirrors (its own style).
+extend-exclude = [
+    "src/ssi_asset_limits/sensitivity/ssi_resource_deeming_reform.py",
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I"]

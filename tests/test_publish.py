@@ -260,3 +260,26 @@ def test_no_change_reform_publishes_zero_deltas():
                 "reform_recipients",
             }:
                 assert row["value"] == 0
+
+
+def test_sensitivity_runs_cannot_be_published_as_the_estimate(tmp_path):
+    persons, households = toy_frames()
+    run = tmp_path / "run"
+    run.mkdir()
+    persons.to_csv(run / "persons.csv.gz", index=False)
+    households.to_csv(run / "households.csv.gz", index=False)
+    (run / "run_metadata.json").write_text(
+        json.dumps(
+            {
+                "provenance": {"analysis_year": 2026},
+                "diagnostics": {"variant": "resource_deeming"},
+            }
+        )
+    )
+    with pytest.raises(ValueError, match="sensitivity run"):
+        publish(run, tmp_path / "out")
+    results = publish(run, tmp_path / "variant-out", allow_variant=True)
+    assert [s["key"] for s in results["scenarios"]] == [
+        "ten_twenty",
+        "no_limit",
+    ]

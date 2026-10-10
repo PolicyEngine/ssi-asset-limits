@@ -329,10 +329,17 @@ def write_outputs(results: dict, out_dir: Path) -> None:
     )
 
 
-def publish(run_dir: Path, out_dir: Path) -> dict:
+def publish(run_dir: Path, out_dir: Path, allow_variant: bool = False) -> dict:
     persons = pd.read_csv(run_dir / "persons.csv.gz")
     households = pd.read_csv(run_dir / "households.csv.gz")
     metadata = json.loads((run_dir / "run_metadata.json").read_text())
+    variant = metadata.get("diagnostics", {}).get("variant")
+    if variant is not None and not allow_variant:
+        raise ValueError(
+            f"{run_dir} is a sensitivity run ({variant}), not the certified "
+            "engine; pass --allow-variant and an output directory other than "
+            "public/data to tabulate it"
+        )
     results = build_results(persons, households, metadata)
     write_outputs(results, out_dir)
     return results
@@ -342,8 +349,9 @@ def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("run_dir", type=Path)
     parser.add_argument("--out-dir", type=Path, default=Path("public/data"))
+    parser.add_argument("--allow-variant", action="store_true")
     args = parser.parse_args(argv)
-    publish(args.run_dir, args.out_dir)
+    publish(args.run_dir, args.out_dir, args.allow_variant)
 
 
 if __name__ == "__main__":

@@ -396,3 +396,36 @@ def test_prepared_requires_the_certified_source_and_chunk_size(tmp_path):
     manifest_path.write_text(json.dumps(manifest))
     chunk.unlink()
     assert not microcosm_run._prepared(manifest_path, 8_000)
+
+
+def test_variant_workers_are_not_mistaken_for_certified_ones(tmp_path):
+    from ssi_asset_limits import microcosm_run
+
+    chunk = tmp_path / "chunk_0000.h5"
+    chunk.write_bytes(b"batch")
+    destination = tmp_path / "workers" / "chunk_0000" / "baseline"
+    destination.mkdir(parents=True)
+    for name in ("persons", "households", "persons_diagnostics"):
+        (destination / f"{name}.csv.gz").write_bytes(b"")
+    receipt = {
+        "scenario": "baseline",
+        "chunk_sha256": microcosm_run.sha256_file(chunk),
+    }
+    (destination / "receipt.json").write_text(json.dumps(receipt))
+    assert microcosm_run._finished(destination, chunk, "baseline")
+    assert not microcosm_run._finished(
+        destination, chunk, "baseline", "resource_deeming"
+    )
+    receipt["variant"] = "resource_deeming"
+    (destination / "receipt.json").write_text(json.dumps(receipt))
+    assert microcosm_run._finished(
+        destination, chunk, "baseline", "resource_deeming"
+    )
+    assert not microcosm_run._finished(destination, chunk, "baseline")
+
+
+def test_unknown_variant_is_refused_before_anything_runs(tmp_path):
+    from ssi_asset_limits import microcosm_run
+
+    with pytest.raises(ValueError, match="unknown variant"):
+        microcosm_run.run(tmp_path, 8_000, None, "not_a_variant")

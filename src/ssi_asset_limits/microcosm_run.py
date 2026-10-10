@@ -34,6 +34,17 @@ import pandas as pd
 
 SCENARIOS = ("baseline", "ten_twenty", "no_limit")
 YEAR = 2026
+# Structural reforms that can be layered on the certified engine for a
+# sensitivity run: name -> (module, class, what it changes). A run with a
+# variant is never the published estimate; ``publish`` refuses it.
+VARIANTS = {
+    "resource_deeming": (
+        "ssi_asset_limits.sensitivity.ssi_resource_deeming_reform",
+        "SSIResourceDeemingReform",
+        "SSI resource deeming from ineligible spouses and parents "
+        "(20 CFR 416.1202) installed on the certified engine as a reform",
+    ),
+}
 # Memory declared to the admission gate for each worker, and the ceiling a
 # worker's measured peak may not pass.
 WORKER_MEM_GIB = 18
@@ -264,20 +275,36 @@ def _calculate(simulation, name: str, entity: str, kind="amount"):
     return np.sum(arrays, axis=0) if len(arrays) > 1 else arrays[0]
 
 
-def run_worker(chunk: Path, scenario: str, destination: Path) -> None:
+def _variant_reform(variant: str):
+    import importlib
+
+    module, name, _ = VARIANTS[variant]
+    return getattr(importlib.import_module(module), name)
+
+
+def run_worker(
+    chunk: Path, scenario: str, destination: Path, variant: str | None = None
+) -> None:
     from policyengine import us
 
     from .reform import create_asset_limit_reform
 
     started = time.monotonic()
-    kwargs = {}
+    reforms = []
+    if variant is not None:
+        # The structural change goes first so the limit reform's parameters
+        # are the ones its formulas read.
+        reforms.append(_variant_reform(variant))
     if scenario != "baseline":
         individual, couple = (
             (10_000, 20_000) if scenario == "ten_twenty" else (1e12, 1e12)
         )
-        kwargs["reform"] = create_asset_limit_reform(
-            individual, couple, start_year=YEAR
+        reforms.append(
+            create_asset_limit_reform(individual, couple, start_year=YEAR)
         )
+    kwargs = {}
+    if reforms:
+        kwargs["reform"] = reforms[0] if len(reforms) == 1 else tuple(reforms)
     simulation = us.managed_microsimulation(
         dataset=str(chunk), allow_unmanaged=True, **kwargs
     )
@@ -341,6 +368,7 @@ def run_worker(chunk: Path, scenario: str, destination: Path) -> None:
         "chunk": str(chunk),
         "chunk_sha256": sha256_file(chunk),
         "scenario": scenario,
+        "variant": variant,
         "peak_rss_gib": peak_rss_gib(),
         "wall_seconds": time.monotonic() - started,
         "legacy_input_renames": simulation.policyengine_bundle.get(
@@ -452,7 +480,9 @@ def _prepared(manifest_path: Path, chunk_size: int) -> bool:
     )
 
 
-def _finished(destination: Path, chunk: Path, scenario: str) -> bool:
+def _finished(
+    destination: Path, chunk: Path, scenario: str, variant: str | None = None
+) -> bool:
     """True when this worker already wrote its tables for this exact chunk."""
     receipt_path = destination / "receipt.json"
     if not receipt_path.exists():
@@ -460,6 +490,7 @@ def _finished(destination: Path, chunk: Path, scenario: str) -> bool:
     receipt = json.loads(receipt_path.read_text())
     return (
         receipt.get("scenario") == scenario
+        and receipt.get("variant") == variant
         and receipt.get("chunk_sha256") == sha256_file(chunk)
         and all(
             (destination / f"{name}.csv.gz").exists()
@@ -468,11 +499,23 @@ def _finished(destination: Path, chunk: Path, scenario: str) -> bool:
     )
 
 
-def run(out_dir: Path, chunk_size: int, cached_dataset: Path | None) -> None:
+def run(
+    out_dir: Path,
+    chunk_size: int,
+    cached_dataset: Path | None,
+    variant: str | None = None,
+) -> None:
     if chunk_size <= 0:
         raise ValueError("chunk_size must be positive")
+    if variant is not None and variant not in VARIANTS:
+        raise ValueError(f"unknown variant {variant!r}")
     started = time.monotonic()
     provenance = certified_provenance()
+    if variant is not None:
+        provenance["method_note"] += (
+            f" Sensitivity variant, not the certified engine: "
+            f"{VARIANTS[variant][2]}."
+        )
     if (out_dir / "run_metadata.json").exists():
         raise ValueError("out-dir already contains a completed run")
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -497,18 +540,19 @@ def run(out_dir: Path, chunk_size: int, cached_dataset: Path | None) -> None:
                 f"chunk {index + 1}/{manifest['chunk_count']} {scenario}",
                 flush=True,
             )
-            if not _finished(destination, Path(chunk), scenario):
-                _admitted(
-                    [
-                        "_worker",
-                        "--chunk",
-                        chunk,
-                        "--scenario",
-                        scenario,
-                        "--out-dir",
-                        str(destination),
-                    ]
-                )
+            if not _finished(destination, Path(chunk), scenario, variant):
+                worker_args = [
+                    "_worker",
+                    "--chunk",
+                    chunk,
+                    "--scenario",
+                    scenario,
+                    "--out-dir",
+                    str(destination),
+                ]
+                if variant is not None:
+                    worker_args += ["--variant", variant]
+                _admitted(worker_args)
             receipt = json.loads((destination / "receipt.json").read_text())
             receipts.append(receipt)
             if receipt["peak_rss_gib"] > WORKER_MEM_GIB:
@@ -528,6 +572,7 @@ def run(out_dir: Path, chunk_size: int, cached_dataset: Path | None) -> None:
     }
     diagnostics = {
         **manifest,
+        "variant": variant,
         "output_weight_totals": output_weight_totals,
         "output_weight_year": YEAR,
         "input_weight_year": 2024,
@@ -564,6 +609,11 @@ def main() -> None:
     parser.add_argument("--cached-dataset", type=Path)
     parser.add_argument("--chunk", type=Path)
     parser.add_argument("--scenario", choices=SCENARIOS)
+    parser.add_argument(
+        "--variant",
+        choices=sorted(VARIANTS),
+        help="Layer a structural reform on the engine (sensitivity run).",
+    )
     args = parser.parse_args()
     args.out_dir = args.out_dir.resolve()
     if args.mode == "_prepare":
@@ -571,9 +621,9 @@ def main() -> None:
     elif args.mode == "_worker":
         if args.chunk is None or args.scenario is None:
             parser.error("_worker requires --chunk and --scenario")
-        run_worker(args.chunk, args.scenario, args.out_dir)
+        run_worker(args.chunk, args.scenario, args.out_dir, args.variant)
     else:
-        run(args.out_dir, args.chunk_size, args.cached_dataset)
+        run(args.out_dir, args.chunk_size, args.cached_dataset, args.variant)
 
 
 if __name__ == "__main__":
