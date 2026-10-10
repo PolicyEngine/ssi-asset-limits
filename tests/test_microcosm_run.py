@@ -159,7 +159,11 @@ def test_run_schema_and_publisher_round_trip(tmp_path):
     assert set(metadata["provenance"]) == PROVENANCE_FIELDS
     assert metadata["diagnostics"]["chunk_count"] == 1
     published = publish(tmp_path, tmp_path / "public")
-    assert published["provenance"] == provenance()
+    assert published["provenance"] == {
+        key: value
+        for key, value in provenance().items()
+        if key != "method_note"
+    }
     assert published["baseline"]["total_recipients"] == 20
     assert published["baseline"]["total_federal_ssi"] == 120_000
     for scenario in published["scenarios"]:

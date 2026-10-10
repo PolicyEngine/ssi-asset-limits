@@ -1,10 +1,11 @@
 """Check a run's current-law SSI caseload against SSA administrative tables.
 
 Only administrative data is used as the standard. The frame's SSI take-up
-draws are set so that December 2024 recipients in three pooled age bands
-(under 18, 18-64, 65 and over) match SSA's counts. The release enforces the
-two adult bands; the child band falls far short because the frame has almost
-no disabled children. Agreement in the adult bands therefore shows little.
+flags keep everyone who reported SSI in the CPS and draw everyone else at one
+rate per age band. For ages 18-64 and 65 and over that rate is set so that
+December 2024 recipients match SSA's counts; too few children qualify to
+reach SSA's child count, so the child rate is the share of qualifying
+children who report SSI. Agreement in the adult bands therefore shows little.
 Everything tabulated here is held out of that targeting: recipients by finer
 age band, recipients who also receive Social Security, and recipients by
 whether a spouse lives with them and receives SSI.
@@ -12,10 +13,12 @@ whether a spouse lives with them and receives SSI.
 The module also splits each reform's new recipients into the factors that
 produce them (the pool that is eligible apart from resources and fails the
 current resource test, the part of that pool the reform admits, and the
-take-up flag), so a gap against an outside estimate can be located.
+take-up flag), by whether they report SSI in the CPS, and by whether they
+live with a spouse, so a gap against an outside estimate can be located.
 
 Inputs are a finished run directory (see ``microcosm_run``) and its household
-chunks, which carry the frame's Social Security components.
+chunks, which carry the frame's Social Security components, marital units
+and CPS SSI reports.
 """
 
 from __future__ import annotations
@@ -103,7 +106,12 @@ FINGERPRINT_FILE = "run_fingerprint.json"
 
 
 def run_fingerprint(run_dir: Path) -> dict[str, str]:
-    return {name: sha256_file(run_dir / name) for name in RUN_FILES}
+    """Hashes of the run tables and the household chunks the checks read."""
+    fingerprint = {name: sha256_file(run_dir / name) for name in RUN_FILES}
+    metadata = json.loads((run_dir / "run_metadata.json").read_text())
+    for path in metadata["diagnostics"]["chunk_paths"]:
+        fingerprint[f"chunk:{Path(path).name}"] = sha256_file(Path(path))
+    return fingerprint
 
 
 def _band(age: pd.Series, lower, upper) -> pd.Series:
@@ -119,8 +127,14 @@ def _wsum(weights: pd.Series, mask) -> float:
     return float(weights[np.asarray(mask, dtype=bool)].sum())
 
 
+# The take-up stage keeps a yes for every CPS ASEC person with SSI_VAL > 0
+# and copies that decision to each support row of the same source person.
+SSI_REPORT_COLUMN = "SSI_VAL"
+ASEC_CHANNEL = "asec"
+
+
 def load_frame_inputs(chunk_paths: list[str]) -> pd.DataFrame:
-    """Inputs the run does not write: Social Security and unit size."""
+    """Inputs the run does not write: Social Security, units, SSI reports."""
     frames = []
     for path in chunk_paths:
         with pd.HDFStore(path, "r") as store:
@@ -132,13 +146,21 @@ def load_frame_inputs(chunk_paths: list[str]) -> pd.DataFrame:
                     person[SOCIAL_SECURITY_COLUMNS].sum(axis=1) > 0
                 ).to_numpy(),
                 "marital_unit_id": person["person_marital_unit_id"].to_numpy(),
+                "source_id": person["person_source_id"].to_numpy(),
+                "asec_reporter": (
+                    (person["person_support_channel"] == ASEC_CHANNEL)
+                    & (person[SSI_REPORT_COLUMN] > 0)
+                ).to_numpy(),
             }
         )
         frame["marital_unit_size"] = frame.groupby("marital_unit_id")[
             "person_id"
         ].transform("size")
         frames.append(frame)
-    return pd.concat(frames, ignore_index=True)
+    inputs = pd.concat(frames, ignore_index=True)
+    reporters = set(inputs.loc[inputs["asec_reporter"], "source_id"])
+    inputs["reports_ssi"] = inputs["source_id"].isin(reporters)
+    return inputs.drop(columns=["source_id", "asec_reporter"])
 
 
 def recipients_by_fine_age(persons: pd.DataFrame) -> pd.DataFrame:
@@ -325,6 +347,92 @@ def new_recipient_decomposition(persons: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def _new_recipients(persons: pd.DataFrame, reform: str) -> pd.Series:
+    return (persons[f"ssi_{BASELINE}"] <= 0) & (persons[f"ssi_{reform}"] > 0)
+
+
+def new_recipients_by_reporting(persons: pd.DataFrame) -> pd.DataFrame:
+    """Recipients who report SSI in the CPS, now and among the new ones.
+
+    A new recipient who reports SSI was kept off SSI under current law only
+    by imputed savings above the limit, although they report receiving it.
+    """
+    weights = persons["person_weight"]
+    groups = [("current_law", persons[f"ssi_{BASELINE}"] > 0)] + [
+        (reform, _new_recipients(persons, reform)) for reform in REFORMS
+    ]
+    rows = []
+    for scenario, recipients in groups:
+        for label, lower, upper in POOLED_BANDS:
+            band = recipients & _band(persons["age"], lower, upper)
+            total = _wsum(weights, band)
+            reporting = _wsum(weights, band & persons["reports_ssi"])
+            rows.append(
+                {
+                    "scenario": scenario,
+                    "age_band": label,
+                    "recipients": total,
+                    "reporting_ssi_in_cps": reporting,
+                    "share_pct": 100 * reporting / total if total else 0.0,
+                }
+            )
+    return pd.DataFrame(rows)
+
+
+def new_recipients_by_marital_status(persons: pd.DataFrame) -> pd.DataFrame:
+    """Each reform's new recipients by whether a spouse lives with them."""
+    weights = persons["person_weight"]
+    married = persons["marital_unit_size"] == 2
+    rows = []
+    for reform in REFORMS:
+        new = _new_recipients(persons, reform)
+        for label, lower, upper in [*POOLED_BANDS, ("All ages", None, None)]:
+            band = new & _band(persons["age"], lower, upper)
+            total = _wsum(weights, band)
+            with_spouse = _wsum(weights, band & married)
+            rows.append(
+                {
+                    "scenario": reform,
+                    "age_band": label,
+                    "new_recipients": total,
+                    "with_spouse": with_spouse,
+                    "share_pct": 100 * with_spouse / total if total else 0.0,
+                }
+            )
+    return pd.DataFrame(rows)
+
+
+def children(persons: pd.DataFrame) -> pd.DataFrame:
+    """Why no child gains: disability and savings among children."""
+    weights = persons["person_weight"]
+    child = persons["age"] < 18
+    aged_blind_disabled = persons[f"is_ssi_aged_blind_disabled_{BASELINE}"] > 0
+    savings = persons["ssi_countable_resources"]
+    measures = {
+        "Under 15 and meeting SSI's disability standard": (persons["age"] < 15)
+        & (persons[f"meets_ssi_disability_criteria_{BASELINE}"] > 0),
+        "Under 18 and aged, blind or disabled": child & aged_blind_disabled,
+        "of which with any countable savings": child
+        & aged_blind_disabled
+        & (savings > 0),
+        "of which with countable savings over $2,000": child
+        & aged_blind_disabled
+        & (savings > 2_000),
+        "Under 18 and receiving SSI under current law": child
+        & (persons[f"ssi_{BASELINE}"] > 0),
+    }
+    return pd.DataFrame(
+        [
+            {
+                "measure": measure,
+                "records": int(np.asarray(mask, dtype=bool).sum()),
+                "weighted": _wsum(weights, mask),
+            }
+            for measure, mask in measures.items()
+        ]
+    )
+
+
 def pool_definition_check(persons: pd.DataFrame) -> pd.DataFrame:
     """How well the pool reproduces the engine's own no-limit recipients.
 
@@ -376,6 +484,11 @@ def run_checks(run_dir: Path, out_dir: Path) -> dict[str, pd.DataFrame]:
         "recipients_by_marital_status": recipients_by_marital_status(persons),
         "resources_of_the_eligible": resources_of_the_eligible(persons),
         "new_recipient_decomposition": new_recipient_decomposition(persons),
+        "new_recipients_by_reporting": new_recipients_by_reporting(persons),
+        "new_recipients_by_marital_status": new_recipients_by_marital_status(
+            persons
+        ),
+        "children": children(persons),
         "pool_definition_check": pool_definition_check(persons),
     }
     out_dir.mkdir(parents=True, exist_ok=True)

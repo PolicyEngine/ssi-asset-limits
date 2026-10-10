@@ -7,6 +7,7 @@ import {
   AlertTitle,
   SegmentedControl,
 } from "@policyengine/ui-kit";
+import { costRatioToOact, times, totalRatioToCbpp } from "@/src/lib/facts";
 import { loadResults, Results, Scenario } from "@/src/lib/results";
 import AgeComparison from "@/src/components/AgeComparison";
 import BaselineCheck from "@/src/components/BaselineCheck";
@@ -23,11 +24,13 @@ const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 const SHARED_WARNING =
   "These figures come from a model whose SSI population does not yet match SSA\u2019s records well, and they rest on few sample records.";
 
-function warningText(scenario: Scenario): string {
+function warningText(results: Results, scenario: Scenario): string {
+  const ratio = times(totalRatioToCbpp(scenario));
+  const cost = costRatioToOact(results, scenario);
   const comparison =
-    scenario.key === "ten_twenty"
-      ? "Added SSI is about three and a half times SSA\u2019s actuaries\u2019 estimate for 2026, and new recipients are about twice CBPP\u2019s count, almost all of the difference among people 65 and over."
-      : "SSA\u2019s actuaries have not estimated removing the limits. New recipients are about twice CBPP\u2019s count: many more people 65 and over, fewer aged 18 to 64, and no children.";
+    scenario.key === "ten_twenty" && cost
+      ? `Added SSI is ${times(cost.ratio)} SSA\u2019s actuaries\u2019 estimate for ${results.provenance.analysis_year}, and new recipients are ${ratio} CBPP\u2019s count.`
+      : `SSA\u2019s actuaries have not estimated this change. New recipients are ${ratio} CBPP\u2019s count.`;
   return `${SHARED_WARNING} ${comparison} We suspect the model overstates gains for people 65 and over, while other gaps push the other way. See \u201cHow to read these numbers\u201d before using them.`;
 }
 
@@ -80,7 +83,9 @@ export default function DashboardClient() {
           <>
             <Alert>
               <AlertTitle>A rough estimate</AlertTitle>
-              <AlertDescription>{warningText(scenario)}</AlertDescription>
+              <AlertDescription>
+                {warningText(results, scenario)}
+              </AlertDescription>
             </Alert>
             <SegmentedControl
               value={scenario.key}
@@ -96,7 +101,7 @@ export default function DashboardClient() {
               cbpp={results.comparators.cbpp}
               precisionNote={results.precision_note}
             />
-            <CostComparison scenario={scenario} oact={results.comparators.oact} />
+            <CostComparison scenario={scenario} results={results} />
             <ResourceBins scenario={scenario} />
             <BaselineCheck baseline={results.baseline} />
             {results.held_out_checks && (
@@ -109,7 +114,7 @@ export default function DashboardClient() {
                 sensitivities={results.sensitivities}
               />
             )}
-            <Caveats />
+            <Caveats results={results} />
             <Methodology provenance={results.provenance} />
           </>
         )}

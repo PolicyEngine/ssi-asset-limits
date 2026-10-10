@@ -7,8 +7,12 @@ from ssi_asset_limits.admin_checks import (
     SSA_AGE_SHARES,
     SSA_MARITAL,
     SSA_WITH_SOCIAL_SECURITY,
+    children,
     eligible_apart_from_resources,
+    load_frame_inputs,
     new_recipient_decomposition,
+    new_recipients_by_marital_status,
+    new_recipients_by_reporting,
     pool_definition_check,
     recipients_by_fine_age,
     recipients_by_marital_status,
@@ -39,8 +43,12 @@ def toy_persons():
             "meets_ssi_resource_test_baseline": [1, 1, 0, 0, 0, 1],
             "meets_ssi_resource_test_ten_twenty": [1, 1, 1, 1, 0, 1],
             "meets_ssi_resource_test_no_limit": [1, 1, 1, 1, 1, 1],
+            "is_ssi_aged_blind_disabled_baseline": [1, 1, 1, 1, 1, 1],
+            "meets_ssi_disability_criteria_baseline": [1, 1, 0, 0, 0, 0],
             # Person 3 becomes eligible at $10k/$20k but would not claim.
             "takes_up_ssi_if_eligible_baseline": [1, 1, 1, 0, 1, 1],
+            # Person 2 reports SSI in the CPS but is kept off it by savings.
+            "reports_ssi": [True, False, True, False, False, True],
         }
     )
     return frame
@@ -210,3 +218,106 @@ def test_resource_bins_partition_each_age_band():
         assert group["share_pct"].sum() == pytest.approx(100)
     zero = table[table.own_countable_resources == "of which exactly $0"]
     assert zero.set_index("age_band").loc["65 or older", "people"] == 60
+
+
+def test_new_recipients_by_reporting_by_hand():
+    table = new_recipients_by_reporting(toy_persons()).set_index(
+        ["scenario", "age_band"]
+    )
+    # $10k/$20k adds person 2 (age 62, weight 30), who reports SSI.
+    adults = table.loc[("ten_twenty", "18-64")]
+    assert adults["recipients"] == 30
+    assert adults["reporting_ssi_in_cps"] == 30
+    assert adults["share_pct"] == 100
+    # Current recipients: persons 0, 1, 5; persons 0 and 5 report.
+    current = table.xs("current_law")
+    assert current["recipients"].sum() == 10 + 20 + 60
+    assert current["reporting_ssi_in_cps"].sum() == 10 + 60
+    # Removal adds person 4 (age 72, weight 50), who does not report.
+    assert table.loc[("no_limit", "65 or older"), "reporting_ssi_in_cps"] == 0
+    assert table.loc[("no_limit", "65 or older"), "recipients"] == 50
+
+
+def test_new_recipients_by_marital_status_by_hand():
+    table = new_recipients_by_marital_status(toy_persons()).set_index(
+        ["scenario", "age_band"]
+    )
+    # Person 2 (weight 30) is the only new recipient at $10k/$20k; married.
+    assert table.loc[("ten_twenty", "All ages"), "new_recipients"] == 30
+    assert table.loc[("ten_twenty", "All ages"), "with_spouse"] == 30
+    # Removal adds persons 2 (married) and 4 (alone, weight 50).
+    removal = table.loc[("no_limit", "All ages")]
+    assert removal["new_recipients"] == 80
+    assert removal["share_pct"] == pytest.approx(100 * 30 / 80)
+    bands = table.xs("no_limit").drop(index="All ages")
+    assert bands["new_recipients"].sum() == removal["new_recipients"]
+
+
+def test_reporters_are_found_across_chunks_by_source_person(tmp_path):
+    """A support row copies its ASEC source person's report, in any chunk."""
+
+    def chunk(name, rows):
+        person = pd.DataFrame(rows)
+        for column in (
+            "social_security_retirement",
+            "social_security_disability",
+            "social_security_survivors",
+            "social_security_dependents",
+        ):
+            person[column] = 0.0
+        path = tmp_path / name
+        with pd.HDFStore(path, "w") as store:
+            store.put("/person", person, format="fixed")
+        return str(path)
+
+    first = chunk(
+        "a.h5",
+        {
+            "person_id": [1, 2],
+            "person_marital_unit_id": [10, 11],
+            "person_source_id": ["s1", "s2"],
+            "person_support_channel": ["asec", "asec"],
+            "SSI_VAL": [5000.0, 0.0],
+        },
+    )
+    second = chunk(
+        "b.h5",
+        {
+            "person_id": [3, 4],
+            "person_marital_unit_id": [12, 12],
+            "person_source_id": ["s1", "s3"],
+            "person_support_channel": ["puf_tax_detail", "puf_tax_detail"],
+            # A support row's own SSI_VAL does not make it a reporter.
+            "SSI_VAL": [0.0, 7000.0],
+        },
+    )
+    inputs = load_frame_inputs([first, second]).set_index("person_id")
+    assert inputs["reports_ssi"].to_dict() == {
+        1: True,
+        2: False,
+        3: True,
+        4: False,
+    }
+    assert inputs.loc[3, "marital_unit_size"] == 2
+
+
+def test_children_by_hand():
+    persons = toy_persons()
+    persons.loc[0, "ssi_countable_resources"] = 2_500
+    table = children(persons).set_index("measure")
+    # Person 0 is 16: disabled, but not under 15.
+    assert (
+        table.loc["Under 15 and meeting SSI's disability standard"]["records"]
+        == 0
+    )
+    disabled = table.loc["Under 18 and aged, blind or disabled"]
+    assert (disabled["records"], disabled["weighted"]) == (1, 10)
+    assert table.loc["of which with any countable savings", "records"] == 1
+    assert (
+        table.loc["of which with countable savings over $2,000", "weighted"]
+        == 10
+    )
+    assert (
+        table.loc["Under 18 and receiving SSI under current law", "weighted"]
+        == 10
+    )

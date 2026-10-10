@@ -11,7 +11,6 @@ export interface Provenance {
   dataset_sha256: string;
   generated_at: string;
   code_commit: string;
-  method_note: string;
 }
 
 export interface BaselineAgeRow {
@@ -114,10 +113,35 @@ export interface MaritalCheck {
   ssa_share_pct: number;
 }
 
+export interface ReportingCheck {
+  scenario: string;
+  age_band: string;
+  recipients: number;
+  reporting_ssi_in_cps: number;
+  share_pct: number;
+}
+
+export interface NewRecipientMaritalCheck {
+  scenario: string;
+  age_band: string;
+  new_recipients: number;
+  with_spouse: number;
+  share_pct: number;
+}
+
+export interface ChildCheck {
+  measure: string;
+  records: number;
+  weighted: number;
+}
+
 export interface HeldOutChecks {
   recipients_by_fine_age: FineAgeCheck[];
   recipients_with_social_security: ShareCheck[];
   recipients_by_marital_status: MaritalCheck[];
+  new_recipients_by_reporting: ReportingCheck[];
+  new_recipients_by_marital_status: NewRecipientMaritalCheck[];
+  children: ChildCheck[];
 }
 
 export interface SensitivityAgeRow {
@@ -127,16 +151,34 @@ export interface SensitivityAgeRow {
   annual_ssi_cost: number;
 }
 
+export interface SensitivityProvenance {
+  code_commit: string;
+  generated_at: string;
+  dataset_build_id: string;
+  dataset_sha256: string;
+  model_version: string;
+  variant: string;
+  variant_source_sha256: string | null;
+}
+
 export interface Sensitivity {
   key: string;
   label: string;
   description: string;
+  provenance: SensitivityProvenance;
   baseline_by_age: BaselineAgeRow[];
   scenarios: { key: string; by_age: SensitivityAgeRow[] }[];
 }
 
+export interface Population {
+  households: number;
+  persons: number;
+  households_with_99pct_of_weight: number;
+}
+
 export interface Results {
   provenance: Provenance;
+  population: Population;
   precision_note: string;
   held_out_checks?: HeldOutChecks;
   sensitivities?: Sensitivity[];

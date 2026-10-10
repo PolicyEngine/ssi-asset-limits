@@ -24,6 +24,9 @@ export default function Sensitivities({
     current_65: pick(baselineRows, "elderly_65_plus")?.policyengine_recipients ?? 0,
     new_18_64: pick(byAge, "adults_18_64")?.new_recipients ?? 0,
     new_65: pick(byAge, "elderly_65_plus")?.new_recipients ?? 0,
+    rate_65:
+      (100 * (pick(byAge, "elderly_65_plus")?.new_recipients ?? 0)) /
+      (pick(baselineRows, "elderly_65_plus")?.policyengine_recipients ?? 1),
     cost: pick(byAge, "total_all_ages")?.annual_ssi_cost ?? 0,
   });
   const rows = [
@@ -45,9 +48,14 @@ export default function Sensitivities({
       </CardHeader>
       <CardContent className="grid gap-4 text-sm leading-6 text-muted-foreground">
         <p>
-          Each row below is a full rerun of the same microsimulation with one
-          known problem corrected. They are diagnostics, not alternative
-          estimates: each fixes one thing and leaves the others in place.
+          Each row below reruns the microsimulation with one known problem
+          corrected and the others left in place. The resource-deeming row is
+          a full rerun. The Social Security row reruns only the households the
+          problem touches and splices them into the published run; because
+          the claiming flags were set to match SSA&apos;s count with the
+          benefit erased, it also shrinks the current-law caseload, so compare
+          new recipients with each run&apos;s own current recipients. These are
+          diagnostics, not alternative estimates.
         </p>
         <div className="overflow-x-auto">
           <DataTable
@@ -70,6 +78,12 @@ export default function Sensitivities({
                 header: "New, 65 and over",
                 align: "right",
                 format: (value) => formatPeople(Number(value)),
+              },
+              {
+                key: "rate_65",
+                header: "New 65+ per 100 recipients 65+ today",
+                align: "right",
+                format: (value) => Number(value).toFixed(1),
               },
               {
                 key: "cost",

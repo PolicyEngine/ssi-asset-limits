@@ -92,7 +92,9 @@ def test_oact_letters_assume_january_eligibility():
         name = letter["url"].rsplit("/", 1)[-1].replace(".pdf", ".txt")
         text = " ".join((SOURCES / name).read_text().split())
         year = letter["effective"].split()[-1]
-        assert f"January 1, {year}" in text
+        # The date must be the one the estimate assumes, not any mention.
+        pattern = rf"(?:effective|starting)[^.]{{0,40}}January 1, {year}"
+        assert re.search(pattern, text), letter["date"]
 
 
 @pytest.mark.skipif(

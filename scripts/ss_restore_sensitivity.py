@@ -24,6 +24,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pandas as pd
@@ -172,18 +173,60 @@ def main() -> None:
         (out_dir / "candidate.json").write_text(json.dumps(summary, indent=2))
     run_scenarios(candidate, out_dir / "workers")
     splice(certified, out_dir / "workers", out_dir)
+    write_metadata(certified, metadata, out_dir)
+
+
+def write_metadata(certified: Path, metadata: dict, out_dir: Path) -> None:
+    """Describe this rerun, not the certified run it was spliced into."""
+
     provenance = dict(metadata["provenance"])
+    provenance["generated_at"] = datetime.now(UTC).isoformat()
+    provenance["code_commit"] = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], text=True
+    ).strip()
     provenance["method_note"] += (
         " Sensitivity, not the certified population: households where the "
         "PUF channel erased a CPS-reported Social Security benefit were rerun "
-        "with that benefit restored (PolicyEngine/microcosm#1178), without "
-        "recalibration."
+        "with that benefit restored (PolicyEngine/microcosm#1178) and spliced "
+        "into the certified run, without redrawing claiming flags."
     )
-    diagnostics = dict(metadata["diagnostics"])
+    certified_diagnostics = metadata["diagnostics"]
+    diagnostics = {
+        key: certified_diagnostics[key]
+        for key in (
+            "chunk_paths",
+            "household_count",
+            "person_count",
+            "source_uri",
+            "source_sha256",
+            "annualization",
+        )
+    }
     diagnostics["variant"] = "restore_cps_social_security"
     diagnostics["candidate"] = json.loads(
         (out_dir / "candidate.json").read_text()
     )
+    diagnostics["spliced_into"] = {
+        "run": str(certified),
+        "code_commit": metadata["provenance"]["code_commit"],
+        "generated_at": metadata["provenance"]["generated_at"],
+    }
+    workers = []
+    for path in sorted((out_dir / "workers").glob("*/receipt.json")):
+        receipt = json.loads(path.read_text())
+        receipt["finished_at"] = datetime.fromtimestamp(
+            path.stat().st_mtime, UTC
+        ).isoformat()
+        workers.append(receipt)
+    diagnostics["workers"] = workers
+    diagnostics["output_weight_totals"] = {
+        entity: float(
+            pd.read_csv(
+                out_dir / f"{entity}s.csv.gz", usecols=[f"{entity}_weight"]
+            )[f"{entity}_weight"].sum()
+        )
+        for entity in ("person", "household")
+    }
     (out_dir / "run_metadata.json").write_text(
         json.dumps(
             {"provenance": provenance, "diagnostics": diagnostics}, indent=2

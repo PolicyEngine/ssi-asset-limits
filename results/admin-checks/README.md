@@ -3,8 +3,8 @@
 Written by `ssi-asset-limits-admin-checks <run> --out-dir results/admin-checks`
 from the certified run (policyengine.py 6.2.5, policyengine-us 2.2.1,
 Microcosm `populace_us_2024` build `populace-us-2024-spm-20260915`).
-`run_fingerprint.json` records the SHA-256 of the run tables read; the
-publisher checks it against the run it publishes. The frame's claiming flags
+`run_fingerprint.json` records the SHA-256 of the run tables and household
+chunks read; the publisher checks it against the run it publishes. The frame's claiming flags
 are set so December 2024 recipients match SSA's counts for ages 18 to 64 and
 65 and over (the child band is not reached); none of the comparisons below
 is a target.
@@ -16,6 +16,9 @@ is a target.
 | `recipients_by_marital_status.csv` | Recipients with no spouse, a spouse who also receives SSI, or a spouse who does not (compared with SSA's no spouse, eligible spouse and ineligible spouse; the model's last row counts every spouse without SSI, including any who would qualify but do not claim) | SSI Annual Statistical Report 2024, Table 12 |
 | `resources_of_the_eligible.csv` | Own countable resources of people the engine would pay with no resource test, by age | (no SSA counterpart; see the SIPP table) |
 | `new_recipient_decomposition.csv` | Each reform's new recipients split into the resource-excluded pool, the part the reform admits, and the take-up flag | (model accounting) |
+| `new_recipients_by_reporting.csv` | Current recipients and each reform's new recipients by whether they report SSI in the CPS (a new recipient who reports SSI is kept off it under current law only by imputed savings) | (model accounting) |
+| `new_recipients_by_marital_status.csv` | Each reform's new recipients by whether a spouse lives with them | (model accounting) |
+| `children.csv` | Children meeting SSI's disability standard, disabled children with any savings or savings over $2,000, and current child recipients (records and weighted) | (model accounting) |
 | `pool_definition_check.csv` | The pool definition reproduces the engine's own no-limit recipients exactly | (consistency check) |
 | `sipp2023_liquid_assets_unmarried_income_eligible.csv` | SIPP 2023 (December 2022) liquid assets (bank + stock/mutual fund + bond) of unmarried, apparently income-eligible aged or disabled people, and SSI receipt, by asset band | Census SIPP 2023 public-use file |
 

@@ -332,6 +332,23 @@ def with_precision(by_age: list[dict], precision: pd.DataFrame) -> list[dict]:
     return rows
 
 
+# The run's own method note is kept in run_metadata.json; the page states the
+# method in its own words, so the note is not republished.
+UNPUBLISHED_PROVENANCE = {"method_note"}
+
+
+def population_facts(persons: pd.DataFrame, households: pd.DataFrame) -> dict:
+    """Size of the population file and how concentrated its weight is."""
+
+    weights = households["household_weight"].sort_values(ascending=False)
+    share = weights.cumsum() / weights.sum()
+    return {
+        "households": int(len(households)),
+        "persons": int(len(persons)),
+        "households_with_99pct_of_weight": int((share < 0.99).sum() + 1),
+    }
+
+
 def build_results(
     persons: pd.DataFrame, households: pd.DataFrame, metadata: dict
 ) -> dict:
@@ -359,8 +376,14 @@ def build_results(
     baseline = baseline_by_age(persons)
     for row in baseline["by_age"]:
         row["records"] = int(baseline_records.loc[row["age_group"], "records"])
+    provenance = {
+        key: value
+        for key, value in metadata["provenance"].items()
+        if key not in UNPUBLISHED_PROVENANCE
+    }
     return {
-        "provenance": metadata["provenance"],
+        "provenance": provenance,
+        "population": population_facts(persons, households),
         "precision_note": PRECISION_NOTE,
         "baseline": baseline,
         "scenarios": scenarios,
@@ -400,6 +423,21 @@ HELD_OUT_TABLES = {
         "policyengine_share_pct",
         "ssa_share_pct",
     ],
+    "new_recipients_by_reporting": [
+        "scenario",
+        "age_band",
+        "recipients",
+        "reporting_ssi_in_cps",
+        "share_pct",
+    ],
+    "new_recipients_by_marital_status": [
+        "scenario",
+        "age_band",
+        "new_recipients",
+        "with_spouse",
+        "share_pct",
+    ],
+    "children": ["measure", "records", "weighted"],
 }
 
 
@@ -422,40 +460,96 @@ def held_out_checks(checks_dir: Path, run_dir: Path) -> dict:
     }
 
 
-SENSITIVITY_LABELS = {
-    "restore_cps_social_security": (
-        "Social Security that the population file erased, restored",
-        "Reruns the 3,566 households in which the population file set a "
-        "person's CPS-reported Social Security to zero "
-        "(PolicyEngine/microcosm#1178), with the benefit restored. Weights "
-        "are not recalibrated, so the current-law caseload no longer "
-        "matches SSA's.",
-    ),
-    "resource_deeming": (
-        "A spouse's and a parent's savings counted, as SSA does",
+def _restore_description(metadata: dict) -> str:
+    households = metadata["diagnostics"]["candidate"]["households"]
+    return (
+        f"Reruns only the {households:,} households in which the population "
+        "file set a person's CPS-reported Social Security to zero "
+        "(PolicyEngine/microcosm#1178), with the benefit restored, and "
+        "splices them into the published run. Claiming flags are not redrawn, "
+        "so the current-law caseload falls below SSA's count; compare new "
+        "recipients with each run's own current-law recipients."
+    )
+
+
+def _deeming_description(metadata: dict) -> str:
+    return (
         "Adds federal resource deeming (20 CFR 416.1202) to the certified "
         "engine as a reform, ahead of the policyengine-us change that adds "
         "it (PolicyEngine/policyengine-us#10040). The certified engine has "
         "no links from a child to their parents, so the reform treats people "
         "marked as parents in the child's tax unit and household, and their "
         "spouses, as the parents. Counting more resources removes some people "
-        "from SSI today, and a higher limit lets them back in, so the "
-        "estimate rises.",
+        "from SSI today, and a higher limit lets them back in."
+    )
+
+
+SENSITIVITY_LABELS = {
+    "restore_cps_social_security": (
+        "Social Security that the population file erased, restored",
+        _restore_description,
+    ),
+    "resource_deeming": (
+        "A spouse's and a parent's savings counted, as SSA does",
+        _deeming_description,
     ),
 }
+SENSITIVITY_PROVENANCE = (
+    "code_commit",
+    "generated_at",
+    "dataset_build_id",
+    "dataset_sha256",
+    "model_version",
+)
 
 
-def sensitivity(run_dir: Path) -> dict:
+def check_sensitivity(
+    persons: pd.DataFrame,
+    metadata: dict,
+    main_persons: pd.DataFrame,
+    main_metadata: dict,
+) -> None:
+    """A sensitivity run must be the published run's population."""
+
+    for key in ("dataset_sha256", "model_version", "analysis_year"):
+        if metadata["provenance"][key] != main_metadata["provenance"][key]:
+            raise ValueError(f"sensitivity run differs in {key}")
+    if set(persons["person_id"]) != set(main_persons["person_id"]):
+        raise ValueError("sensitivity run has different people")
+    totals = (
+        float(frame["person_weight"].sum())
+        for frame in (persons, main_persons)
+    )
+    if not np.isclose(*totals, rtol=1e-12, atol=0):
+        raise ValueError("sensitivity run has different person weights")
+
+
+def sensitivity(
+    run_dir: Path,
+    main_persons: pd.DataFrame | None = None,
+    main_metadata: dict | None = None,
+) -> dict:
     """Headline rows of one sensitivity run, for comparison on the page."""
 
     persons = pd.read_csv(run_dir / "persons.csv.gz")
     metadata = json.loads((run_dir / "run_metadata.json").read_text())
-    variant = metadata["diagnostics"]["variant"]
-    label, description = SENSITIVITY_LABELS[variant]
+    if main_persons is not None:
+        check_sensitivity(persons, metadata, main_persons, main_metadata)
+    diagnostics = metadata["diagnostics"]
+    variant = diagnostics["variant"]
+    label, describe = SENSITIVITY_LABELS[variant]
+    provenance = {
+        key: metadata["provenance"].get(key) for key in SENSITIVITY_PROVENANCE
+    }
+    provenance["variant"] = variant
+    provenance["variant_source_sha256"] = diagnostics.get(
+        "variant_source_sha256"
+    )
     return {
         "key": variant,
         "label": label,
-        "description": description,
+        "description": describe(metadata),
+        "provenance": provenance,
         "baseline_by_age": baseline_by_age(persons)["by_age"],
         "scenarios": [
             {
@@ -500,7 +594,7 @@ def publish(
         results["held_out_checks"] = held_out_checks(checks_dir, run_dir)
     if sensitivity_dirs:
         results["sensitivities"] = [
-            sensitivity(path) for path in sensitivity_dirs
+            sensitivity(path, persons, metadata) for path in sensitivity_dirs
         ]
     write_outputs(results, out_dir)
     return results

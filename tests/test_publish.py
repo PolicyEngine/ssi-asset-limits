@@ -375,8 +375,43 @@ def test_held_out_checks_are_embedded_when_given(tmp_path):
             "ssa_share_pct": [91.8],
         }
     ).to_csv(checks / "recipients_by_marital_status.csv", index=False)
+    pd.DataFrame(
+        {
+            "scenario": ["ten_twenty"],
+            "age_band": ["18-64"],
+            "recipients": [153_211.0],
+            "reporting_ssi_in_cps": [23_345.0],
+            "share_pct": [15.2],
+        }
+    ).to_csv(checks / "new_recipients_by_reporting.csv", index=False)
+    pd.DataFrame(
+        {
+            "scenario": ["ten_twenty"],
+            "age_band": ["All ages"],
+            "new_recipients": [515_839.0],
+            "with_spouse": [349_739.0],
+            "share_pct": [67.8],
+        }
+    ).to_csv(checks / "new_recipients_by_marital_status.csv", index=False)
+    pd.DataFrame(
+        {
+            "measure": ["Under 18 and aged, blind or disabled"],
+            "records": [98],
+            "weighted": [307_319.0],
+        }
+    ).to_csv(checks / "children.csv", index=False)
     persons[["person_id"]].to_csv(
         run / "persons_diagnostics.csv.gz", index=False
+    )
+    chunk = tmp_path / "chunk_0000.h5"
+    chunk.write_bytes(b"chunk")
+    (run / "run_metadata.json").write_text(
+        json.dumps(
+            {
+                "provenance": {"analysis_year": 2026},
+                "diagnostics": {"chunk_paths": [str(chunk)]},
+            }
+        )
     )
     (checks / FINGERPRINT_FILE).write_text(json.dumps(run_fingerprint(run)))
     results = publish(run, tmp_path / "out", checks_dir=checks)
@@ -390,7 +425,11 @@ def test_held_out_checks_are_embedded_when_given(tmp_path):
     ]
     assert "extra" not in tables["recipients_with_social_security"][0]
     assert "held_out_checks" not in publish(run, tmp_path / "out2")
-    # Tables from a different run are refused.
+    # Tables from a different run, or from different chunks, are refused.
+    chunk.write_bytes(b"other chunk")
+    with pytest.raises(ValueError, match="different run"):
+        publish(run, tmp_path / "out4", checks_dir=checks)
+    chunk.write_bytes(b"chunk")
     persons.assign(age=persons["age"] + 1).to_csv(
         run / "persons.csv.gz", index=False
     )
@@ -398,26 +437,49 @@ def test_held_out_checks_are_embedded_when_given(tmp_path):
         publish(run, tmp_path / "out3", checks_dir=checks)
 
 
+PROVENANCE = {
+    "analysis_year": 2026,
+    "dataset_sha256": "abc",
+    "dataset_build_id": "build",
+    "model_version": "2.2.1",
+    "code_commit": "c0ffee",
+    "generated_at": "2026-10-10T00:00:00+00:00",
+    "method_note": "The run's own note.",
+}
+
+
+def write_run(path, persons, households, variant=None, **overrides):
+    path.mkdir()
+    persons.to_csv(path / "persons.csv.gz", index=False)
+    households.to_csv(path / "households.csv.gz", index=False)
+    diagnostics = {}
+    if variant is not None:
+        diagnostics = {
+            "variant": variant,
+            "candidate": {"households": 3_566},
+            "variant_source_sha256": "f00d",
+        }
+    (path / "run_metadata.json").write_text(
+        json.dumps(
+            {
+                "provenance": {**PROVENANCE, **overrides},
+                "diagnostics": diagnostics,
+            }
+        )
+    )
+
+
 def test_sensitivity_runs_are_summarised_beside_the_estimate(tmp_path):
     persons, households = toy_frames()
-
-    def write_run(path, variant, persons):
-        path.mkdir()
-        persons.to_csv(path / "persons.csv.gz", index=False)
-        households.to_csv(path / "households.csv.gz", index=False)
-        diagnostics = {} if variant is None else {"variant": variant}
-        (path / "run_metadata.json").write_text(
-            json.dumps(
-                {
-                    "provenance": {"analysis_year": 2026},
-                    "diagnostics": diagnostics,
-                }
-            )
-        )
-
-    write_run(tmp_path / "run", None, persons)
+    write_run(tmp_path / "run", persons, households)
     restored = persons.assign(ssi_ten_twenty=persons["ssi_baseline"])
-    write_run(tmp_path / "restored", "restore_cps_social_security", restored)
+    write_run(
+        tmp_path / "restored",
+        restored,
+        households,
+        "restore_cps_social_security",
+        code_commit="beef",
+    )
     results = publish(
         tmp_path / "run",
         tmp_path / "out",
@@ -425,6 +487,9 @@ def test_sensitivity_runs_are_summarised_beside_the_estimate(tmp_path):
     )
     (sens,) = results["sensitivities"]
     assert sens["key"] == "restore_cps_social_security"
+    assert "3,566 households" in sens["description"]
+    assert sens["provenance"]["code_commit"] == "beef"
+    assert sens["provenance"]["variant_source_sha256"] == "f00d"
     ten = next(s for s in sens["scenarios"] if s["key"] == "ten_twenty")
     total = next(
         r for r in ten["by_age"] if r["age_group"] == "total_all_ages"
@@ -436,3 +501,48 @@ def test_sensitivity_runs_are_summarised_beside_the_estimate(tmp_path):
         if r["age_group"] == "total_all_ages"
     )
     assert main_total["new_recipients"] == pytest.approx(100)
+    # The run's own method note stays in run_metadata.json.
+    assert "method_note" not in results["provenance"]
+    assert results["population"] == {
+        "households": 3,
+        "persons": 4,
+        # Weights 100, 50, 10: the two largest hold 93.75 percent.
+        "households_with_99pct_of_weight": 3,
+    }
+
+
+@pytest.mark.parametrize(
+    ("change", "message"),
+    [
+        ({"dataset_sha256": "other"}, "dataset_sha256"),
+        ({"model_version": "2.38.1"}, "model_version"),
+        ("people", "different people"),
+        ("weights", "different person weights"),
+    ],
+)
+def test_sensitivity_runs_must_share_the_published_population(
+    tmp_path, change, message
+):
+    persons, households = toy_frames()
+    write_run(tmp_path / "run", persons, households)
+    other = persons
+    overrides = {}
+    if change == "people":
+        other = persons.assign(person_id=persons["person_id"] + 100)
+    elif change == "weights":
+        other = persons.assign(person_weight=persons["person_weight"] * 1.01)
+    else:
+        overrides = change
+    write_run(
+        tmp_path / "variant",
+        other,
+        households,
+        "resource_deeming",
+        **overrides,
+    )
+    with pytest.raises(ValueError, match=message):
+        publish(
+            tmp_path / "run",
+            tmp_path / "out",
+            sensitivity_dirs=[tmp_path / "variant"],
+        )

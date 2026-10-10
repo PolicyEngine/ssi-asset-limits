@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle, DataTable } from "@policyengine/ui-kit";
 import { formatBillionsRange, formatCurrency } from "@/src/lib/format";
-import { OactLetter, Scenario } from "@/src/lib/results";
+import { oactSentence } from "@/src/lib/facts";
+import { OactLetter, Results, Scenario } from "@/src/lib/results";
 
 function letterRow(letter: OactLetter) {
   const row: Record<string, string> = {
@@ -17,11 +18,12 @@ function letterRow(letter: OactLetter) {
 
 export default function CostComparison({
   scenario,
-  oact,
+  results,
 }: {
   scenario: Scenario;
-  oact: OactLetter[];
+  results: Results;
 }) {
+  const oact = results.comparators.oact;
   const cost = scenario.summary.find((row) => row.metric === "annual_ssi_cost");
   const total = scenario.by_age.find(
     (row) => row.age_group === "total_all_ages",
@@ -60,12 +62,9 @@ export default function CostComparison({
           {total
             ? ` (sampling range ${formatBillionsRange(total.annual_ssi_cost_low, total.annual_ssi_cost_high)})`
             : ""}
-          . SSA&apos;s Office of the Chief Actuary (OACT) estimates the same
-          limits, indexed to inflation, would add $0.5 billion in the first
-          year and $1.0 billion to $1.4 billion a year after that; its 2024
-          letter puts 2026 at $1.0 billion. Both letters assume the limits
-          apply from January 1 of their first year. The table shows
-          OACT&apos;s letters year by year.
+          . {oactSentence(results)} Both letters assume the limits apply from
+          January 1 of their first year. The table shows OACT&apos;s letters
+          year by year.
         </p>
         <div className="overflow-x-auto">
           <DataTable
