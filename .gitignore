@@ -16,3 +16,4 @@ results/**/*.csv.gz
 results/**/chunks/
 results/**/workers/
 results/**/*.h5
+tsconfig.tsbuildinfo
