@@ -35,50 +35,50 @@
       },
       "65_plus": {
         "against_ssa": {
-          "value": 2297645.8625438437,
+          "value": 2290482.1732191434,
           "reference": 2382142.0,
-          "difference": -84496.13745615631,
-          "relative_difference": -0.0354706551734348,
+          "difference": -91659.82678085659,
+          "relative_difference": -0.03847790214893008,
           "more_than_10_percent_off": false
         },
         "against_july_build_p": {
-          "value": 2297645.8625438437,
+          "value": 2290482.1732191434,
           "reference": 2310000.0,
-          "difference": -12354.137456156313,
-          "relative_difference": -0.005348111452881521,
+          "difference": -19517.826780856587,
+          "relative_difference": -0.00844927566270848,
           "more_than_10_percent_off": false
         }
       },
       "total": {
         "against_ssa": {
-          "value": 6156455.741169338,
+          "value": 6149292.051844638,
           "reference": 7289843.0,
-          "difference": -1133387.258830662,
-          "relative_difference": -0.15547485162995442,
+          "difference": -1140550.9481553622,
+          "relative_difference": -0.15645754622635386,
           "more_than_10_percent_off": true
         },
         "against_july_build_p": {
-          "value": 6156455.741169338,
+          "value": 6149292.051844638,
           "reference": 6290000.0,
-          "difference": -133544.25883066189,
-          "relative_difference": -0.021231201721885834,
+          "difference": -140707.94815536216,
+          "relative_difference": -0.022370103045367594,
           "more_than_10_percent_off": false
         }
       }
     },
     "annual_federal_ssi": {
       "against_ssa": {
-        "value": 56799388028.38539,
+        "value": 56713940946.05539,
         "reference": 62760000000.0,
-        "difference": -5960611971.614609,
-        "relative_difference": -0.09497469680711614,
+        "difference": -6046059053.944611,
+        "relative_difference": -0.09633618632798933,
         "more_than_10_percent_off": false
       },
       "against_july_build_p": {
-        "value": 56799388028.38539,
+        "value": 56713940946.05539,
         "reference": 57900000000.0,
-        "difference": -1100611971.6146088,
-        "relative_difference": -0.01900884234222122,
+        "difference": -1186059053.9446106,
+        "relative_difference": -0.02048461233064958,
         "more_than_10_percent_off": false
       }
     },
@@ -139,17 +139,17 @@
     },
     "no_limit": {
       "annual_ssi_change": {
-        "value": 7880790973.368502,
+        "value": 7966238055.698498,
         "reference": 6830000000.0,
-        "difference": 1050790973.3685017,
-        "relative_difference": 0.153849337242826,
+        "difference": 1136238055.6984978,
+        "relative_difference": 0.16635989102467025,
         "more_than_10_percent_off": true
       },
       "new_recipients": {
-        "value": 1078717.7232253077,
+        "value": 1085881.4125500075,
         "reference": 947000.0,
-        "difference": 131717.72322530765,
-        "relative_difference": 0.13908946486304927,
+        "difference": 138881.41255000746,
+        "relative_difference": 0.14665407872228875,
         "more_than_10_percent_off": true
       },
       "by_age": {
@@ -162,8 +162,8 @@
           "new_recipients": 345070.55790335493
         },
         "65_plus": {
-          "annual_ssi_change": 4992455153.403416,
-          "new_recipients": 707552.4829219526
+          "annual_ssi_change": 5077902235.733412,
+          "new_recipients": 714716.1722466527
         }
       }
     }
@@ -276,8 +276,8 @@
         {
           "age_band": "65_plus",
           "overall_true_rate": 0.45153719902597317,
-          "baseline_eligible_true_rate": 0.4745705737223102,
-          "weighted_baseline_eligible_persons": 23342121.26318218
+          "baseline_eligible_true_rate": 0.4747013534056447,
+          "weighted_baseline_eligible_persons": 23314705.740857482
         }
       ],
       "ten_twenty": [
@@ -296,8 +296,8 @@
         {
           "age_band": "65_plus",
           "overall_true_rate": 0.45153719902597317,
-          "baseline_eligible_true_rate": 0.4745705737223102,
-          "weighted_baseline_eligible_persons": 23342121.26318218
+          "baseline_eligible_true_rate": 0.4747013534056447,
+          "weighted_baseline_eligible_persons": 23314705.740857482
         }
       ],
       "no_limit": [
@@ -316,8 +316,8 @@
         {
           "age_band": "65_plus",
           "overall_true_rate": 0.45153719902597317,
-          "baseline_eligible_true_rate": 0.4745705737223102,
-          "weighted_baseline_eligible_persons": 23342121.26318218
+          "baseline_eligible_true_rate": 0.4747013534056447,
+          "weighted_baseline_eligible_persons": 23314705.740857482
         }
       ]
     },

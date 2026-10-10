@@ -1,16 +1,16 @@
 A under_18: 153,815 recipients; SSA 1,001,922 (-84.6%); July Build P 180,000 (-14.5%); >10% SSA discrepancy: True
 A 18_64: 3,704,995 recipients; SSA 3,905,779 (-5.1%); July Build P 3,800,000 (-2.5%); >10% SSA discrepancy: False
-A 65_plus: 2,297,646 recipients; SSA 2,382,142 (-3.5%); July Build P 2,310,000 (-0.5%); >10% SSA discrepancy: False
-A total: 6,156,456 recipients; SSA 7,289,843 (-15.5%); July Build P 6,290,000 (-2.1%); >10% SSA discrepancy: True
-A annual federal SSI: $56,799,388,028; SSA annualized $62,760,000,000; July Build P $57,900,000,000
+A 65_plus: 2,290,482 recipients; SSA 2,382,142 (-3.8%); July Build P 2,310,000 (-0.8%); >10% SSA discrepancy: False
+A total: 6,149,292 recipients; SSA 7,289,843 (-15.6%); July Build P 6,290,000 (-2.2%); >10% SSA discrepancy: True
+A annual federal SSI: $56,713,940,946; SSA annualized $62,760,000,000; July Build P $57,900,000,000
 B ten_twenty: added SSI $4,212,641,380; new recipients 597,233; vs July Build P +16.7% / +15.7%
 B ten_twenty under_18: added SSI $0; new recipients 0
 B ten_twenty 18_64: added SSI $1,227,145,040; new recipients 177,703
 B ten_twenty 65_plus: added SSI $2,985,496,340; new recipients 419,530
-B no_limit: added SSI $7,880,790,973; new recipients 1,078,718; vs July Build P +15.4% / +13.9%
+B no_limit: added SSI $7,966,238,056; new recipients 1,085,881; vs July Build P +16.6% / +14.7%
 B no_limit under_18: added SSI $296,763,764; new recipients 26,095
 B no_limit 18_64: added SSI $2,591,572,056; new recipients 345,071
-B no_limit 65_plus: added SSI $4,992,455,153; new recipients 707,552
+B no_limit 65_plus: added SSI $5,077,902,236; new recipients 714,716
 C person weights: full 340077322.653648853; chunks 340077322.653648853; difference 0
 C household weights: full 122537091.885683298; chunks 122537091.885683298; difference 0
 D zero countable resources: 67.263703%; maximum persons per household with nonzero resources: 1
@@ -22,7 +22,7 @@ D 18_64 disability: is_disabled 11.574418%; meets_ssi_disability_criteria 5.8404
 D 65_plus disability: is_disabled 25.862977%; meets_ssi_disability_criteria 8.735981%
 D under_18 take-up: overall 48.779924%; baseline eligible 73.190828%
 D 18_64 take-up: overall 39.727278%; baseline eligible 60.156466%
-D 65_plus take-up: overall 45.153720%; baseline eligible 47.457057%
+D 65_plus take-up: overall 45.153720%; baseline eligible 47.470135%
 D under_18 ABD persons: 307,319
 D 18_64 ABD persons: 11,623,164
 D 65_plus ABD persons: 62,176,754

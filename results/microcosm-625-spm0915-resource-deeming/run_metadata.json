@@ -8,8 +8,8 @@
     "dataset": "populace_us_2024",
     "dataset_build_id": "populace-us-2024-spm-20260915",
     "dataset_sha256": "6496cc4393d4d3c6574f76eca231de5898c803b9067645591fd5c4d3e65aee84",
-    "generated_at": "2026-10-10T06:58:23.869942+00:00",
-    "code_commit": "6792d233bc09c617ab7d8b0a9819e10bbd02b770",
+    "generated_at": "2026-10-10T08:34:57.405476+00:00",
+    "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
     "method_note": "The population was run in household batches. Every marital, tax, SPM and family unit nests within one household, and no output published here depends on other households under this run's settings, which leave health benefits out of household income, so batching gives the same answer as one run. Sensitivity variant, not the certified engine: SSI resource deeming from ineligible spouses and parents (20 CFR 416.1202) installed on the certified engine as a reform."
   },
   "diagnostics": {
@@ -178,7 +178,7 @@
     "preparation_peak_rss_gib": 1.93878173828125,
     "preparation_wall_seconds": 16.080364415975055,
     "variant": "resource_deeming",
-    "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
+    "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
     "output_weight_totals": {
       "person": 345685947.2203935,
       "household": 124557998.58971302
@@ -188,51 +188,51 @@
     "per_chunk_peak_rss_gib": [
       {
         "chunk_index": 0,
-        "baseline": 14.47607421875,
-        "ten_twenty": 14.472396850585938,
-        "no_limit": 14.477371215820312
+        "baseline": 11.054931640625,
+        "ten_twenty": 14.476638793945312,
+        "no_limit": 14.472824096679688
       },
       {
         "chunk_index": 1,
-        "baseline": 14.424774169921875,
-        "ten_twenty": 14.423995971679688,
-        "no_limit": 14.422683715820312
+        "baseline": 14.420700073242188,
+        "ten_twenty": 14.421478271484375,
+        "no_limit": 14.4281005859375
       },
       {
         "chunk_index": 2,
-        "baseline": 14.487274169921875,
-        "ten_twenty": 14.48681640625,
-        "no_limit": 14.482864379882812
+        "baseline": 14.501541137695312,
+        "ten_twenty": 14.484970092773438,
+        "no_limit": 14.485244750976562
       },
       {
         "chunk_index": 3,
-        "baseline": 11.940170288085938,
-        "ten_twenty": 11.941543579101562,
-        "no_limit": 11.940505981445312
+        "baseline": 11.948883056640625,
+        "ten_twenty": 11.937698364257812,
+        "no_limit": 11.948501586914062
       },
       {
         "chunk_index": 4,
-        "baseline": 10.313217163085938,
-        "ten_twenty": 10.380569458007812,
-        "no_limit": 10.3582763671875
+        "baseline": 10.310943603515625,
+        "ten_twenty": 10.309249877929688,
+        "no_limit": 10.311614990234375
       },
       {
         "chunk_index": 5,
-        "baseline": 10.959625244140625,
-        "ten_twenty": 10.960067749023438,
-        "no_limit": 10.961257934570312
+        "baseline": 10.956939697265625,
+        "ten_twenty": 10.963027954101562,
+        "no_limit": 10.960235595703125
       },
       {
         "chunk_index": 6,
-        "baseline": 12.279678344726562,
-        "ten_twenty": 12.284698486328125,
-        "no_limit": 12.280563354492188
+        "baseline": 12.285324096679688,
+        "ten_twenty": 12.277099609375,
+        "no_limit": 12.282150268554688
       },
       {
         "chunk_index": 7,
-        "baseline": 2.4890899658203125,
-        "ten_twenty": 2.4903564453125,
-        "no_limit": 2.4900970458984375
+        "baseline": 2.488983154296875,
+        "ten_twenty": 2.487457275390625,
+        "no_limit": 2.4875946044921875
       }
     ],
     "workers": [
@@ -241,9 +241,11 @@
         "chunk_sha256": "3680b27d1f173f53021a98bbaecddeca93431a63b28492fea32409c95fbadc93",
         "scenario": "baseline",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 14.47607421875,
-        "wall_seconds": 51.79324154101778,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 11.054931640625,
+        "wall_seconds": 52.14874337500078,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -261,9 +263,11 @@
         "chunk_sha256": "3680b27d1f173f53021a98bbaecddeca93431a63b28492fea32409c95fbadc93",
         "scenario": "ten_twenty",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 14.472396850585938,
-        "wall_seconds": 50.995129249989986,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 14.476638793945312,
+        "wall_seconds": 50.51878891600063,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -281,9 +285,11 @@
         "chunk_sha256": "3680b27d1f173f53021a98bbaecddeca93431a63b28492fea32409c95fbadc93",
         "scenario": "no_limit",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 14.477371215820312,
-        "wall_seconds": 53.33003212499898,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 14.472824096679688,
+        "wall_seconds": 50.754372416005936,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -301,9 +307,11 @@
         "chunk_sha256": "e14f88f1f18c08849f6fbaf49b64854d1169b35d9586cd56cb969539d5c358a5",
         "scenario": "baseline",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 14.424774169921875,
-        "wall_seconds": 50.44623387500178,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 14.420700073242188,
+        "wall_seconds": 50.84122629201738,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -321,9 +329,11 @@
         "chunk_sha256": "e14f88f1f18c08849f6fbaf49b64854d1169b35d9586cd56cb969539d5c358a5",
         "scenario": "ten_twenty",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 14.423995971679688,
-        "wall_seconds": 49.9140049169946,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 14.421478271484375,
+        "wall_seconds": 50.25049666699488,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -341,9 +351,11 @@
         "chunk_sha256": "e14f88f1f18c08849f6fbaf49b64854d1169b35d9586cd56cb969539d5c358a5",
         "scenario": "no_limit",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 14.422683715820312,
-        "wall_seconds": 51.268695375008974,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 14.4281005859375,
+        "wall_seconds": 49.83758374999161,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -361,9 +373,11 @@
         "chunk_sha256": "df0035522367e60dbf317615a84da1cdcf50262b931ccacb4125557cb7ccade6",
         "scenario": "baseline",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 14.487274169921875,
-        "wall_seconds": 49.87160379101988,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 14.501541137695312,
+        "wall_seconds": 56.003201667015674,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -381,9 +395,11 @@
         "chunk_sha256": "df0035522367e60dbf317615a84da1cdcf50262b931ccacb4125557cb7ccade6",
         "scenario": "ten_twenty",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 14.48681640625,
-        "wall_seconds": 51.77104337498895,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 14.484970092773438,
+        "wall_seconds": 54.10222358399187,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -401,9 +417,11 @@
         "chunk_sha256": "df0035522367e60dbf317615a84da1cdcf50262b931ccacb4125557cb7ccade6",
         "scenario": "no_limit",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 14.482864379882812,
-        "wall_seconds": 53.93656616698718,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 14.485244750976562,
+        "wall_seconds": 52.71274341698154,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -421,9 +439,11 @@
         "chunk_sha256": "7d3f8e36e5be01372ff3d39bff0f3330d4b4e481f1fe9dc701adb31f00862dab",
         "scenario": "baseline",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 11.940170288085938,
-        "wall_seconds": 43.51694420797867,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 11.948883056640625,
+        "wall_seconds": 43.254999916011,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -441,9 +461,11 @@
         "chunk_sha256": "7d3f8e36e5be01372ff3d39bff0f3330d4b4e481f1fe9dc701adb31f00862dab",
         "scenario": "ten_twenty",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 11.941543579101562,
-        "wall_seconds": 42.90792737499578,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 11.937698364257812,
+        "wall_seconds": 43.43572675000178,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -461,9 +483,11 @@
         "chunk_sha256": "7d3f8e36e5be01372ff3d39bff0f3330d4b4e481f1fe9dc701adb31f00862dab",
         "scenario": "no_limit",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 11.940505981445312,
-        "wall_seconds": 42.54897445900133,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 11.948501586914062,
+        "wall_seconds": 42.841181915981,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -481,9 +505,11 @@
         "chunk_sha256": "32d5741574fdbf7fdda7bee46b1c7bcdd03716f59d4411ecbc421e14b8f5089b",
         "scenario": "baseline",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 10.313217163085938,
-        "wall_seconds": 41.31989225000143,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 10.310943603515625,
+        "wall_seconds": 41.53264291700907,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -501,9 +527,11 @@
         "chunk_sha256": "32d5741574fdbf7fdda7bee46b1c7bcdd03716f59d4411ecbc421e14b8f5089b",
         "scenario": "ten_twenty",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 10.380569458007812,
-        "wall_seconds": 41.13873729101033,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 10.309249877929688,
+        "wall_seconds": 41.6528900420235,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -521,9 +549,11 @@
         "chunk_sha256": "32d5741574fdbf7fdda7bee46b1c7bcdd03716f59d4411ecbc421e14b8f5089b",
         "scenario": "no_limit",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 10.3582763671875,
-        "wall_seconds": 41.87080237499322,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 10.311614990234375,
+        "wall_seconds": 41.55865104100667,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -541,9 +571,11 @@
         "chunk_sha256": "bae9e975509d0015ae0191c43d09d2a7bf75c9cda9a7a5a86d1f1eca1652d898",
         "scenario": "baseline",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 10.959625244140625,
-        "wall_seconds": 42.80796408301103,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 10.956939697265625,
+        "wall_seconds": 40.54616095800884,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -561,9 +593,11 @@
         "chunk_sha256": "bae9e975509d0015ae0191c43d09d2a7bf75c9cda9a7a5a86d1f1eca1652d898",
         "scenario": "ten_twenty",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 10.960067749023438,
-        "wall_seconds": 41.261531791009475,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 10.963027954101562,
+        "wall_seconds": 40.85301595798228,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -581,9 +615,11 @@
         "chunk_sha256": "bae9e975509d0015ae0191c43d09d2a7bf75c9cda9a7a5a86d1f1eca1652d898",
         "scenario": "no_limit",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 10.961257934570312,
-        "wall_seconds": 41.48986324999714,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 10.960235595703125,
+        "wall_seconds": 40.86739062500419,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -601,9 +637,11 @@
         "chunk_sha256": "75fb0d8dfb105a7a72399349911f1948c3e522f70ca472213f0e263ed812e77d",
         "scenario": "baseline",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 12.279678344726562,
-        "wall_seconds": 45.28131029198994,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 12.285324096679688,
+        "wall_seconds": 45.13146454101661,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -621,9 +659,11 @@
         "chunk_sha256": "75fb0d8dfb105a7a72399349911f1948c3e522f70ca472213f0e263ed812e77d",
         "scenario": "ten_twenty",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 12.284698486328125,
-        "wall_seconds": 44.98340308299521,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 12.277099609375,
+        "wall_seconds": 43.065141375001986,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -641,9 +681,11 @@
         "chunk_sha256": "75fb0d8dfb105a7a72399349911f1948c3e522f70ca472213f0e263ed812e77d",
         "scenario": "no_limit",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 12.280563354492188,
-        "wall_seconds": 45.70232904198929,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 12.282150268554688,
+        "wall_seconds": 43.70557900000131,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -661,9 +703,11 @@
         "chunk_sha256": "6c42f832a83e07516cf131c1009548d3b3cf9456f4e4a71fd9d128ea25f04a49",
         "scenario": "baseline",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 2.4890899658203125,
-        "wall_seconds": 12.24948220801889,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 2.488983154296875,
+        "wall_seconds": 11.65638783297618,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -681,9 +725,11 @@
         "chunk_sha256": "6c42f832a83e07516cf131c1009548d3b3cf9456f4e4a71fd9d128ea25f04a49",
         "scenario": "ten_twenty",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 2.4903564453125,
-        "wall_seconds": 13.233296666992828,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 2.487457275390625,
+        "wall_seconds": 11.54928020798252,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -701,9 +747,11 @@
         "chunk_sha256": "6c42f832a83e07516cf131c1009548d3b3cf9456f4e4a71fd9d128ea25f04a49",
         "scenario": "no_limit",
         "variant": "resource_deeming",
-        "variant_source_sha256": "bb8f3fc804cab394262faf106c8a56ca719cd6869511f57ac547478df8b9ca5b",
-        "peak_rss_gib": 2.4900970458984375,
-        "wall_seconds": 12.760971167008393,
+        "variant_source_sha256": "4df2a7f3588f3c79db558fa1f707b59c412f19f693b2b09be56fe155b45ba84a",
+        "code_commit": "0a7fcad14ba7e513a8b1aec4ca9a37b513a788ce",
+        "code_dirty": false,
+        "peak_rss_gib": 2.4875946044921875,
+        "wall_seconds": 11.441820292006014,
         "legacy_input_renames": {
           "would_claim_wic": "takes_up_wic_if_eligible"
         },
@@ -717,7 +765,7 @@
         }
       }
     ],
-    "wall_seconds": 1367.1869993329747,
+    "wall_seconds": 1347.8755030409957,
     "uv_pip_freeze_path": "/Users/maxghenis/PolicyEngine/ssi-asset-limits/results/microcosm-625-spm0915-resource-deeming/uv-pip-freeze.txt",
     "annualization": "MONTH amounts sum all twelve months; MONTH flags are fractions of true months; age and resources use January; YEAR variables are calculated for 2026."
   }
