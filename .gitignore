@@ -2,6 +2,7 @@
 .venv/
 .ruff_cache/
 .pytest_cache/
+.pytest-tmp*/
 __pycache__/
 *.py[cod]
 node_modules/
@@ -10,3 +11,8 @@ out/
 dist/
 *.egg-info/
 .local-results/
+.uv-cache/
+results/**/*.csv.gz
+results/**/chunks/
+results/**/workers/
+results/**/*.h5

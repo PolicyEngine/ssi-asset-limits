@@ -1,6 +1,0 @@
-metric,label,value,unit
-annual_ssi_cost,Annual SSI cost,15751175847.204847,currency
-baseline_recipients,Baseline SSI recipients,6838671.134098053,people
-reform_recipients,Recipients after reform,8607063.585777283,people
-new_recipients,New SSI recipients,1768392.4516792297,people
-average_gain,Average gain among winners,8907.058968866242,currency

@@ -5,27 +5,67 @@ PolicyEngine US microsimulation.
 
 The repository has two pieces:
 
-- A Python package, `ssi_asset_limits`, that defines the reform and generates
-  CSV outputs.
-- A Next.js dashboard that reads the generated CSVs from `public/data`.
+- A Python package, `ssi_asset_limits`, that defines the reforms and scores
+  them on the certified US population.
+- A Next.js dashboard that reads `public/data/results.json`.
 
 ## Setup
 
 ```bash
-uv venv --python 3.13
+uv venv --python 3.13 .venv
 uv pip install -e ".[dev]"
 bun install
 ```
 
 ## Generate Data
 
-Use the published default PolicyEngine dataset:
+Score current law, $10,000 individual / $20,000 couple resource limits, and
+removal of the resource test for 2026, then publish the dashboard data:
 
 ```bash
-uv run ssi-asset-limits-data --output-dir public/data
+uv run ssi-asset-limits-run --out-dir results/microcosm-625-spm0915
+uv run ssi-asset-limits-publish results/microcosm-625-spm0915 --out-dir public/data
 ```
 
-Use a locally rebuilt Enhanced CPS H5:
+The runner pins `policyengine[us]==6.2.5`, bundle `us-6.2.5`, and
+`policyengine-us==2.2.1`. It materializes the certified `populace_us_2024`
+build `populace-us-2024-spm-20260915` through PolicyEngine's dataset loader
+and verifies SHA-256
+`6496cc4393d4d3c6574f76eca231de5898c803b9067645591fd5c4d3e65aee84`.
+Each chunk uses `managed_microsimulation(dataset=<local chunk>,
+allow_unmanaged=True)`, retaining the managed bundle's legacy input renames
+and SPM poverty selection.
+
+The population is run in household batches, which is exact because every
+person, marital unit, tax unit, SPM unit, and family nests within one
+household. The runner proves that nesting before splitting and checks that
+person and household weights sum to the full population's totals. It
+preserves all HDF tables, IDs, and `_time_period` data. Each scenario and
+chunk runs sequentially in a fresh process through `heavy --mem 16`; the
+initial batch size is 8,000 households. The machine's `heavy` admission gate
+must be on `PATH` and able to inspect process information.
+
+The partition proof compares the unchanged 2024 source-file weights. If the
+file has no person-weight column, each person inherits their household's
+weight. Scored outputs use the model's 2026 weights, including population
+uprating, so their totals can differ from the source-file totals.
+
+Annual SSI is the sum of all twelve 2026 monthly values. The person
+diagnostics store annual monthly boolean means, so a value of `0.5` means
+the condition held in six months; positive annual SSI identifies a
+recipient. Age and countable resources use January snapshots when defined
+monthly, and diagnostics also retain January flags for marital-unit
+checks. Poverty and household income outputs use annual 2026 values.
+
+The run directory contains `persons.csv.gz`, `households.csv.gz`,
+`persons_diagnostics.csv.gz`, and `run_metadata.json`. Metadata separates
+the app's provenance fields from execution diagnostics, including batch
+sizes, peak resident memory, elapsed time, and the installed package
+freeze. Large row-level files stay outside version control; published
+summaries can be regenerated with the second command above. Engine runs
+are separate from the unit tests.
+
+For older analysis workflows, use a locally rebuilt Enhanced CPS H5:
 
 ```bash
 uv run ssi-asset-limits-data \
@@ -86,7 +126,7 @@ This writes:
 Fit the published adult 18-64 CBPP equation from SIPP 2014 Wave 2:
 
 ```bash
-uv run ssi-asset-limits-fit-cbpp --output-dir public/data
+uv run ssi-asset-limits-fit-cbpp --output-dir results/cbpp-method-fit
 ```
 
 This downloads the Census SIPP 2014 Wave 2 public-use pipe file if needed and
@@ -109,7 +149,7 @@ Run the same adult 18-64 CBPP-style equation on the newer 2023 SIPP release:
 uv run ssi-asset-limits-fit-cbpp \
   --sipp-path /path/to/pu2023.csv \
   --sipp-format 2023-calendar \
-  --output-dir public/data
+  --output-dir results/cbpp-method-fit
 ```
 
 When `--sipp-format` is omitted, the fitter infers 2014 vs 2023 from the

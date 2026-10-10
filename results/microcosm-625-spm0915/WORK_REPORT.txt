@@ -1,0 +1,114 @@
+WP1 status: implementation and input preflight; scoring is blocked.
+
+Workspace: /Users/maxghenis/PolicyEngine/_worktrees/ssi-2026-10/ssi-asset-limits
+Branch: cbpp-replication
+Starting/current HEAD: 59df10d95aac12ab387dbb691fe56fe54da423d8
+No pushes or GitHub writes. Existing tree was clean before edits.
+
+Implemented:
+- Package runner and ssi-asset-limits-run console entry point.
+- Certified policyengine[us]==6.2.5 dependency and regenerated uv.lock
+  (policyengine-core 3.32.10, policyengine-us 2.2.1).
+- Exact HDF household splitting, nesting/ID closure assertions, every table,
+  period and ID retained; supports both foreign-key naming conventions.
+- Sequential heavy --mem 16 fresh processes for preparation and each
+  scenario/chunk; annual monthly amounts sum all twelve months; diagnostic
+  flags include annual fractions and January snapshots. Outputs use model
+  2026 weights; partition proof uses unchanged source-frame 2024 weights.
+- Publisher-compatible person/household tables, exact provenance fields,
+  separate execution diagnostics, package freeze and memory receipts.
+- Reproducible A-E checks and detailed monotonicity cases from saved rows.
+- README instructions, ignored large outputs, deleted stale public summary
+  and resource-bin files, moved CBPP fit CSVs to results/cbpp-method-fit.
+  Existing pipeline.py still uses the available country Microsimulation API.
+
+Completed validation:
+- Runner contract/annualization tests: 39 passed.
+- Splitter tests, including modern/legacy keys and inherited weights: 14 passed.
+- Diagnostic tests: 14 passed.
+- Ruff check: all checks passed.
+- Ruff format --check: all 31 Python files formatted.
+- git diff --check passed.
+Full pytest did not complete: system-Python attempt was interrupted during
+collection after 500.10s (0 tests ran); original Python 3.13 attempt with
+--assert=plain and plugin autoload disabled was interrupted during imports
+after 372.43s (0 tests ran). Both exited 2. Focused tests above passed.
+Frontend: bun install --frozen-lockfile --backend=copy was interrupted after
+299/516 packages during filesystem stalls (exit 1). A supervised
+NODE_OPTIONS=--max-old-space-size=2048 bun run build reached Next.js 16.2.6
+optimized production compilation but timed out after 180.19s (exit 124;
+child exit 143; observed child peak RSS 0.6922 GiB). The supervisor stopped
+and reaped the entire build process group. Build did not pass.
+
+Certified input preflight (frame_preflight.json; no engine calculation):
+- Streamed SHA256 exactly matches
+  6496cc4393d4d3c6574f76eca231de5898c803b9067645591fd5c4d3e65aee84.
+- 57,240 households; 166,321 persons.
+- Cross-household units: 0 of 130,729 marital units; 0 of 79,729 tax units;
+  0 of 59,900 SPM units; 0 of 65,206 families.
+- Eight planned partitions: seven with 8,000 households, one with 1,240.
+- Person counts: 23,630 / 23,540 / 23,850 / 22,685 / 22,700 / 22,994 /
+  23,195 / 3,727. All 166,321 persons occur in exactly one partition.
+- Household weight sum: 122,537,091.8856833; partition difference 0.0.
+- Inherited person weight sum: 340,077,322.65364885; difference 0.0.
+- Source has no person_weight; pe-US 2.2.1 person_weight.py:10-11 maps
+  household weights to persons. household_weight.py:10 specifies uprating;
+  2026 simulation weights have not yet been calculated.
+- Only 16,056,760 bytes of selected ID/weight columns were retained.
+- Source metadata vs July Build P: person columns 317 -> 318; sole added
+  column is is_spm_independent_minor_role. Shared columns remain ordered.
+
+A/B/D/E: NOT SCORED. No baseline/reform SSI, disability/take-up rates,
+resource diagnostics, poverty effects or monotonicity numbers are available.
+Engine chunks executed: 0. Per-chunk peak RSS: unavailable.
+Publisher: not run; no results.json or new published headline numbers.
+All task-owned installer, test and build sessions have now exited; no engine
+workers were ever launched. The last uv installation attempt exited 1 after
+interruption. The certified environment installation remains incomplete.
+
+Source findings (not an explanation of unobserved aggregate changes):
+- pe-US 2.2.1 ssi_claim_is_joint.py:11-15 uses ABD and tax-unit roles;
+  ssi_couple_computation_applies.py:18-36 uses joint claim/facility status.
+  Resource eligibility alone does not start couple computation.
+- Actual cached 1.764.6 vs 2.2.1 student-exclusion eligibility source differs:
+  old is_ssi_blind_or_disabled_working_student_exclusion_eligible.py:16-21
+  uses is_disabled; current:29-34 uses meets_ssi_disability_criteria.
+  Any aggregate attribution still requires scored person-level evidence.
+
+Hard environment blockers:
+1. heavy --mem 16 fails before launching: sandbox denies ps in
+   /Users/maxghenis/offload/src/heavy/procs.py:48 with PermissionError.
+   No admission bypass or full-frame simulation was attempted.
+2. git add/commit fails creating .git/index.lock: Operation not permitted.
+   Sandbox explicitly marks this clone's .git read-only. No new commit SHAs.
+The user was notified and asked to correct these workspace permissions.
+
+Commands attempted/completed:
+- Read src/ssi_asset_limits/publish.py and tests/test_publish.py first.
+- heavy --help; heavy status; heavy --mem 16 -- <input inspection>
+  (status/admission failed on ps).
+- uv venv --python 3.13 .venv
+- UV_CACHE_DIR=$PWD/.uv-cache uv sync --extra dev
+  (shared cache unavailable; local-cache installation did not complete).
+- PYTHONPATH=src UV_CACHE_DIR=$PWD/.uv-cache uv run --no-sync pytest
+  tests/test_microcosm_run.py --basetemp=$PWD/.pytest-tmp-runner -q
+- PYTHONPATH=src python3 -m pytest tests/test_microcosm_chunks.py -q
+  --basetemp=.pytest-tmp/chunk-tests
+- PYTHONPATH=src /Users/maxghenis/PolicyEngine/ssi-asset-limits/.venv/bin/python
+  -m pytest tests/test_microcosm_checks.py -q
+- UV_CACHE_DIR=$PWD/.uv-cache uv run --no-sync ruff check src tests
+- UV_CACHE_DIR=$PWD/.uv-cache uv run --no-sync ruff format --check src tests
+- git add src/ssi_asset_limits/microcosm_chunks.py tests/test_microcosm_chunks.py
+  .gitignore (failed before staging; commit command was not reached).
+
+After restoring permissions and completing the package installation:
+  UV_CACHE_DIR=$PWD/.uv-cache uv sync --extra dev
+  UV_CACHE_DIR=$PWD/.uv-cache uv run ssi-asset-limits-run \
+    --out-dir results/microcosm-625-spm0915 \
+    --cached-dataset /Users/maxghenis/.cache/huggingface/hub/datasets--policyengine--populace-us/blobs/6496cc4393d4d3c6574f76eca231de5898c803b9067645591fd5c4d3e65aee84
+  UV_CACHE_DIR=$PWD/.uv-cache uv run ssi-asset-limits-publish \
+    results/microcosm-625-spm0915 --out-dir public/data
+Measure the first 8,000-household worker, reducing --chunk-size if necessary;
+the coordinator stops after a worker whose recorded peak exceeds 15 GiB.
+Commit runner/tests and then actual published data in coherent steps on
+cbpp-replication; never push.
