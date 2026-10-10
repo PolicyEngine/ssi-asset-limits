@@ -473,6 +473,15 @@ def write_run(path, persons, households, variant=None, **overrides):
             "candidate": {"households": 3_566},
             "variant_source_sha256": "f00d",
         }
+    if variant == "restore_cps_social_security":
+        # Every household counts as rerun unless a test says otherwise.
+        (path / "chunks").mkdir()
+        with pd.HDFStore(path / "chunks" / "repaired.h5", "w") as store:
+            store.put(
+                "/household",
+                pd.DataFrame({"household_id": households["household_id"]}),
+            )
+        diagnostics["repaired_chunk"] = "elsewhere/chunks/repaired.h5"
     (path / "run_metadata.json").write_text(
         json.dumps(
             {
@@ -626,6 +635,7 @@ def test_a_spliced_rerun_may_not_change_flags_or_other_households(tmp_path):
         metadata = json.loads(path.read_text())
         metadata["diagnostics"]["candidate"]["households"] = 1
         metadata["diagnostics"]["repaired_chunk"] = str(repaired)
+        (tmp_path / name / "chunks" / "repaired.h5").unlink()
         path.write_text(json.dumps(metadata))
         return tmp_path / name
 
@@ -670,3 +680,21 @@ def test_published_deeming_run_used_the_reform_in_the_repository():
     assert deeming["provenance"]["variant_source_sha256"] == (
         variant_source_sha256("resource_deeming")
     )
+
+
+def test_a_spliced_rerun_without_its_repaired_chunk_is_refused(tmp_path):
+    persons, households = toy_frames()
+    write_run(tmp_path / "run", persons, households)
+    write_run(
+        tmp_path / "restored",
+        persons,
+        households,
+        "restore_cps_social_security",
+    )
+    (tmp_path / "restored" / "chunks" / "repaired.h5").unlink()
+    with pytest.raises(ValueError, match="repaired chunk"):
+        publish(
+            tmp_path / "run",
+            tmp_path / "out",
+            sensitivity_dirs=[tmp_path / "restored"],
+        )

@@ -36,14 +36,11 @@ export default function Sensitivities({
   });
   const rows = [
     row("Published estimate", baseline.by_age, scenario.by_age),
-    ...sensitivities.map((sensitivity) =>
-      row(
-        sensitivity.label,
-        sensitivity.baseline_by_age,
-        sensitivity.scenarios.find((item) => item.key === scenario.key)?.by_age ??
-          [],
-      ),
-    ),
+    // A run without this scenario has nothing to show for it.
+    ...sensitivities.flatMap((sensitivity) => {
+      const match = sensitivity.scenarios.find((item) => item.key === scenario.key);
+      return match ? [row(sensitivity.label, sensitivity.baseline_by_age, match.by_age)] : [];
+    }),
   ];
 
   return (

@@ -538,6 +538,7 @@ def check_sensitivity(
     metadata: dict,
     main_persons: pd.DataFrame,
     main_metadata: dict,
+    run_dir: Path,
 ) -> None:
     """A sensitivity run must be the published run's population.
 
@@ -582,20 +583,25 @@ def check_sensitivity(
                 f"spliced rerun changes {len(households)} households, more "
                 f"than the {candidate['households']} it reran"
             )
-        reran = _reran_households(metadata)
-        if reran is not None and not households <= reran:
+        if not households <= _reran_households(metadata, run_dir):
             raise ValueError(
                 "spliced rerun changes households it did not rerun"
             )
 
 
-def _reran_households(metadata: dict) -> set | None:
-    """Household ids in a spliced rerun's repaired chunk, when it is here."""
-    path = metadata["diagnostics"].get("repaired_chunk")
-    if path is None or not Path(path).exists():
-        return None
-    with pd.HDFStore(path, "r") as store:
-        return set(store["/household"]["household_id"])
+def _reran_households(metadata: dict, run_dir: Path) -> set:
+    """Household ids in a spliced rerun's repaired chunk.
+
+    The chunk lives in the rerun's own directory; the recorded path is
+    tried as written, then under ``run_dir``. Without it, which households
+    changed cannot be checked, so publishing stops.
+    """
+    recorded = Path(metadata["diagnostics"]["repaired_chunk"])
+    for path in (recorded, run_dir / "chunks" / recorded.name):
+        if path.exists():
+            with pd.HDFStore(path, "r") as store:
+                return set(store["/household"]["household_id"])
+    raise ValueError(f"{run_dir}: repaired chunk {recorded.name} is missing")
 
 
 def sensitivity(
@@ -608,7 +614,9 @@ def sensitivity(
     persons = pd.read_csv(run_dir / "persons.csv.gz")
     metadata = json.loads((run_dir / "run_metadata.json").read_text())
     if main_persons is not None:
-        check_sensitivity(persons, metadata, main_persons, main_metadata)
+        check_sensitivity(
+            persons, metadata, main_persons, main_metadata, run_dir
+        )
     diagnostics = metadata["diagnostics"]
     variant = diagnostics["variant"]
     label, describe = SENSITIVITY_LABELS[variant]
