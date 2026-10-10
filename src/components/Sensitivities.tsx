@@ -6,6 +6,10 @@ function pick<T extends { age_group: string }>(rows: T[], group: string) {
   return rows.find((row) => row.age_group === group);
 }
 
+function rate(added: number | undefined, current: number | undefined) {
+  return added === undefined || !current ? null : (100 * added) / current;
+}
+
 export default function Sensitivities({
   scenario,
   baseline,
@@ -24,9 +28,10 @@ export default function Sensitivities({
     current_65: pick(baselineRows, "elderly_65_plus")?.policyengine_recipients ?? 0,
     new_18_64: pick(byAge, "adults_18_64")?.new_recipients ?? 0,
     new_65: pick(byAge, "elderly_65_plus")?.new_recipients ?? 0,
-    rate_65:
-      (100 * (pick(byAge, "elderly_65_plus")?.new_recipients ?? 0)) /
-      (pick(baselineRows, "elderly_65_plus")?.policyengine_recipients ?? 1),
+    rate_65: rate(
+      pick(byAge, "elderly_65_plus")?.new_recipients,
+      pick(baselineRows, "elderly_65_plus")?.policyengine_recipients,
+    ),
     cost: pick(byAge, "total_all_ages")?.annual_ssi_cost ?? 0,
   });
   const rows = [
@@ -84,7 +89,8 @@ export default function Sensitivities({
                 key: "rate_65",
                 header: "New 65+ per 100 recipients 65+ today",
                 align: "right",
-                format: (value) => Number(value).toFixed(1),
+                format: (value) =>
+                  value === null ? "–" : Number(value).toFixed(1),
               },
               {
                 key: "cost",

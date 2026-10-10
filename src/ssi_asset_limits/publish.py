@@ -26,7 +26,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from .admin_checks import FINGERPRINT_FILE, run_fingerprint
+from .admin_checks import CODE_STATE_FILE, FINGERPRINT_FILE, run_fingerprint
 from .calculators import CBPP_AGE_GROUPS, RESOURCE_BINS
 from .comparators import (
     CBPP_CITATION,
@@ -38,7 +38,7 @@ from .comparators import (
     SSA_SSI_MONTHLY_DEC_2024_LABEL,
     SSA_SSI_MONTHLY_DEC_2024_URL,
 )
-from .microcosm_run import is_flag
+from .microcosm_run import code_state, is_flag
 from .precision import scenario_precision
 
 BASELINE = "baseline"
@@ -564,19 +564,38 @@ def check_sensitivity(
         raise ValueError("sensitivity run has different person weights")
     candidate = metadata["diagnostics"].get("candidate")
     if candidate is not None:
-        numeric = [
-            c for c in shared if np.issubdtype(main[c].dtype, np.number)
-        ]
-        changed = ~np.isclose(
-            variant[numeric].to_numpy(dtype=float),
-            main[numeric].to_numpy(dtype=float),
-        ).all(axis=1)
-        households = main.loc[changed, "household_id"].nunique()
-        if households > candidate["households"]:
+        # Every column, flags included, may differ only in reran households.
+        changed = pd.Series(False, index=main.index)
+        for column in shared:
+            if np.issubdtype(main[column].dtype, np.number):
+                changed |= ~np.isclose(
+                    variant[column].to_numpy(dtype=float),
+                    main[column].to_numpy(dtype=float),
+                )
+            else:
+                changed |= variant[column].astype(str) != main[column].astype(
+                    str
+                )
+        households = set(main.loc[changed, "household_id"])
+        if len(households) > candidate["households"]:
             raise ValueError(
-                f"spliced rerun changes {households} households, more than "
-                f"the {candidate['households']} it reran"
+                f"spliced rerun changes {len(households)} households, more "
+                f"than the {candidate['households']} it reran"
             )
+        reran = _reran_households(metadata)
+        if reran is not None and not households <= reran:
+            raise ValueError(
+                "spliced rerun changes households it did not rerun"
+            )
+
+
+def _reran_households(metadata: dict) -> set | None:
+    """Household ids in a spliced rerun's repaired chunk, when it is here."""
+    path = metadata["diagnostics"].get("repaired_chunk")
+    if path is None or not Path(path).exists():
+        return None
+    with pd.HDFStore(path, "r") as store:
+        return set(store["/household"]["household_id"])
 
 
 def sensitivity(
@@ -650,8 +669,14 @@ def publish(
             "public/data to tabulate it"
         )
     results = build_results(persons, households, metadata)
+    results["published_with"] = {"publisher": code_state()}
     if checks_dir is not None:
         results["held_out_checks"] = held_out_checks(checks_dir, run_dir)
+        state = checks_dir / CODE_STATE_FILE
+        if state.exists():
+            results["published_with"]["admin_checks"] = json.loads(
+                state.read_text()
+            )
     if sensitivity_dirs:
         results["sensitivities"] = [
             sensitivity(path, persons, metadata) for path in sensitivity_dirs

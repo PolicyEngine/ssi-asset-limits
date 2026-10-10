@@ -31,7 +31,7 @@ import numpy as np
 import pandas as pd
 
 from .calculators import RESOURCE_BINS
-from .microcosm_run import sha256_file
+from .microcosm_run import code_state, sha256_file
 
 BASELINE = "baseline"
 REFORMS = ("ten_twenty", "no_limit")
@@ -103,6 +103,8 @@ SOCIAL_SECURITY_COLUMNS = [
 # their hashes so the publisher can refuse tables from a different run.
 RUN_FILES = ("persons.csv.gz", "persons_diagnostics.csv.gz")
 FINGERPRINT_FILE = "run_fingerprint.json"
+# The analysis code that wrote the tables (not part of the run fingerprint).
+CODE_STATE_FILE = "code_state.json"
 
 
 def run_fingerprint(run_dir: Path) -> dict[str, str]:
@@ -561,6 +563,9 @@ def run_checks(run_dir: Path, out_dir: Path) -> dict[str, pd.DataFrame]:
         table.to_csv(out_dir / f"{name}.csv", index=False)
     (out_dir / FINGERPRINT_FILE).write_text(
         json.dumps(run_fingerprint(run_dir), indent=2) + "\n"
+    )
+    (out_dir / CODE_STATE_FILE).write_text(
+        json.dumps(code_state(), indent=2) + "\n"
     )
     return tables
 

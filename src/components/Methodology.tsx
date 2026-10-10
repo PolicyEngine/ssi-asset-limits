@@ -1,9 +1,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@policyengine/ui-kit";
-import { Provenance } from "@/src/lib/results";
+import { CodeState, Provenance, Results } from "@/src/lib/results";
 
 const REPO_URL = "https://github.com/PolicyEngine/ssi-asset-limits";
 
-export default function Methodology({ provenance }: { provenance: Provenance }) {
+function describe(state: CodeState): string {
+  return state.code_dirty ? `${state.code_commit} (with uncommitted changes)` : state.code_commit;
+}
+
+export default function Methodology({
+  provenance,
+  publishedWith,
+}: {
+  provenance: Provenance;
+  publishedWith?: Results["published_with"];
+}) {
   const rows: [string, string][] = [
     ["Year analyzed", String(provenance.analysis_year)],
     [
@@ -15,7 +25,15 @@ export default function Methodology({ provenance }: { provenance: Provenance }) 
       `Microcosm ${provenance.dataset}, build ${provenance.dataset_build_id}`,
     ],
     ["Population file SHA-256", provenance.dataset_sha256],
-    ["Analysis code", provenance.code_commit],
+    ["Run code", provenance.code_commit],
+    ...(publishedWith
+      ? ([
+          ["Published by code", describe(publishedWith.publisher)],
+          ...(publishedWith.admin_checks
+            ? [["SSA checks by code", describe(publishedWith.admin_checks)]]
+            : []),
+        ] as [string, string][])
+      : []),
     ["Generated", provenance.generated_at],
   ];
 

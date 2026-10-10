@@ -318,7 +318,7 @@ def code_state() -> dict:
             str(root),
             "status",
             "--porcelain",
-            "--untracked-files=no",
+            "--untracked-files=normal",
             "--",
             *CODE_PATHS,
         ],

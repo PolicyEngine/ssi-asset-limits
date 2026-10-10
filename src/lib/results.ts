@@ -142,6 +142,7 @@ export interface HeldOutChecks {
   new_recipients_by_reporting: ReportingCheck[];
   new_recipients_by_marital_status: NewRecipientMaritalCheck[];
   children: ChildCheck[];
+  new_recipients_with_erased_social_security: ErasedSocialSecurityCheck[];
 }
 
 export interface SensitivityAgeRow {
@@ -176,8 +177,24 @@ export interface Population {
   households_with_99pct_of_weight: number;
 }
 
+export interface CodeState {
+  code_commit: string;
+  code_dirty: boolean;
+}
+
+export interface ErasedSocialSecurityCheck {
+  scenario: string;
+  age_band: string;
+  new_recipients: number;
+  with_erased_social_security: number;
+  share_pct: number;
+  records: number;
+  median_reported_social_security: number;
+}
+
 export interface Results {
   provenance: Provenance;
+  published_with?: { publisher: CodeState; admin_checks?: CodeState };
   population: Population;
   precision_note: string;
   held_out_checks?: HeldOutChecks;

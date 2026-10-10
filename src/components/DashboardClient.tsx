@@ -122,7 +122,10 @@ export default function DashboardClient() {
               />
             )}
             <Caveats results={results} />
-            <Methodology provenance={results.provenance} />
+            <Methodology
+              provenance={results.provenance}
+              publishedWith={results.published_with}
+            />
           </>
         )}
       </section>

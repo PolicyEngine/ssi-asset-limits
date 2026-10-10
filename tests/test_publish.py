@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -606,4 +607,66 @@ def test_a_spliced_rerun_may_change_only_the_households_it_reran(tmp_path):
         tmp_path / "run",
         tmp_path / "out2",
         sensitivity_dirs=[tmp_path / "restored"],
+    )
+
+
+def test_a_spliced_rerun_may_not_change_flags_or_other_households(tmp_path):
+    persons, households = toy_frames()
+    write_run(tmp_path / "run", persons, households)
+    # Only household 30 (person 4) was rerun.
+    repaired = tmp_path / "repaired.h5"
+    with pd.HDFStore(repaired, "w") as store:
+        store.put("/household", pd.DataFrame({"household_id": [30]}))
+
+    def rerun(name, frame):
+        write_run(
+            tmp_path / name, frame, households, "restore_cps_social_security"
+        )
+        path = tmp_path / name / "run_metadata.json"
+        metadata = json.loads(path.read_text())
+        metadata["diagnostics"]["candidate"]["households"] = 1
+        metadata["diagnostics"]["repaired_chunk"] = str(repaired)
+        path.write_text(json.dumps(metadata))
+        return tmp_path / name
+
+    inside = persons.assign(
+        ssi_no_limit=persons["ssi_no_limit"] + [0, 0, 0, 1]
+    )
+    publish(
+        tmp_path / "run",
+        tmp_path / "ok",
+        sensitivity_dirs=[rerun("a", inside)],
+    )
+    # A flag flipped in household 10, which was not rerun.
+    flipped = persons.copy()
+    flipped.loc[0, "in_poverty_no_limit"] = True
+    with pytest.raises(ValueError, match="did not rerun"):
+        publish(
+            tmp_path / "run",
+            tmp_path / "bad",
+            sensitivity_dirs=[rerun("b", flipped)],
+        )
+
+
+def test_results_record_the_code_that_published_them(tmp_path):
+    persons, households = toy_frames()
+    write_run(tmp_path / "run", persons, households)
+    results = publish(tmp_path / "run", tmp_path / "out")
+    state = results["published_with"]["publisher"]
+    assert set(state) == {"code_commit", "code_dirty"}
+
+
+def test_published_deeming_run_used_the_reform_in_the_repository():
+    """The page's deeming sensitivity must come from the vendored reform."""
+    from ssi_asset_limits.microcosm_run import variant_source_sha256
+
+    root = Path(__file__).resolve().parents[1]
+    results = json.loads((root / "public/data/results.json").read_text())
+    (deeming,) = [
+        s
+        for s in results.get("sensitivities", [])
+        if s["key"] == "resource_deeming"
+    ]
+    assert deeming["provenance"]["variant_source_sha256"] == (
+        variant_source_sha256("resource_deeming")
     )

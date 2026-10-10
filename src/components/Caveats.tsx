@@ -6,6 +6,7 @@ import {
 } from "@policyengine/ui-kit";
 import {
   anyChildGains,
+  erasedSocialSecurity,
   cbppByAgeSentence,
   cbppFor,
   childMeasure,
@@ -19,7 +20,7 @@ import {
   socialSecurityShare,
   times,
 } from "@/src/lib/facts";
-import { formatPeople } from "@/src/lib/format";
+import { formatCurrency, formatPeople } from "@/src/lib/format";
 import { Results } from "@/src/lib/results";
 
 type Item = { key: string; title: string; body: string };
@@ -47,6 +48,7 @@ function higherItem(results: Results): Item {
   const cost = ten && costRatioToOact(results, ten);
   const reporting = reportingShare(results, "ten_twenty", "18-64");
   const deeming = deemingCosts(results, "ten_twenty");
+  const erased = erasedSocialSecurity(results, "ten_twenty", "65 or older");
   const parts = [
     ten &&
       `For the $10,000 and $20,000 limits the model has ${cbppByAgeSentence(ten)}.`,
@@ -54,6 +56,8 @@ function higherItem(results: Results): Item {
     cost &&
       `Its added SSI for the $10,000 and $20,000 limits is ${times(cost.ratio)} the $${cost.billions.toFixed(1)} billion that SSA's actuaries estimated for ${results.provenance.analysis_year} in their ${cost.year} letter; they have not estimated removing the limits.`,
     "We suspect the model overstates gains for people 65 and over: too few of its older recipients get Social Security (see the checks above), and part of that is a defect in the population file.",
+    erased &&
+      `Under the $10,000 and $20,000 limits, ${percent(erased.share_pct)} of the new recipients aged 65 and over reported Social Security in the Census survey that the population file set to zero (median reported benefit ${formatCurrency(erased.median_reported_social_security)} a year, ${erased.records.toLocaleString("en-US")} sample records); at that income most would not qualify for SSI.`,
     reporting &&
       reporting.share_pct >= 1 &&
       `Some new recipients aged 18 to 64 may already receive SSI: ${percent(reporting.share_pct)} of them report SSI in the Census survey but are kept off it in the model by imputed savings above the limit.`,
@@ -71,10 +75,13 @@ function higherItem(results: Results): Item {
 function claimingItem(results: Results): Item {
   const adults = reportingShare(results, "ten_twenty", "18-64");
   const older = reportingShare(results, "ten_twenty", "65 or older");
-  const reported =
-    adults && older
-      ? ` In this run, ${percent(adults.share_pct)} of the new recipients aged 18 to 64 under the $10,000 and $20,000 limits, and ${percent(older.share_pct)} of those 65 and over, reported SSI in the Census survey; the rest were drawn.`
-      : "";
+  const parts = [
+    adults && adults.recipients > 0 && `${percent(adults.share_pct)} of the new recipients aged 18 to 64`,
+    older && older.recipients > 0 && `${percent(older.share_pct)} of those 65 and over`,
+  ].filter(Boolean);
+  const reported = parts.length
+    ? ` In this run, under the $10,000 and $20,000 limits, ${parts.join(" and ")} reported SSI in the Census survey; the rest were drawn.`
+    : "";
   return {
     key: "claiming",
     title: "Who would claim is an assumption",
@@ -132,7 +139,7 @@ function compositionItem(results: Results): Item {
       `Among recipients 65 and over, ${percent(older.policyengine_share_pct)} in the model also receive Social Security, against ${percent(older.ssa_share_pct)} in SSA's records.`,
     "Older people are more likely to have savings, and Social Security counts as income for SSI, lowering the payment, so both gaps bear on who gains from a higher limit and by how much. Part of the Social Security gap is a defect in the population file, which sets Social Security to zero for some people who report it in the Census survey (PolicyEngine/microcosm#1178).",
     restore &&
-      `Restoring it, in the sensitivity table above, ${restore.currentChangePct < 0 ? `makes ${percent(-restore.currentChangePct)} of current recipients aged 65 and over income-ineligible` : `changes current recipients aged 65 and over by ${percent(restore.currentChangePct)}`}; the claiming rates were set to match SSA's count with the benefit erased and are not re-solved to offset that. New recipients 65 and over under the $10,000 and $20,000 limits ${restore.restoredRate < restore.rate ? "fall" : "rise"} from ${percent(restore.rate)} to ${percent(restore.restoredRate)} of each run's current recipients that age. So that rerun cannot say how many new recipients a corrected population would have; the fix belongs in the population file.`,
+      `Restoring it, in the sensitivity table above, ${restore.currentChangePct < 0 ? `makes ${percent(-restore.currentChangePct)} of current recipients aged 65 and over income-ineligible` : `changes current recipients aged 65 and over by ${percent(restore.currentChangePct)}`}; the claiming rates were set to match SSA's count with the benefit erased and are not re-solved to offset that. New recipients 65 and over under the $10,000 and $20,000 limits ${Math.round(restore.restoredRate) === Math.round(restore.rate) ? `stay at about ${percent(restore.rate)}` : `${restore.restoredRate < restore.rate ? "fall" : "rise"} from ${percent(restore.rate)} to ${percent(restore.restoredRate)}`} of each run's current recipients that age. So that rerun cannot say how many new recipients a corrected population would have; the fix belongs in the population file.`,
   ];
   return {
     key: "composition",

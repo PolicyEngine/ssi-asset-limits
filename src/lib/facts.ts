@@ -256,3 +256,10 @@ export function socialSecurityShare(results: Results, band: string) {
     (row) => row.age_band === band,
   );
 }
+
+export function erasedSocialSecurity(results: Results, scenario: string, band: string) {
+  const row = results.held_out_checks?.new_recipients_with_erased_social_security.find(
+    (item) => item.scenario === scenario && item.age_band === band,
+  );
+  return row && row.new_recipients > 0 && row.records > 0 ? row : null;
+}
