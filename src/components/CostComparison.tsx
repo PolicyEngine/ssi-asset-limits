@@ -62,8 +62,10 @@ export default function CostComparison({
             : ""}
           . SSA&apos;s Office of the Chief Actuary (OACT) estimates the same
           limits, indexed to inflation, would add $0.5 billion in the first
-          year and $1.0 billion to $1.4 billion a year after that. The table
-          shows OACT&apos;s letters year by year.
+          year and $1.0 billion to $1.4 billion a year after that; its 2024
+          letter puts 2026 at $1.0 billion. Both letters assume the limits
+          apply from January 1 of their first year. The table shows
+          OACT&apos;s letters year by year.
         </p>
         <div className="overflow-x-auto">
           <DataTable

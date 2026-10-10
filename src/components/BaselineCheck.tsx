@@ -19,8 +19,11 @@ export default function BaselineCheck({ baseline }: { baseline: Baseline }) {
       <CardContent className="grid gap-4 text-sm leading-6 text-muted-foreground">
         <p>
           Before trusting any change, we compare the model&apos;s current-law
-          SSI caseload with SSA&apos;s count. A large gap in an age group means
-          the model is missing part of the program for that group; see
+          SSI caseload with SSA&apos;s count. This is a diagnostic, not a
+          target the model should match exactly: SSA counts people with a
+          federal payment in December 2024, including retroactive payments,
+          and PolicyEngine counts people with any federal SSI in 2026. The
+          large shortfall for children has a known cause, described under
           &quot;How to read these numbers&quot; below.
         </p>
         <div className="overflow-x-auto">

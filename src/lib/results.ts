@@ -102,8 +102,14 @@ export interface FineAgeCheck {
 }
 
 export interface ShareCheck {
-  age_band?: string;
-  marital_status?: string;
+  age_band: string;
+  policyengine_share_pct: number;
+  ssa_share_pct: number;
+}
+
+export interface MaritalCheck {
+  marital_status: string;
+  ssa_category: string;
   policyengine_share_pct: number;
   ssa_share_pct: number;
 }
@@ -111,7 +117,7 @@ export interface ShareCheck {
 export interface HeldOutChecks {
   recipients_by_fine_age: FineAgeCheck[];
   recipients_with_social_security: ShareCheck[];
-  recipients_by_marital_status: ShareCheck[];
+  recipients_by_marital_status: MaritalCheck[];
 }
 
 export interface SensitivityAgeRow {

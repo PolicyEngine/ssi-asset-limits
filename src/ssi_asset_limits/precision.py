@@ -1,9 +1,11 @@
 """How much the estimates could move if the population sample were redrawn.
 
-The certified population is small and sparse: most of its person records
-carry zero weight, and a reform that reaches a narrow group can rest on a few
-dozen records. This module puts a sampling range on each published count and
-dollar figure and reports how many records stand behind it.
+The certified population is small and its weight is concentrated: every one
+of its 166,321 person records has positive weight, but about 12,300 of its
+57,240 households carry 99 percent of the weight, so a reform that reaches a
+narrow group can rest on a few dozen records. This module puts a sampling
+range on each published count and dollar figure and reports how many records
+stand behind it.
 
 The range is a household bootstrap: households are resampled with replacement
 (as Poisson(1) multiplicities, the usual large-sample form), keeping each

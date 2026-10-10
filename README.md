@@ -14,23 +14,42 @@ The repository has two parts:
 
 ## Reproduce the published numbers
 
+Each step writes into a fresh directory; the runner refuses a directory that
+already holds a finished run (`results/microcosm-625-spm0915` keeps the
+published run's metadata and checks, so do not reuse it).
+
 ```bash
 uv venv --python 3.13
 uv pip install -e ".[dev]"
-uv run ssi-asset-limits-run --out-dir results/microcosm-625-spm0915
-uv run ssi-asset-limits-publish results/microcosm-625-spm0915 --out-dir public/data
+RUN=.local-results/reproduce
+uv run ssi-asset-limits-run --out-dir $RUN/certified
+uv run ssi-asset-limits-admin-checks $RUN/certified --out-dir $RUN/admin-checks
+uv run python scripts/ss_restore_sensitivity.py $RUN/certified $RUN/ss-restored
+uv run ssi-asset-limits-run --variant resource_deeming --out-dir $RUN/resource-deeming
+uv run ssi-asset-limits-publish $RUN/certified --out-dir public/data \
+  --checks-dir $RUN/admin-checks \
+  --sensitivity $RUN/ss-restored --sensitivity $RUN/resource-deeming
 ```
 
 `ssi-asset-limits-run` uses the certified PolicyEngine bundle pinned in
 `pyproject.toml` (policyengine.py, policyengine-us and the Microcosm dataset
 it certifies), runs current law and both reforms for 2026, and writes person
 and household tables plus `run_metadata.json`. It runs the population in
-household batches, one process per batch, which gives the same answer as a
-single run because every unit PolicyEngine computes (marital unit, tax unit,
-SPM unit, family) sits inside one household. A full run needs about 16 GB of
-memory per batch. `ssi-asset-limits-publish` turns the run into the app's
-data; every figure is a weighted sum over that run, with nothing scaled from
-other runs.
+household batches, one process per batch. Every unit PolicyEngine computes
+(marital unit, tax unit, SPM unit, family) sits inside one household, and no
+published output depends on other households under the run's settings, which
+leave health benefits out of household income; so batching gives the same
+answer as a single run. Each batch is admitted with 18 GB of memory.
+
+`ssi-asset-limits-admin-checks` compares the run's current-law caseload with
+SSA tables it is not targeted to, and records the hashes of the run tables it
+read; `ssi-asset-limits-publish` refuses check tables whose hashes do not
+match the run it publishes. The two sensitivity runs are shown beside the
+estimate and are never published as it: the publisher refuses a variant run
+as its main input.
+
+`ssi-asset-limits-publish` turns the run into the app's data; every figure is
+a weighted sum over that run, with nothing scaled from other runs.
 
 ## Comparisons
 
