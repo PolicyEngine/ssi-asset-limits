@@ -53,6 +53,19 @@ or a spliced rerun that changes more households than it reran.
 `ssi-asset-limits-publish` turns the run into the app's data; every figure is
 a weighted sum over that run, with nothing scaled from other runs.
 
+### Current certified bundle
+
+The published run used policyengine.py 6.2.5. As of 2026-10-13, the latest
+release, policyengine.py 6.3.3, certifies the same US bundle: policyengine-us
+2.2.1 (wheel SHA-256 `0993a6c7…`) and Microcosm
+`populace-us-2024-spm-20260915` (`populace_us_2024.h5`, SHA-256
+`6496cc43…`). Its US code changes between the two releases stamp the year
+files it cuts and change how it parses and merges reform dictionaries. The
+runner passes its reforms as policyengine-core `Reform` classes, and the
+register of renamed stored inputs is unchanged, so nothing in the SSI path
+differs and the published run is the current certified estimate. Microcosm has published no newer
+release to `latest.json` since 2026-09-15.
+
 ## Comparisons
 
 `src/ssi_asset_limits/comparators.py` holds the published figures the page
@@ -80,15 +93,23 @@ language, with every figure computed from the published data:
   (`results/admin-checks/new_recipients_by_reporting.csv`).
 - Social Security: the population file zeroes CPS-reported Social Security
   for many people (PolicyEngine/microcosm#1178); a spliced rerun with it
-  restored is shown as a sensitivity.
+  restored is shown as a sensitivity. Microcosm fixed the build code in
+  PolicyEngine/microcosm#1186 (merged 2026-10-12); the fix reaches this
+  estimate with the next certified population file.
 - Children: the population has almost no children under 15 who meet SSI's
-  disability standard (PolicyEngine/microcosm#509), and policyengine-us 2.2.1
-  does not deem a parent's resources to a child
-  (PolicyEngine/policyengine-us#10040 adds it; its 2.2.1 companion runs as a
-  sensitivity).
-- Couples: policyengine-us 2.2.1 does not deem an ineligible spouse's
-  resources (same PR), and the population records each household's savings
-  on one person.
+  disability standard (PolicyEngine/microcosm#509, not merged), and
+  policyengine-us 2.2.1 does not deem a parent's resources to a child.
+  PolicyEngine/policyengine-us#10040 added deeming in policyengine-us
+  2.38.14 (2026-10-11), which the certified bundle predates. The PR's 2.2.1
+  companion runs as a sensitivity; its policy classes are the merged code's,
+  except that 2.2.1 has no parent links, so it finds parents through the tax
+  unit and household.
+- Couples and households: policyengine-us 2.2.1 does not deem an ineligible
+  spouse's resources (same PR). The population records each household's
+  savings on one person, the lowest line number on the CPS roster
+  (PolicyEngine/microcosm#1215), so everyone else in the household holds $0
+  of their own; and it has far more married people aged 65 and over, and far fewer
+  living alone, than the CPS and ACS (PolicyEngine/microcosm#1212).
 - Savings: imputed from SIPP 2023 and SCF 2022, not calibrated; only bank
   accounts, stocks and bonds count.
 

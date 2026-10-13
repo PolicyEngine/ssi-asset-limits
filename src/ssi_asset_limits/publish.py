@@ -488,15 +488,19 @@ def _restore_description(metadata: dict) -> str:
         "(PolicyEngine/microcosm#1178), with the benefit restored, and "
         "splices them into the published run. Claiming flags are not redrawn, "
         "so the current-law caseload falls below SSA's count; compare new "
-        "recipients with each run's own current-law recipients."
+        "recipients with each run's own current-law recipients. Microcosm "
+        "has since fixed the defect in the code that builds the population "
+        "file (PolicyEngine/microcosm#1186); the fix reaches the published "
+        "estimate with the next certified population file."
     )
 
 
 def _deeming_description(metadata: dict) -> str:
     return (
         "Adds federal resource deeming (20 CFR 416.1202) to the certified "
-        "engine as a reform, ahead of the policyengine-us change that adds "
-        "it (PolicyEngine/policyengine-us#10040). The certified engine has "
+        "engine as a reform. The rule is the one PolicyEngine-US released in "
+        "version 2.38.14 (PolicyEngine/policyengine-us#10040), which the "
+        "certified bundle predates. The certified engine has "
         "no links from a child to their parents, so the reform treats people "
         "marked as parents in the child's tax unit and household, and their "
         "spouses, as the parents. Counting more resources removes some people "
