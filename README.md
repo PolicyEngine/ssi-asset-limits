@@ -55,16 +55,16 @@ a weighted sum over that run, with nothing scaled from other runs.
 
 ### Current certified bundle
 
-The published run used policyengine.py 6.2.5. As of 2026-10-13, the latest
-release, policyengine.py 6.3.3, certifies the same US bundle: policyengine-us
-2.2.1 (wheel SHA-256 `0993a6c7…`) and Microcosm
-`populace-us-2024-spm-20260915` (`populace_us_2024.h5`, SHA-256
-`6496cc43…`). Its US code changes between the two releases stamp the year
-files it cuts and change how it parses and merges reform dictionaries. The
-runner passes its reforms as policyengine-core `Reform` classes, and the
-register of renamed stored inputs is unchanged, so nothing in the SSI path
-differs and the published run is the current certified estimate. Microcosm has published no newer
-release to `latest.json` since 2026-09-15.
+The published run used policyengine.py 6.2.5 (policyengine-core 3.32.10).
+As of 2026-10-13 the latest release, policyengine.py 6.3.3, certifies the
+same US model and population file: policyengine-us 2.2.1 (wheel SHA-256
+`0993a6c7…`) and Microcosm `populace-us-2024-spm-20260915`
+(`populace_us_2024.h5`, SHA-256 `6496cc43…`). It also moves policyengine-core
+to 3.33.0. Running the published runner on both, over every household with a
+new recipient and 2,000 sampled others, gives identical SSI, poverty and
+reform changes; one household's income tax differs by $84 in every scenario
+(`results/runtime-check-6.3.3/`). Microcosm has published no newer release to
+`latest.json` since 2026-09-15.
 
 ## Comparisons
 
@@ -94,8 +94,10 @@ language, with every figure computed from the published data:
 - Social Security: the population file zeroes CPS-reported Social Security
   for many people (PolicyEngine/microcosm#1178); a spliced rerun with it
   restored is shown as a sensitivity. Microcosm fixed the build code in
-  PolicyEngine/microcosm#1186 (merged 2026-10-12); the fix reaches this
-  estimate with the next certified population file.
+  PolicyEngine/microcosm#1186 (merged 2026-10-12). The certified file still
+  has the defect; the fix reaches this estimate only when a file rebuilt
+  with the corrected code (a fiscal-only refresh of an old base does not
+  repair it) is certified and the analysis is rerun.
 - Children: the population has almost no children under 15 who meet SSI's
   disability standard (PolicyEngine/microcosm#509, not merged), and
   policyengine-us 2.2.1 does not deem a parent's resources to a child.
