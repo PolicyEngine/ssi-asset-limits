@@ -21,9 +21,10 @@ policyengine-core to 3.33.0. This check runs the published runner on both.
 Result: every person-level output (SSI, countable resources, poverty flags
 and the eligibility diagnostics) is identical in all three scenarios, and so
 is every reform-minus-current-law change in household income, SNAP and income
-tax. The only difference is one household's income tax (household 1163404,
-weight 0.0017), $84.39 lower under policyengine-core 3.33.0 in every
-scenario. It does not affect any published figure.
+tax. The only difference is one household (1163404, weight 0.0017): under
+policyengine-core 3.33.0 its income tax is $84.39 lower and its net income
+$84.39 higher, by the same amount in every scenario, so it cancels from every
+change and affects no published figure.
 
 Reproduce from the repository root, with `$CERTIFIED_H5` the certified file and
 `$RUN` the published run directory (with its `persons.csv.gz`):
