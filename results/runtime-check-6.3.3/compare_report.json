@@ -1,0 +1,65 @@
+{
+ "baseline/persons": {
+  "rows": 6509,
+  "columns": 8,
+  "same_shape": true,
+  "differing_columns": {}
+ },
+ "baseline/households": {
+  "rows": 2231,
+  "columns": 5,
+  "same_shape": true,
+  "differing_columns": {
+   "household_net_income_baseline": 84.39100000000326,
+   "income_tax_baseline": 84.390625
+  }
+ },
+ "baseline/persons_diagnostics": {
+  "rows": 6509,
+  "columns": 26,
+  "same_shape": true,
+  "differing_columns": {}
+ },
+ "ten_twenty/persons": {
+  "rows": 6509,
+  "columns": 8,
+  "same_shape": true,
+  "differing_columns": {}
+ },
+ "ten_twenty/households": {
+  "rows": 2231,
+  "columns": 5,
+  "same_shape": true,
+  "differing_columns": {
+   "household_net_income_ten_twenty": 84.39100000000326,
+   "income_tax_ten_twenty": 84.390625
+  }
+ },
+ "ten_twenty/persons_diagnostics": {
+  "rows": 6509,
+  "columns": 26,
+  "same_shape": true,
+  "differing_columns": {}
+ },
+ "no_limit/persons": {
+  "rows": 6509,
+  "columns": 8,
+  "same_shape": true,
+  "differing_columns": {}
+ },
+ "no_limit/households": {
+  "rows": 2231,
+  "columns": 5,
+  "same_shape": true,
+  "differing_columns": {
+   "household_net_income_no_limit": 84.39100000000326,
+   "income_tax_no_limit": 84.390625
+  }
+ },
+ "no_limit/persons_diagnostics": {
+  "rows": 6509,
+  "columns": 26,
+  "same_shape": true,
+  "differing_columns": {}
+ }
+}

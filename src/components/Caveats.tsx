@@ -62,7 +62,7 @@ function higherItem(results: Results): Item {
       reporting.share_pct >= 1 &&
       `Some new recipients aged 18 to 64 may already receive SSI: ${percent(reporting.share_pct)} of them report SSI in the Census survey but are kept off it in the model by imputed savings above the limit.`,
     deeming &&
-      `Other gaps push the other way: the model has almost no disabled children under 15, and it does not yet count a spouse's or a parent's savings, which the sensitivity table shows would ${deeming.raises ? "raise" : "lower"} the added SSI from ${deeming.without} to ${deeming.with_}.`,
+      `Other gaps push the other way: the model has almost no disabled children under 15, and the version of PolicyEngine-US used for this estimate does not count an ineligible spouse's or a parent's savings, which the sensitivity table shows would ${deeming.raises ? "raise" : "lower"} the added SSI from ${deeming.without} to ${deeming.with_}.`,
     "Read these figures as a rough estimate, not as a finding that the reform would cost this much.",
   ];
   return {
@@ -104,10 +104,10 @@ function childrenItem(results: Results): Item {
       `The Census survey behind the population asks its disability questions only from age 15, so almost no child under 15 in the population meets SSI's disability standard${young ? ` (${records(young.records)})` : ""}.`,
       current &&
         `The model has ${formatPeople(current.policyengine_recipients)} child recipients, against SSA's ${formatPeople(current.ssa_recipients)}.`,
-      "A stage that adds disabled children from the Census Bureau's SIPP is not part of the population used here (PolicyEngine/microcosm#509).",
+      "A stage that adds disabled children from the Census Bureau's SIPP has not been merged into Microcosm, so it is not part of the population used here (PolicyEngine/microcosm#509).",
       withSavings &&
         overLimit &&
-        `${gains ? "Few children gain from a higher limit" : "No child gains from a higher limit"} for two reasons: few disabled children in this population have savings of their own (${records(withSavings.records)} with any, ${overLimit.records === 0 ? "none" : records(overLimit.records)} over $2,000), and PolicyEngine does not yet count a parent's savings when it tests a child's eligibility, although SSA counts a parent's savings above an allowance (20 CFR 416.1202(b); PolicyEngine/policyengine-us#10040). The resource-deeming sensitivity above adds that rule.`,
+        `${gains ? "Few children gain from a higher limit" : "No child gains from a higher limit"} for two reasons: few disabled children in this population have savings of their own (${records(withSavings.records)} with any, ${overLimit.records === 0 ? "none" : records(overLimit.records)} over $2,000), and the version of PolicyEngine-US used for this estimate (${results.provenance.model_version}) does not count a parent's savings when it tests a child's eligibility, although SSA counts a parent's savings above an allowance (20 CFR 416.1202(b)). PolicyEngine-US added that rule in version 2.38.14 (PolicyEngine/policyengine-us#10040); the rerun above that counts spouses' and parents' savings applies the same rule to the version used here.`,
     ]
       .filter(Boolean)
       .join(" "),
@@ -121,8 +121,8 @@ function couplesItem(results: Results): Item {
     : "";
   return {
     key: "couples",
-    title: "Married people are over-represented, and a spouse's savings are not counted",
-    body: `When both spouses are aged, blind or disabled, PolicyEngine tests their combined savings against the couple limit, as SSA does. When only one spouse is, SSA also counts the other spouse's savings (20 CFR 416.1202(a)); PolicyEngine does not yet. The population also records each household's savings on a single person, the household's reference person, so when that person is the spouse who does not qualify, the spouse who does is treated as having no savings.${numbers}`,
+    title: "Married people are over-represented, and an ineligible spouse's savings are not counted",
+    body: `When both spouses are aged, blind or disabled, PolicyEngine tests their combined savings against the couple limit, as SSA does. When only one spouse is, SSA also counts the other spouse's savings (20 CFR 416.1202(a)); PolicyEngine-US has done so since version 2.38.14 (PolicyEngine/policyengine-us#10040), but the version used for this estimate (${results.provenance.model_version}) does not. The population also records each household's savings on a single person, the first person on the Census survey's household roster, who is usually the household's reference person. When that person is the spouse who does not qualify, the spouse who does is treated as having no savings, and every adult outside that person's marriage, such as an older parent living with an adult child, is treated as having none (PolicyEngine/microcosm#1215). The population file also has far more married people aged 65 and over, and far fewer living alone, than Census surveys show (PolicyEngine/microcosm#1212).${numbers}`,
   };
 }
 
@@ -137,7 +137,7 @@ function compositionItem(results: Results): Item {
       `Within ages 18 to 64 the model has ${times(twenties)} SSA's number of recipients aged 22 to 29 and ${percent(100 * sixties)} of SSA's number aged 60 to 64; only the age group's total is targeted.`,
     older &&
       `Among recipients 65 and over, ${percent(older.policyengine_share_pct)} in the model also receive Social Security, against ${percent(older.ssa_share_pct)} in SSA's records.`,
-    "Older people are more likely to have savings, and Social Security counts as income for SSI, lowering the payment, so both gaps bear on who gains from a higher limit and by how much. Part of the Social Security gap is a defect in the population file, which sets Social Security to zero for some people who report it in the Census survey (PolicyEngine/microcosm#1178).",
+    "Older people are more likely to have savings, and Social Security counts as income for SSI, lowering the payment, so both gaps bear on who gains from a higher limit and by how much. Part of the Social Security gap is a defect in the population file, which sets Social Security to zero for some people who report it in the Census survey (PolicyEngine/microcosm#1178). Microcosm has fixed the defect in the code that builds the file (PolicyEngine/microcosm#1186), but the population file used here still has it; the fix reaches this estimate only when Microcosm releases a population file rebuilt with the corrected code and the analysis is rerun on it.",
     restore &&
       `Restoring it, in the sensitivity table above, ${restore.currentChangePct < 0 ? `makes ${percent(-restore.currentChangePct)} of current recipients aged 65 and over income-ineligible` : `changes current recipients aged 65 and over by ${percent(restore.currentChangePct)}`}; the claiming rates were set to match SSA's count with the benefit erased and are not re-solved to offset that. New recipients 65 and over under the $10,000 and $20,000 limits ${Math.round(restore.restoredRate) === Math.round(restore.rate) ? `stay at about ${percent(restore.rate)}` : `${restore.restoredRate < restore.rate ? "fall" : "rise"} from ${percent(restore.rate)} to ${percent(restore.restoredRate)}`} of each run's current recipients that age. So that rerun cannot say how many new recipients a corrected population would have; the fix belongs in the population file.`,
   ];
